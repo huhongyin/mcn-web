@@ -1,21 +1,16 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
-import Index from '@/views/home/Index.vue'
+import HomePage from './homepage'
+import Login from './login'
 
 Vue.use(Router)
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    },
-    {
-      path: '/index',
-      name: 'Index',
-      component: Index,
-    }
-  ]
-})
+const router = new Router({
+    // 路由模式
+    mode: 'hash',
+    routes:[
+      ...Login,
+      ...HomePage
+    ]
+  })
+  export default router
