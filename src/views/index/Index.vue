@@ -2,8 +2,8 @@
   <el-container class="main">
     <el-aside width="242px" class="nav_list">
       <div class="img_title">
-        <img :src="paizhao" width="32" height="29" alt />
-        <span class="e-menu-span" style="font-size:18px;font-weight:500;">涂鸦机器人</span>
+        <!-- <img :src="paizhao" width="32" height="29" alt /> -->
+        <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:500;">MCN</span>
       </div>
       <el-menu
         :default-active="this.$route.path"
@@ -13,33 +13,33 @@
         <!-- 主页 -->
         <el-menu-item index="/echarts">
           <img :src="homepage_icon" width="20" style="margin-right:10px" height="20" alt />
-          <span class="e-menu-span" slot="title" style="font-size:18px;font-weight:400;letter-spacing:2px;">主页</span>
+          <span class="e-menu-span" slot="title" style="color:#C0CCDA;font-size:13px;font-weight:400;letter-spacing:2px;">主页</span>
         </el-menu-item>
         <!-- 用户管理 -->
         <el-submenu index="/management">
           <template slot="title">
             <img :src="userguanli_icon" width="20" style="margin-right:10px" height="20" alt />
-            <span class="e-menu-span" style="font-size:18px;font-weight:400;letter-spacing:2px;">用户管理</span>
+            <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">艺人管理</span>
           </template>
           <el-menu-item-group class="el-item">
-            <el-menu-item index="/management" style="el-item e-menu-span">手机用户</el-menu-item>
+            <el-menu-item index="/management" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">艺人列表</el-menu-item>
           </el-menu-item-group>
-          <el-menu-item-group>
+          <!-- <el-menu-item-group>
             <el-menu-item index="/admin">管理员</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group>
+          </el-menu-item-group> -->
+          <!-- <el-menu-item-group>
             <el-menu-item index="/role">角色</el-menu-item>
           </el-menu-item-group>
           <el-menu-item-group>
             <el-menu-item index="/password">修改密码</el-menu-item>
-          </el-menu-item-group>
+          </el-menu-item-group> -->
           
         </el-submenu>
         <!-- 涂鸦管理 -->
-        <el-submenu index="/graffiti">
+        <!-- <el-submenu index="/graffiti">
           <template slot="title">
             <img :src="tuyaguanli_icon" width="20" style="margin-right:10px" height="20" alt />
-            <span class="e-menu-span" style="font-size:18px;font-weight:400;letter-spacing:2px;">涂鸦管理</span>
+            <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;">涂鸦管理</span>
           </template>
           <el-menu-item-group>
             <el-menu-item index="/graffiti">涂鸦分类</el-menu-item>
@@ -48,18 +48,18 @@
             <el-menu-item index="/models">涂鸦模板</el-menu-item>
           </el-menu-item-group>
          
-        </el-submenu>
+        </el-submenu> -->
         <!-- banner管理 -->
-        <el-menu-item index="/banner">
+        <!-- <el-menu-item index="/banner">
           <img :src="bannerguanli_icon" width="20" style="margin-right:10px" height="20" alt />
-          <span class="e-menu-span" slot="title" style="font-size:18px;font-weight:400;letter-spacing:2px;">Banner管理</span>
-        </el-menu-item>
+          <span class="e-menu-span" slot="title" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;">Banner管理</span>
+        </el-menu-item> -->
         <!-- 反馈建议 -->
         
-        <el-submenu index="/feedback">
+        <!-- <el-submenu index="/feedback">
           <template slot="title">
             <img :src="tuyaguanli_icon" width="20" style="margin-right:10px" height="20" alt />
-            <span class="e-menu-span" style="font-size:18px;font-weight:400;letter-spacing:2px;">帮助与反馈</span>
+            <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;">帮助与反馈</span>
           </template>
           <el-menu-item-group>
             <el-menu-item index="/help">帮助中心</el-menu-item>
@@ -68,22 +68,22 @@
             <el-menu-item index="/suggestions">反馈建议</el-menu-item>
           </el-menu-item-group>
          
-        </el-submenu>
+        </el-submenu> -->
         <!-- 联系我们 -->
-        <el-menu-item index="/contact">
+        <!-- <el-menu-item index="/contact">
           <img :src="lianxi_icon" width="20" style="margin-right:10px" height="20" alt />
-          <span class="e-menu-span" slot="title" style="font-size:18px;font-weight:400;letter-spacing:2px;">联系我们</span>
-        </el-menu-item>
+          <span class="e-menu-span" slot="title" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;">联系我们</span>
+        </el-menu-item> -->
         <!-- 设备监控 -->
-        <el-menu-item index="/equipment">
+        <!-- <el-menu-item index="/equipment">
           <img :src="video_icon" width="20" style="margin-right:10px" height="20" alt />
-          <span class="e-menu-span" slot="title" style="font-size:18px;font-weight:400;letter-spacing:2px;">设备监控</span>
-        </el-menu-item>
+          <span class="e-menu-span" slot="title" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;">设备监控</span>
+        </el-menu-item> -->
         <!-- 操作日志 -->
-        <el-menu-item index="/operation">
+        <!-- <el-menu-item index="/operation">
           <img :src="caozuo_icon" width="20" style="margin-right:10px" height="20" alt />
-          <span class="e-menu-span" slot="title" style="font-size:18px;font-weight:400;letter-spacing:2px;">操作日志</span>
-        </el-menu-item>
+          <span class="e-menu-span" slot="title" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;">操作日志</span>
+        </el-menu-item> -->
       </el-menu>
     </el-aside>
     <el-container class="container_box">
@@ -125,12 +125,12 @@ export default {
     };
   },
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    }
+    // handleOpen(key, keyPath) {
+    //   console.log(key, keyPath);
+    // },
+    // handleClose(key, keyPath) {
+    //   console.log(key, keyPath);
+    // }
   }
 };
 </script>
@@ -138,15 +138,24 @@ export default {
     .el-menu-item-group__title{
       background: #35404F;
     }
+    .el-submenu div:hover{
+      background:#35404F;
+    }
+    li:hover{
+      background:#35404F;
+    }
 </style>
 <style lang='less' scoped>
 .el-menu-item.is-active{
   box-sizing: border-box;
   color: #409EFF;
-  background:rgba(240,250,255,1);
+  background:#35404F;
   border-left: 4px solid #2E8CFF;
 }
 
+.el-submenu:hover{
+  background:#35404F;
+}
 
 .main {
   width: 100%;
