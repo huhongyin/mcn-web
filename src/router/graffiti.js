@@ -1,25 +1,25 @@
-import Index from '../views/graffiti/Graffiti.vue'
-import Models from '../views/graffiti/Models.vue'
-import AddModel from '@/views/graffiti/AddModel.vue'
+import Rule from '../views/graffiti/Rule.vue'
+import User from '../views/graffiti/User.vue'
+import Group from '@/views/graffiti/Group.vue'
 
 export default
 [
-  // 涂鸦分类
+  // 权限
   {
-    path: '/graffiti',
-    name: 'graffiti',
-    component: Index,
+    path: '/rules',
+    name: 'rule',
+    component: Rule,
   },
-  //涂鸦模板
+  //用户管理
   {
-    path: '/models',
-    name: 'models',
-    component: Models,
+    path: '/users',
+    name: 'user',
+    component: User,
   },
-  //添加涂鸦模板
+  //运营分组
   {
-    path: '/addModel',
-    name: 'addModel',
-    component: AddModel,
+    path: '/groups',
+    name: 'group',
+    component: Group,
   },
 ]

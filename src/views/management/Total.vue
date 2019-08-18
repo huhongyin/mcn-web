@@ -3,29 +3,21 @@
         <div slot="header" class="clearfix">
             <el-input class="card-header-input" v-model="search.keywords" placeholder="输入关键字搜索"></el-input>
             <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button>
-            <el-button class="right" type="primary" @click="add(0)">新增</el-button>
-            <el-button class="right" @click="deleteData('checkbox', 0)">删除</el-button>
+            <!-- <el-button class="right" type="primary" @click="add(0)">新增</el-button>
+            <el-button class="right" @click="deleteData('checkbox', 0)">删除</el-button> -->
         </div>
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
-                <el-table-column type="selection"></el-table-column>
+                <!-- <el-table-column type="selection"></el-table-column> -->
                 <el-table-column label="序号" type="index"></el-table-column>
-                <el-table-column label="角色">
+                <el-table-column label="公司名" prop="company_name"></el-table-column>
+                <el-table-column label="上月总收入" prop="last_month_money"></el-table-column>
+                <el-table-column label="总收入" prop="total_money"></el-table-column>
+                <!-- <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <span class="link" v-text="scope.row.roleName"></span>
-                    </template>
-                </el-table-column>
-                <el-table-column label="权限">
-                    <template slot-scope="scope">
-                        <el-button type="primary" @click="ruleDetail(scope.row.roleId)">详情</el-button>
-                    </template>
-                </el-table-column>
-                <el-table-column label="修改时间" prop="updateTime"></el-table-column>
-                <el-table-column label="操作">
-                    <template slot-scope="scope">
-                        <el-button @click="add(scope.row.roleId, scope.row.roleName)" type="text" size="small">编辑</el-button>
+                        <el-button @click="add(scope.row.id)" type="text" size="small">详情</el-button>
                         <el-button @click="deleteData('sigle', scope.row.roleId)" type="text" size="small">删除</el-button>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
             </el-table>
             <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :page-count="totalPage" @current-change="handleCurrentChange"></el-pagination>
             <el-dialog title="角色详情" :visible.sync="showDetailDialog.centerDialogVisible" width="800px" center>
@@ -114,7 +106,26 @@ export default {
             current : 1,
             totalPage: 0,
             total: 0,
-            list: [],
+            list: [
+                {
+                    id: 1,
+                    company_name: '子公司一',
+                    last_month_money: 150000,
+                    total_money: 1500000,
+                },
+                {
+                    id: 2,
+                    company_name: '子公司二',
+                    last_month_money: 150000,
+                    total_money: 1500000,
+                },
+                {
+                    id: 3,
+                    company_name: '子公司三',
+                    last_month_money: 150000,
+                    total_money: 1500000,
+                },
+            ],
             detail: {
                 role_detail: "超级管理员，操作工超级管理员，操作工超级管理员，操作工超级管理员，操作工超级管理员，操作工超级管理员，操作工超级管理员，操作工超级管理员，操作工超级管理员，操作工超级管理员，操作工超级管理员，操作工"
             },
@@ -139,18 +150,18 @@ export default {
             })
         },
         getData(){
-            var params = { current : this.current, size : this.size, roleName : this.search.keywords }
-            var that = this
-            fPost(roleApi.list, params)
-                .then(function(res){
-                    that.list = res.data.list
-                    that.total = res.data.total
-                    that.current = res.data.pageNum
-                    that.totalPage = res.data.totalPage
-                }).catch(function(err){
-                    console.log('error')
-                    console.log(err)
-                })
+            // var params = { current : this.current, size : this.size, roleName : this.search.keywords }
+            // var that = this
+            // fPost(roleApi.list, params)
+            //     .then(function(res){
+            //         that.list = res.data.list
+            //         that.total = res.data.total
+            //         that.current = res.data.pageNum
+            //         that.totalPage = res.data.totalPage
+            //     }).catch(function(err){
+            //         console.log('error')
+            //         console.log(err)
+            //     })
         },
         ruleDetail(id){
             let that = this
@@ -160,7 +171,9 @@ export default {
                 this.showDetailDialog.centerDialogVisible = true
             })
         },
-        add(id, roleName){
+        add(id){
+            this.addUserDialog.addUserDialogVisible = true
+            return false
             this.retRole()
             // this.getRules()
             if(id != 0){

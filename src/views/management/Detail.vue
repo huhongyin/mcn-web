@@ -1,33 +1,40 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            <el-input class="card-header-input" placeholder="账号/用户名" v-model="search.keywords"></el-input>
-            <el-select v-model="search.role" placeholder="角色" class="offset-left-30">
+            <el-input class="card-header-input" placeholder="艺人/运营负责人" v-model="search.keywords"></el-input>
+            <el-select v-model="search.plats" placeholder="平台" class="offset-left-30">
                 <el-option
-                v-for="item in search.roleList"
-                :key="item.roleId"
-                :label="item.roleName"
-                :value="item.roleId">
+                v-for="item in search.platsList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+                </el-option>
+            </el-select>
+            <el-select v-model="search.fenzu" placeholder="运营分组" class="offset-left-30">
+                <el-option
+                v-for="item in search.fenzuList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
                 </el-option>
             </el-select>
             <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button>
-            <el-button class="right" type="primary" @click="addUser(0)">新增</el-button>
-            <el-button class="right" @click="deleteData()">删除</el-button>
+            <!-- <el-button class="right" type="primary" @click="addUser(0)">新增</el-button>
+            <el-button class="right" @click="deleteData()">删除</el-button> -->
         </div>
-        <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
-                <el-table-column type="selection"></el-table-column>
+        <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
+                <!-- <el-table-column type="selection"></el-table-column> -->
                 <el-table-column label="序号" type="index"></el-table-column>
-                <el-table-column label="账号" prop="username"></el-table-column>
-                <el-table-column label="姓名" prop="managerName"></el-table-column>
-                <el-table-column label="性别" prop="sex"></el-table-column>
-                <el-table-column label="角色" prop="roleName"></el-table-column>
-                <el-table-column label="修改时间" prop="updateTime"></el-table-column>
-                <el-table-column label="备注" prop="remark"></el-table-column>
+                <el-table-column label="主播名" prop="username"></el-table-column>
+                <el-table-column label="年龄" prop="age"></el-table-column>
+                <el-table-column label="所属平台" prop="plat.name"></el-table-column>
+                <el-table-column label="昨日礼物流水" prop="yestoday_money"></el-table-column>
+                <el-table-column label="上月应发工资" prop="last_month_money"></el-table-column>
+                <el-table-column label="备注" prop="remark" show-overflow-tooltip="true"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button @click="userDetail(scope.row.id)" type="text" size="small">详情</el-button>
                         <el-button @click="addUser(scope.row.id)" type="text" size="small">编辑</el-button>
-                        <el-button @click="resetPsd(scope.row.id)" type="text" size="small">重置密码</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -35,16 +42,19 @@
             <el-dialog title="用户详情" :visible.sync="showDetailDialog.centerDialogVisible" width="800px" center>
                 <div class="center">
                     <div>
-                        <span class="user-detail-text">账号：</span><span class="user-detail-value" v-text="detail.username"></span>
+                        <span class="user-detail-text">主播名：</span><span class="user-detail-value" v-text="detail.username"></span>
                     </div>
                     <div>
-                        <span class="user-detail-text">姓名：</span><span class="user-detail-value" v-text="detail.managerName"></span>
+                        <span class="user-detail-text">年龄：</span><span class="user-detail-value" v-text="detail.age"></span>
                     </div>
                     <div>
-                        <span class="user-detail-text">性别：</span><span class="user-detail-value" v-text="detail.sex">女</span>
+                        <span class="user-detail-text">所属平台：</span><span class="user-detail-value" v-text="detail.plat.name"></span>
                     </div>
                     <div>
-                        <span class="user-detail-text">角色：</span><span class="user-detail-value" v-text="detail.roleName">超级管理员</span>
+                        <span class="user-detail-text">昨日礼物流水：</span><span class="user-detail-value" v-text="detail.yestoday_money"></span>
+                    </div>
+                    <div>
+                        <span class="user-detail-text">上月应发工资：</span><span class="user-detail-value" v-text="detail.last_month_money"></span>
                     </div>
                     <div class="remark">
                         <span class="user-detail-text">备注：</span><span class="user-detail-value" v-text="detail.remark"></span>
@@ -58,24 +68,25 @@
             </el-dialog>
             <el-dialog :title="addUserDialog.addUserTitle" :visible.sync="addUserDialog.addUserDialogVisible" width="800px" center>
                 <div class="center">
-                    <el-form :rules="addUserDialog.rules" ref="addForm" :model="addUserDialog.form">
+                    <!-- <el-form :rules="addUserDialog.rules" ref="addForm" :model="addUserDialog.form"> -->
+                    <el-form ref="addForm" :model="addUserDialog.form">
                         <el-input v-model="addUserDialog.form.id" type="hidden" autocomplete="off"></el-input>
                         <!-- <el-form-item label="账号" class="add-user-dialog-label" :label-width="addUserDialog.formLabelWidth"> -->
-                        <el-form-item prop="username" label="账号：" :label-width="addUserDialog.formLabelWidth">
+                        <el-form-item prop="username" label="主播名：" :label-width="addUserDialog.formLabelWidth">
                             <el-input v-model="addUserDialog.form.username" autocomplete="off" required></el-input>
                         </el-form-item>
-                        <el-form-item prop="managerName" label="姓名：" :label-width="addUserDialog.formLabelWidth">
-                            <el-input v-model="addUserDialog.form.managerName" autocomplete="off" required></el-input>
+                        <el-form-item prop="age" label="年龄：" :label-width="addUserDialog.formLabelWidth">
+                            <el-input v-model="addUserDialog.form.age" autocomplete="off" required></el-input>
                         </el-form-item>
-                        <el-form-item prop="sex" label="性别：" :label-width="addUserDialog.formLabelWidth">
-                            <el-select v-model="addUserDialog.form.sex" placeholder="请选择性别" required>
-                                <el-option :key="i" v-for="(item, i) in addUserDialog.sexes" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
+                        <el-form-item prop="yestoday_money" label="昨日礼物流水：" :label-width="addUserDialog.formLabelWidth">
+                            <el-input v-model="addUserDialog.form.yestoday_money" autocomplete="off" required></el-input>
                         </el-form-item>
-                        <!-- <el-form-item label="角色" class="add-user-dialog-label" :label-width="addUserDialog.formLabelWidth"> -->
-                        <el-form-item prop="roleId" label="角色：" :label-width="addUserDialog.formLabelWidth">
-                            <el-select v-model="addUserDialog.form.roleId" placeholder="请选择角色" required>
-                                <el-option :key="i" v-for="(item, i) in search.roleList" :label="item.roleName" :value="item.roleId"></el-option>
+                        <el-form-item prop="last_month_money" label="上月应发工资：" :label-width="addUserDialog.formLabelWidth">
+                            <el-input v-model="addUserDialog.form.last_month_money" autocomplete="off" required></el-input>
+                        </el-form-item>
+                        <el-form-item label="所属平台：" :label-width="addUserDialog.formLabelWidth">
+                            <el-select style="width:100%;" v-model="addUserDialog.form.plat.name" placeholder="请选择平台" required>
+                                <el-option :key="i" v-for="(item, i) in search.platsList" :label="item.name" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="备注：" :label-width="addUserDialog.formLabelWidth">
@@ -105,17 +116,46 @@ export default {
     data(){
         return {
             search:{
-                roleList:[
-                    
+                platsList:[
+                    {
+                        id: 1,
+                        name: '抖音'
+                    },
+                    {
+                        id: 2,
+                        name: '陌陌'
+                    },
+                    {
+                        id: 3,
+                        name: '火山小视频'
+                    },
                 ],
                 keywords : "",
-                role: "",
+                plats: "",
+                fenzu: "",
+                fenzuList: [
+                    {
+                        id: 1,
+                        name: '运营小组一'
+                    },
+                    {
+                        id: 2,
+                        name: '运营小组二'
+                    },
+                    {
+                        id: 3,
+                        name: '运营小组三'
+                    },
+                ]
             },
             addUserDialog:{
                 addUserTitle : '新增用户',
                 addUserDialogVisible: false,
                 form:{
-
+                    plat: {
+                        id: 1,
+                        name: '抖音'
+                    }
                 },
                 rules: {
                     managerName: [
@@ -154,57 +194,85 @@ export default {
             totalPage: 0,
             total: 0,
             list: [
+                {
+                    id: 1,
+                    username: '晓晓',
+                    age: 21,
+                    plat: {
+                        id: 1,
+                        name: '抖音'
+                    },
+                    yestoday_money: 2000,
+                    last_month_money: 15000,
+                    remark: '备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注',
+                },
+                {
+                    id: 2,
+                    username: '晓晓1',
+                    age: 21,
+                    plat: {
+                        id: 1,
+                        name: '抖音'
+                    },
+                    yestoday_money: 2000,
+                    last_month_money: 15000,
+                    remark: '备注备注备注',
+                },
+                {
+                    id: 2,
+                    username: '晓晓2',
+                    age: 21,
+                    plat: {
+                        id: 1,
+                        name: '抖音'
+                    },
+                    yestoday_money: 2000,
+                    last_month_money: 15000,
+                    remark: '备注备注备注',
+                },
             ],
             detail: {
-                
+                id: 1,
+                username: '晓晓',
+                age: 21,
+                yestoday_money: 2100,
+                last_month_money: 15000,
+                remark: '备注备注备注备注',
+                plat: {
+                    id: 1,
+                    name: '陌陌'
+                }
             },
             multipleSelection : [],
             selectIds: [],
         }
     },
     methods:{
-        toggleSelection(rows) {
-            if (rows) {
-                rows.forEach(row => {
-                    this.$refs.multipleTable.toggleRowSelection(row);
-                });
-            } else {
-                this.$refs.multipleTable.clearSelection();
-            }
-        },
-        handleSelectionChange(val) {
-            this.multipleSelection = val
-            let ids  = []
-            this.multipleSelection.map((item) => {
-                ids.push(item.id)
-            })
-            this.selectIds = ids
-        },
         getData(){
-            var params = { current : this.current, size : this.size, username : this.search.keywords, roleId: this.search.role }
-            var that = this
-            fPost(adminApi.adminList, params)
-            .then(function(res){
-                that.list = res.data.list
-                that.total = res.data.total
-                that.current = res.data.pageNum
-                that.totalPage = res.data.totalPage
-            }).catch(function(err){
-                console.log('error')
-                console.log(err)
-            })
+            // var params = { current : this.current, size : this.size, username : this.search.keywords, roleId: this.search.role }
+            // var that = this
+            // fPost(adminApi.adminList, params)
+            // .then(function(res){
+            //     that.list = res.data.list
+            //     that.total = res.data.total
+            //     that.current = res.data.pageNum
+            //     that.totalPage = res.data.totalPage
+            // }).catch(function(err){
+            //     console.log('error')
+            //     console.log(err)
+            // })
         },
         userDetail(id){
-            // this.showDetailDialog.centerDialogVisible = true
-            var params = { id: id }
-            var that = this
-            fPost(adminApi.adminDetail, params).then(function(res){
-                that.detail = res.data
-                that.showDetailDialog.centerDialogVisible = true
-            }).catch(function(err){
-                console.log('error')
-                console.log(err)
-            })
+            this.showDetailDialog.centerDialogVisible = true
+            // var params = { id: id }
+            // var that = this
+            // fPost(adminApi.adminDetail, params).then(function(res){
+            //     that.detail = res.data
+            //     that.showDetailDialog.centerDialogVisible = true
+            // }).catch(function(err){
+            //     console.log('error')
+            //     console.log(err)
+            // })
         },
         addUser(id){
             this.addUserDialog.form = {}
@@ -233,6 +301,8 @@ export default {
             this.addUserDialog.addUserDialogVisible = true
         },
         submitForm(formName){
+            this.addUserDialog.addUserDialogVisible = false 
+            return false
             let that = this
             let url = (this.addUserDialog.form.id > 0 ? adminApi.editAdmin : adminApi.addAdmin)
             var params = { id: this.addUserDialog.form.id, managerName: this.addUserDialog.form.managerName, password: '', remark: this.addUserDialog.form.remark, roleId: this.addUserDialog.form.roleId, sex: this.addUserDialog.form.sex, username: this.addUserDialog.form.username }
@@ -255,33 +325,14 @@ export default {
             
         },
         getRole(){
-            let that = this
-            get(roleApi.allRole, {}).then(function(res){
-                that.search.roleList = res.data 
-            })
+            // let that = this
+            // get(roleApi.allRole, {}).then(function(res){
+            //     that.search.roleList = res.data 
+            // })
         },
         handleCurrentChange(val){
             this.current = val
             this.getData()
-        },
-        deleteData(){
-            var params = this.selectIds
-            var that = this
-            post(adminApi.deleteAdmin, params).then(function(res){
-                if(res.code == 200){
-                    that.getData()
-                }
-            })
-        },
-        resetPsd(id){
-            let that = this
-            fPost(adminApi.resetPsd, {id : id}).then((res) => {
-                that.$message({
-                    message: res.data,
-                    type: 'success', 
-                    duration: 1000,
-                })
-            })
         },
     }
 }

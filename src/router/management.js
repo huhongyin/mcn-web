@@ -1,29 +1,25 @@
 import Index from '../views/management/Management.vue'
-import Admin from '../views/management/Admin.vue'
-import Role from '../views/management/Role.vue'
-import Password from '../views/management/Password.vue'
+import Detail from '../views/management/Detail.vue'
+import Total from '../views/management/Total.vue'
 
 export default
 [
-  // 用户管理
+  // 首页
   {
     path: '/management',
     name: 'management',
     component: Index,
   },
+  //明细报表
   {
-    path: '/admin',
-    name: 'admin',
-    component: Admin,
+    path: '/detail',
+    name: 'detail',
+    component: Detail,
   },
+  //汇总报表
   {
-    path: '/role',
-    name: 'role',
-    component: Role,
-  },
-  {
-    path: '/password',
-    name: 'password',
-    component: Password,
+    path: '/total',
+    name: 'total',
+    component: Total,
   },
 ]

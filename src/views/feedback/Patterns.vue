@@ -2,52 +2,27 @@
     <el-card class="box-card">
         <div slot="header" class="clearfix">
             <el-input class="card-header-input" v-model="search.keywords" placeholder="关键词"></el-input>
-            <el-select class="offset-left-30" v-model="search.status" placeholder="状态">
+            <el-select class="offset-left-30" v-model="search.plat" placeholder="平台">
                 <el-option
-                v-for="item in search.statusList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in search.plats"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
                 </el-option>
             </el-select>
-            <el-date-picker
-                class="offset-left-30"
-                v-model="search.select_date"
-                type="datetimerange"
-                range-separator="-"
-                format="yyyy-MM-dd HH:mm:ss"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :picker-options="pickerOptions">
-            </el-date-picker>
             <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button>
-            <el-button class="right btn-search" @click="add(0)">处理</el-button>
-            <el-button class="right btn-search" @click="">删除</el-button>
         </div>
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
-                <el-table-column type="selection"></el-table-column>
+                <!-- <el-table-column type="selection"></el-table-column> -->
                 <el-table-column label="序号" type="index"></el-table-column>
-                <el-table-column label="状态">
-                    <template slot-scope="scope">
-                        <img class="undeal" src="@/assets/imgs/suggest/undeal.png"/><span v-text="scope.row.status"></span>
-                    </template>
-                </el-table-column>
-                <el-table-column label="账号">
-                    <template slot-scope="scope">
-                        <span class="link" v-text="scope.row.account"></span>
-                    </template>
-                </el-table-column>
-                <el-table-column label="姓名" prop="name"></el-table-column>
-                <el-table-column label="联系方式" prop="contract"></el-table-column>
-                <el-table-column label="反馈时间" prop="time"></el-table-column>
-                <el-table-column label="问题描述" prop="desc" show-overflow-tooltip></el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="主播姓名" prop="username"></el-table-column>
+                <el-table-column label="所属平台" prop="plat.name"></el-table-column>
+                <el-table-column label="计算规则" prop="cal_fun"></el-table-column>
+                <!-- <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button @click="showDetail(scope.row.id)" type="text" size="small">查看</el-button>
-                        <el-button @click="" type="text" size="small">处理</el-button>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
             </el-table>
             <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :page-count="totalPage" @current-change="handleCurrentChange"></el-pagination>
             <el-dialog title="反馈建议详情" :visible.sync="detail.show" center>
@@ -94,19 +69,22 @@ export default {
     data(){
         return {
             search:{
-                statusList:[
+                plats:[
                     {
-                        value: 1,
-                        label: "已处理"
+                        id: 1,
+                        name: "抖音"
                     },
                     {
-                        value: 2,
-                        label: "未处理"
+                        id: 2,
+                        name: "陌陌"
+                    },
+                    {
+                        id: 3,
+                        name: "火山小视频"
                     },
                 ],
                 keywords: "",
-                status: "",
-                select_date: "",
+                plat: "",
             },
             size : 10,
             current : 1,
@@ -115,30 +93,30 @@ export default {
             list: [
                 {
                     id : 1,
-                    account: '1468018',
-                    name: "张三",
-                    status: "已处理",
-                    contract: "18245214574",
-                    desc: "问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述",
-                    time: "2019-08-09 10:20",
+                    username: '张晓晓', //主播名
+                    plat: {
+                        id: 1,
+                        name: '抖音'
+                    },
+                    cal_fun: "底薪+月总流水*0.6", //收益公式
                 },
                 {
-                    id : 1,
-                    account: '1468018',
-                    name: "张三",
-                    status: "已处理",
-                    contract: "18245214574",
-                    desc: "问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述",
-                    time: "2019-08-09 10:20",
+                    id : 2,
+                    username: '张晓晓', //主播名
+                    plat: {
+                        id: 1,
+                        name: '陌陌'
+                    },
+                    cal_fun: "底薪+月总流水*0.8", //收益公式
                 },
                 {
-                    id : 1,
-                    account: '1468018',
-                    name: "张三",
-                    status: "已处理",
-                    contract: "18245214574",
-                    desc: "问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述",
-                    time: "2019-08-09 10:20",
+                    id : 3,
+                    username: '刘', //主播名
+                    plat: {
+                        id: 1,
+                        name: '火山小视频'
+                    },
+                    cal_fun: "底薪+月总流水*0.7", //收益公式
                 },
             ],
             multipleSelection : [],

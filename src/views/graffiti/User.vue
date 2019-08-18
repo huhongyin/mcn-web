@@ -1,8 +1,7 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            <el-input class="card-header-input" placeholder="关键词" v-model="search.keywords"></el-input>
-            <el-select class="offset-left-30" v-model="search.type" placeholder="场景分类">
+            <el-select v-model="search.type" placeholder="场景类型">
                 <el-option
                 v-for="item in search.types"
                 :key="item.value"
@@ -10,19 +9,6 @@
                 :value="item.value">
                 </el-option>
             </el-select>
-            <el-input class="card-header-input offset-left-30" placeholder="提供者" v-model="search.provide"></el-input>
-            <el-date-picker
-                class="offset-left-30"
-                style="max-width:40%;"
-                v-model="search.select_date"
-                type="datetimerange"
-                range-separator="-"
-                format="yyyy-MM-dd HH:mm:ss"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :picker-options="pickerOptions">
-            </el-date-picker>
             <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button>
             <el-button class="right" type="primary" @click="add(0)">新增</el-button>
             <el-button class="right" @click="">删除</el-button>
@@ -30,19 +16,13 @@
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
                 <el-table-column label="序号" type="index"></el-table-column>
-                <el-table-column label="名称">
-                    <template slot-scope="scope">
-                        <span class="link" v-text="scope.row.name"></span>
-                    </template>
-                </el-table-column>
-                <el-table-column label="场景分类" prop="type"></el-table-column>
-                <el-table-column label="标签" prop="tag"></el-table-column>
-                <el-table-column label="提供者" prop="provide"></el-table-column>
+                <el-table-column label="场景类型" prop="type"></el-table-column>
                 <el-table-column label="更新时间" prop="update_time"></el-table-column>
+                <el-table-column label="备注" prop="remark"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button @click="add(scope.row.id)" type="text" size="small">编辑</el-button>
-                        <el-button @click="showDetail(scope.row.id)" type="text" size="small">详情</el-button>
+                        <el-button @click="showDetail(scope.row.id)" type="text" size="small">查看</el-button>
                         <el-button @click="" type="text" size="small">删除</el-button>
                     </template>
                 </el-table-column>
@@ -110,10 +90,7 @@ export default {
                         label: "动物"
                     },
                 ],
-                keyword: "",
                 type: "",
-                provide: "",
-                select_date: [],
             },
             addDialog:{
                 addTitle : '新增场景类型',
@@ -135,27 +112,21 @@ export default {
             list: [
                 {
                     id : 1,
-                    name: "动漫人物",
                     type: '建筑',
-                    tag: "标签",
-                    provide: "成都恒速科技",
                     update_time: "2019-08-09 10:20",
+                    remark: '备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注',
                 },
                 {
                     id : 2,
-                    name: "动漫人物",
-                    type: '建筑',
-                    tag: "标签",
-                    provide: "成都恒速科技",
+                    type: '人物',
                     update_time: "2019-08-09 10:20",
+                    remark: '备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注',
                 },
                 {
                     id : 3,
-                    name: "动漫人物",
-                    type: '建筑',
-                    tag: "标签",
-                    provide: "成都恒速科技",
+                    type: '动物',
                     update_time: "2019-08-09 10:20",
+                    remark: '备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注',
                 },
             ],
             detail: {
@@ -189,7 +160,7 @@ export default {
             console.log(type)
         },
         getData(){
-            var params = { current : this.current, size : this.size, keywords : this.search.keywords, provide: this.search.provide, begin : this.search.select_date[0], end : this.search.select_date[1] }
+            // var params = { current : this.current, size : this.size, buyerEmail : this.search.keywords }
             // var that = this
             // post(userApi.phoneUserList, params)
             // .then(function(res){
@@ -218,7 +189,13 @@ export default {
             // console.log(this.detail)
         },
         add(id){
-            this.$router.push({path: '/addModel', 'query': {id : id}})
+            if(id > 0){
+                //编辑时要获取对应角色的权限数据
+                this.addDialog.addTitle = '编辑场景类型'
+            }else{
+                this.addDialog.addTitle = '新增场景类型'
+            }
+            this.addDialog.addDialogVisible = true
         },
         handleCurrentChange(val){
             this.current = val

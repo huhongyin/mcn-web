@@ -7,13 +7,15 @@
         </div>
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
                 <el-table-column label="序号" type="index"></el-table-column>
-                <el-table-column label="问题" prop="questionTitle"></el-table-column>
-                <el-table-column label="帮助信息详情" prop="answerDetail" show-overflow-tooltip=""></el-table-column>
+                <el-table-column label="主播" prop="username"></el-table-column>
+                <el-table-column label="平台" prop="plat.name"></el-table-column>
+                <el-table-column label="昨日流水" prop="yestoday_money"></el-table-column>
+                <el-table-column label="昨日在线时长" prop="yestoday_total_time"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button @click="showDetail(scope.row.id)" type="text" size="small">查看</el-button>
                         <el-button @click="add(scope.row.id)" type="text" size="small">修改</el-button>
-                        <el-button @click="deleteData(scope.row.id)" type="text" size="small">删除</el-button>
+                        <!-- <el-button @click="deleteData(scope.row.id)" type="text" size="small">删除</el-button> -->
                     </template>
                 </el-table-column>
             </el-table>
@@ -79,7 +81,28 @@ export default {
             current : 1,
             totalPage: 0,
             total: 0,
-            list: [],
+            list: [
+                {
+                    id: 1,
+                    username: 'Rose', //主播名
+                    plat: {
+                        id: 1,
+                        name: '抖音',
+                    },
+                    yestoday_money: '2000', //昨日流水
+                    yestoday_total_time: '8小时', //昨日在线时长
+                },
+                {
+                    id: 1,
+                    username: 'Rose', //主播名
+                    plat: {
+                        id: 1,
+                        name: '抖音',
+                    },
+                    yestoday_money: '2000', //昨日流水
+                    yestoday_total_time: '8小时', //昨日在线时长
+                },
+            ],
             detail: {
                 show: false,
                 info: {}
@@ -101,15 +124,15 @@ export default {
     },
     methods:{
         getData(){
-            var params = { current : this.current, size : this.size, keywords: this.search.keywords }
-            var that = this
-            fPost(helpApi.list, params)
-                .then(function(res){
-                    that.list = res.data.list
-                    that.total = res.data.total
-                    that.current = res.data.pageNum
-                    that.totalPage = res.data.totalPage
-                })
+            // var params = { current : this.current, size : this.size, keywords: this.search.keywords }
+            // var that = this
+            // fPost(helpApi.list, params)
+            //     .then(function(res){
+            //         that.list = res.data.list
+            //         that.total = res.data.total
+            //         that.current = res.data.pageNum
+            //         that.totalPage = res.data.totalPage
+            //     })
         },
         showDetail(id){
             var params = { helpId: id }

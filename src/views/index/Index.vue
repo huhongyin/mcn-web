@@ -11,11 +11,26 @@
         router
       >
         <!-- 主页 -->
-        <el-menu-item index="/echarts">
+        <el-submenu index="/echarts">
+          <template slot="title">
+            <img :src="homepage_icon" width="20" style="margin-right:10px" height="20" alt />
+            <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">数据报表</span>
+          </template>
+          <el-menu-item-group class="el-item">
+            <el-menu-item index="/echarts" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">概况</el-menu-item>
+          </el-menu-item-group>
+          <el-menu-item-group class="el-item">
+            <el-menu-item index="/detail" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">明细报表</el-menu-item>
+          </el-menu-item-group>
+          <el-menu-item-group class="el-item">
+            <el-menu-item index="/total" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">汇总报表</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <!-- <el-menu-item index="/echarts">
           <img :src="homepage_icon" width="20" style="margin-right:10px" height="20" alt />
           <span class="e-menu-span" slot="title" style="color:#C0CCDA;font-size:13px;font-weight:400;letter-spacing:2px;">主页</span>
-        </el-menu-item>
-        <!-- 用户管理 -->
+        </el-menu-item> -->
+        <!-- 艺人管理 -->
         <el-submenu index="/management">
           <template slot="title">
             <img :src="userguanli_icon" width="20" style="margin-right:10px" height="20" alt />
@@ -24,16 +39,35 @@
           <el-menu-item-group class="el-item">
             <el-menu-item index="/management" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">艺人列表</el-menu-item>
           </el-menu-item-group>
-          <!-- <el-menu-item-group>
-            <el-menu-item index="/admin">管理员</el-menu-item>
-          </el-menu-item-group> -->
-          <!-- <el-menu-item-group>
-            <el-menu-item index="/role">角色</el-menu-item>
+        </el-submenu>
+        <!-- 财务结算 -->
+        <el-submenu index="/finance">
+          <template slot="title">
+            <img :src="userguanli_icon" width="20" style="margin-right:10px" height="20" alt />
+            <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">财务结算</span>
+          </template>
+          <el-menu-item-group class="el-item">
+            <el-menu-item index="/patterns" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">分成模式</el-menu-item>
           </el-menu-item-group>
-          <el-menu-item-group>
-            <el-menu-item index="/password">修改密码</el-menu-item>
-          </el-menu-item-group> -->
-          
+          <el-menu-item-group class="el-item">
+            <el-menu-item index="/datas" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">运营数据</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <!-- 分组与平台 -->
+        <el-submenu index="/department">
+          <template slot="title">
+            <img :src="userguanli_icon" width="20" style="margin-right:10px" height="20" alt />
+            <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">分组与平台</span>
+          </template>
+          <el-menu-item-group class="el-item">
+            <el-menu-item index="/rules" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">权限</el-menu-item>
+          </el-menu-item-group>
+          <el-menu-item-group class="el-item">
+            <el-menu-item index="/users" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">用户管理</el-menu-item>
+          </el-menu-item-group>
+          <el-menu-item-group class="el-item">
+            <el-menu-item index="/groups" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">运营分组</el-menu-item>
+          </el-menu-item-group>
         </el-submenu>
         <!-- 涂鸦管理 -->
         <!-- <el-submenu index="/graffiti">

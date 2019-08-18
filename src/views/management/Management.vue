@@ -1,7 +1,7 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            <el-input class="card-header-input" placeholder="账号" v-model="keywords"></el-input>
+            <!-- <el-input class="card-header-input" placeholder="账号" v-model="keywords"></el-input>
             <el-date-picker
                 class="offset-left-30"
                 v-model="select_date"
@@ -13,65 +13,145 @@
                 end-placeholder="结束日期"
                 :picker-options="pickerOptions">
             </el-date-picker>
-            <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button>
-            <el-button class="right" @click="unFrozen('checkbox', 1)">解冻</el-button>
-            <el-button class="right" @click="frozen('checkbox', 0)">冻结</el-button>
+            <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button> -->
+            <el-button @click="" type="primary">新增</el-button>
+            <el-button @click="" icon="el-icon-download">导出</el-button>
         </div>
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
                 <el-table-column label="序号" type="index"></el-table-column>
-                <el-table-column label="姓名" prop="buyerName"></el-table-column>
-                <el-table-column label="邮箱" prop="buyerEmail"></el-table-column>
-                <el-table-column label="地区" prop="district"></el-table-column>
-                <el-table-column label="类型"><span>手机用户</span></el-table-column>
-                <el-table-column label="注册时间" prop="createTime"></el-table-column>
+                <el-table-column label="姓名" prop="username"></el-table-column>
+                <el-table-column label="运营分组" prop="group.name"></el-table-column>
+                <el-table-column label="等级" prop="level"></el-table-column>
+                <el-table-column label="签约时间" prop="sign_time"></el-table-column>
+                <el-table-column label="分成模式" prop="cal_type"></el-table-column>
+                <el-table-column label="签约平台">
+                    <template slot-scope="scope">
+                        <template v-for="(item,i)  in scope.row.plats">
+                            <template v-if="typeof(scope.row.plats[i + 1]) != 'undefined'">
+                                <span :key="i" v-text="item.name + ','"></span>
+                            </template>
+                            <template v-else>
+                                <span :key="i" v-text="item.name"></span>
+                            </template>
+                        </template>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="userDetail(scope.row.id)" type="text" size="small">详情</el-button>
-                        <template v-if="scope.row.isActive==1">
-                            <el-button type="text color-blue" size="small" @click="frozen('sigle', scope.row.id)">冻结</el-button>
-                        </template>
-                        <template v-else>
-                            <el-button class="color-red" type="text" size="small" @click="unFrozen('sigle', scope.row.id)">解冻</el-button>
-                        </template>
+                        <el-button @click="signDetail(scope.row.id)" type="text" size="small">签约信息</el-button>
+                        <el-button @click="userDetail(scope.row.id)" type="text" size="small">艺人信息</el-button>
+                        <el-button @click="bankDetail(scope.row.id)" type="text" size="small">银行资料</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :page-count="totalPage" @current-change="handleCurrentChange"></el-pagination>
-            <el-dialog title="手机用户详情" :visible.sync="centerDialogVisible" width="50%" center>
-                <div class="center">
-                    <div>
-                        <span class="user-detail-text">姓名：</span><span class="user-detail-value" v-text="detail.buyerName"></span>
-                    </div>
-                    <div>
-                        <span class="user-detail-text">邮箱：</span><span class="user-detail-value" v-text="detail.buyerEmail"></span>
-                    </div>
-                    <div>
-                        <span class="user-detail-text">类型：</span><span class="user-detail-value">手机用户</span>
-                    </div>
-                    <div>
-                        <span class="user-detail-text">地区：</span><span class="user-detail-value" v-text="detail.district"></span>
-                    </div>
-                    <div>
-                        <span class="user-detail-text">状态：</span>
-                        <span class="user-detail-value">
-                            <template v-if="detail.isActive==1">
-                                正常
-                            </template>
-                            <template v-else>
-                                已冻结
-                            </template>
-                        </span>
-                    </div>
-                    <div>
-                        <span class="user-detail-text">注册时间：</span><span class="user-detail-value" v-text="detail.createTime"></span>
-                    </div>
-                </div>
+            <el-dialog title="签约信息" :visible.sync="signDetailDialog.show" width="70%" center>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <span class="user-detail-text">运营分组：</span><span class="user-detail-value" v-text="signDetailDialog.detail.group.name"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">运营负责人：</span><span class="user-detail-value" v-text="signDetailDialog.detail.prop_user.name"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">招募负责人：</span><span class="user-detail-value" v-text="signDetailDialog.detail.get_user.name"></span>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <span class="user-detail-text">签约时间：</span><span class="user-detail-value" v-text="signDetailDialog.detail.sign_time"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">等级：</span><span class="user-detail-value" v-text="signDetailDialog.detail.level"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">分成模式：</span><span class="user-detail-value" v-text="signDetailDialog.detail.cal_type"></span>
+                    </el-col>
+                </el-row>
+                <template v-for="(plat,key) in signDetailDialog.detail.plats">
+                    <el-row :gutter="20" :key="key">
+                        <el-col :span="8">
+                            <span class="user-detail-text">签约平台：</span><span class="user-detail-value" v-text="plat.name"></span>
+                        </el-col>
+                        <el-col :span="8">
+                            <span class="user-detail-text">签约平台ID：</span><span class="user-detail-value" v-text="plat.id"></span>
+                        </el-col>
+                        <el-col :span="8">
+                            <span class="user-detail-text">签约有效期：</span><span class="user-detail-value" v-text="plat.untill"></span>
+                        </el-col>
+                    </el-row>
+                </template>
                 <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="centerDialogVisible = false">保 存</el-button>
-                    <el-button @click="centerDialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="signDetailDialog.show = false">确 定</el-button>
                 </span>
-                
+            </el-dialog>
+            <el-dialog title="艺人信息" :visible.sync="userDetailDialog.show" width="70%" center>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <span class="user-detail-text">真实姓名：</span><span class="user-detail-value" v-text="userDetailDialog.detail.name"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">照片：</span><span class="user-detail-value" v-text="userDetailDialog.detail.photo"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">手机号：</span><span class="user-detail-value" v-text="userDetailDialog.detail.phone"></span>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <span class="user-detail-text">微信：</span><span class="user-detail-value" v-text="userDetailDialog.detail.wechat"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">QQ：</span><span class="user-detail-value" v-text="userDetailDialog.detail.qq"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">邮箱：</span><span class="user-detail-value" v-text="userDetailDialog.detail.email"></span>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <span class="user-detail-text">个人简介：</span><span class="user-detail-value" v-text="userDetailDialog.detail.desc"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">特长：</span><span class="user-detail-value" v-text="userDetailDialog.detail.special"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">外站经验：</span><span class="user-detail-value" v-text="userDetailDialog.detail.out_websiete_exp"></span>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <span class="user-detail-text">备注：</span><span class="user-detail-value" v-text="userDetailDialog.detail.remark"></span>
+                    </el-col>
+                </el-row>
+                <span slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="userDetailDialog.show = false">确 定</el-button>
+                </span>
+            </el-dialog>
+            <el-dialog title="银行信息" :visible.sync="bankDetailDialog.show" width="70%" center>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <span class="user-detail-text">开户姓名：</span><span class="user-detail-value" v-text="bankDetailDialog.detail.name"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">银行卡号：</span><span class="user-detail-value" v-text="bankDetailDialog.detail.bank_no"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">开户银行：</span><span class="user-detail-value" v-text="bankDetailDialog.detail.bank_name"></span>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <span class="user-detail-text">开户支行：</span><span class="user-detail-value" v-text="bankDetailDialog.detail.o_bank_name"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">支付宝：</span><span class="user-detail-value" v-text="bankDetailDialog.detail.ali_pay"></span>
+                    </el-col>
+                </el-row>
+                <span slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="bankDetailDialog.show = false">确 定</el-button>
+                </span>
             </el-dialog>
     </el-card>
 </template>
@@ -93,25 +173,111 @@ export default {
             current : 1,
             totalPage: 0,
             total: 0,
-            list: [
-                // {
-                //     id : 0,
-                //     buyerName: '',
-                //     buyerEmail : '',
-                //     district : '',
-                //     userType : '',
-                //     createTime: 0,
-                //     isActive : 1
-                // },
-            ],
-            detail: {
-                buyerEmail : "",
-                buyerName : "",
-                createTime : "",
-                district : "",
-                isActive : 0,
-                id : 0,
+            signDetailDialog: {
+                show: false,
+                detail: {
+                    id: 1,
+                    group: {
+                        id: 1,
+                        name: '运营小组一'
+                    },
+                    prop_user: {
+                        id: 1,
+                        name: '负责人一',
+                    },
+                    get_user: {
+                        id: 1,
+                        name: '招募人一',
+                    },
+                    sign_time: '2019-08-15 10:14:20', //签约时间,
+                    sign_type: '游戏主播', //签约类型
+                    level: 'A级',
+                    cal_type: '上月总流水*0.8*0.5', //提成计算公式
+                    plats: [
+                        {
+                            id: 1,
+                            name: '火山小视频',
+                            untill: '2020-07-08'
+                        },
+                        {
+                            id: 2,
+                            name: '抖音',
+                            untill: '2020-07-08'
+                        },
+                    ],
+                }
             },
+            userDetailDialog: {
+                show: false,
+                detail: {
+                    id: 1,
+                    name: '张三',
+                    photo: 'http://www.baidu.com', //照片,
+                    phone: '18244192319', //手机号
+                    id_card: '511323199403294011',
+                    cal_type: '上月总流水*0.8*0.5', //提成计算公式
+                    wechat: 'zhangsan', //微信
+                    qq: '1186121410',
+                    email: 'zhangsan@qq.com',
+                    desc: '个人简介个人简介',
+                    special: '唱歌', //特长
+                    out_websiete_exp: '外站经验',
+                    remark: '备注备注备注备注',
+                }
+            },
+            bankDetailDialog: {
+                show: false,
+                detail: {
+                    id: 1,
+                    name: '张三',
+                    bank_no: '623105105819538283', //银行卡号,
+                    bank_name: '中国银行', //开户行
+                    o_bank_name: '工行', //支行
+                    ali_pay: '18215185813', //支付宝
+                }
+            },
+            list: [
+                {
+                    username: '张三',
+                    group: {
+                        id: 1,
+                        name: '运营组一'
+                    },
+                    level: 'B级',
+                    sign_time: '2019-08-07 14:44:13',
+                    cal_type: '上月总流水*0.8*0.8',
+                    plats: [
+                        {
+                            id: 1,
+                            name: '抖音',
+                        },
+                        {
+                            id: 2,
+                            name: '火山小视频'
+                        }
+                    ]
+                },
+                {
+                    username: '张三',
+                    group: {
+                        id: 1,
+                        name: '运营组一'
+                    },
+                    level: 'B级',
+                    sign_time: '2019-08-07 14:44:13',
+                    cal_type: '上月总流水*0.8*0.8',
+                    plats: [
+                        {
+                            id: 1,
+                            name: '抖音',
+                        },
+                        {
+                            id: 2,
+                            name: '火山小视频'
+                        }
+                    ]
+                },
+            ],
             multipleSelection : [],
             selectedIDs: [],
             pickerOptions: {
@@ -205,7 +371,10 @@ export default {
                 console.log(err)
             })
         },
-        userDetail(id){
+        signDetail(id){
+            //签约信息查看
+            this.signDetailDialog.show = true
+            return false
             var params = { id: id }
             var that = this
             fPost(userApi.phoneUserDetail, params).then(function(res){
@@ -215,6 +384,12 @@ export default {
                 console.log('error')
                 console.log(err)
             })
+        },
+        userDetail(id){
+            this.userDetailDialog.show = true
+        },
+        bankDetail(id){
+            this.bankDetailDialog.show = true
         },
         handleCurrentChange(val){
             this.current = val
@@ -233,5 +408,8 @@ export default {
 }
 .color-blue:hover{
     color: #409EFF;
+}
+.el-row{
+    margin-bottom: 20px;
 }
 </style>
