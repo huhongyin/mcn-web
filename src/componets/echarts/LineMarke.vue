@@ -20,7 +20,13 @@ export default {
             lineOptions: {
                 title: {
                     text: this.Text,
-                    subtext: this.Subtext
+                    subtext: this.Subtext,
+                    textStyle: {
+                        color: 'rgb(46, 56, 74)'
+                    },
+                },
+                textStyle: {
+                    color: 'rgb(46, 56, 74)'
                 },
                 tooltip: {
                     trigger: 'axis'
@@ -61,7 +67,7 @@ export default {
     },
     methods:{
         initMarkLine(){
-          let myChart = this.$echarts.init(document.getElementById(this.EchartId));
+          let myChart = this.$echarts.init(document.getElementById(this.EchartId), 'macarons');
           myChart.setOption(this.lineOptions);
         }
     }

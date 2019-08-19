@@ -16,14 +16,22 @@
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
                 <el-table-column label="序号" type="index"></el-table-column>
-                <el-table-column label="场景类型" prop="type"></el-table-column>
-                <el-table-column label="更新时间" prop="update_time"></el-table-column>
-                <el-table-column label="备注" prop="remark"></el-table-column>
+                <el-table-column label="用户名" prop="username"></el-table-column>
+                <el-table-column label="手机号" prop="phone"></el-table-column>
+                <el-table-column label="公司" prop="company.name"></el-table-column>
+                <el-table-column label="分组" prop="group.name"></el-table-column>
+                <!-- <el-table-column label="部门" prop="department.name"></el-table-column> -->
+                <el-table-column label="状态">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.status==1">在职</span>
+                        <span v-else>离职</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button @click="add(scope.row.id)" type="text" size="small">编辑</el-button>
                         <el-button @click="showDetail(scope.row.id)" type="text" size="small">查看</el-button>
-                        <el-button @click="" type="text" size="small">删除</el-button>
+                        <el-button type="text" size="small">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -66,9 +74,9 @@
 </template>
 
 <script>
-import { mkdir } from 'fs';
-import { get, post} from '@/api/index.js';
-import userApi from '@/api/user.js';
+// import { mkdir } from 'fs';
+import { get} from '@/api/index.js';
+// import userApi from '@/api/user.js';
 export default {
     created(){
         this.getData()
@@ -112,21 +120,49 @@ export default {
             list: [
                 {
                     id : 1,
-                    type: '建筑',
-                    update_time: "2019-08-09 10:20",
-                    remark: '备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注',
+                    username: 'admin',
+                    phone: "18244251413",
+                    company: {
+                        id: 1,
+                        name: '子公司一'
+                    },
+                    group: {
+                        id: 1,
+                        name: '运营小组一'
+                    },
+                    status: 1,
                 },
                 {
-                    id : 2,
-                    type: '人物',
-                    update_time: "2019-08-09 10:20",
-                    remark: '备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注',
+                    id : 1,
+                    username: 'admin',
+                    phone: "18244251413",
+                    company: {
+                        id: 1,
+                        name: '子公司一'
+                    },
+                    group: {
+                        id: 1,
+                        name: '运营小组一'
+                    },
+                    status: 1,
                 },
                 {
-                    id : 3,
-                    type: '动物',
-                    update_time: "2019-08-09 10:20",
-                    remark: '备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注',
+                    id : 1,
+                    username: 'admin',
+                    phone: "18244251413",
+                    company: {
+                        id: 1,
+                        name: '子公司一'
+                    },
+                    group: {
+                        id: 1,
+                        name: '运营小组一'
+                    },
+                    // department: {
+                    //     id: 1,
+                    //     name: '人事部'
+                    // },
+                    status: 1,
                 },
             ],
             detail: {
@@ -156,9 +192,6 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
-        frozen(type){
-            console.log(type)
-        },
         getData(){
             // var params = { current : this.current, size : this.size, buyerEmail : this.search.keywords }
             // var that = this
@@ -174,6 +207,7 @@ export default {
             // })
         },
         showDetail(id){
+            this.showDetailDialog.id = id
             this.showDetailDialog.centerDialogVisible = true
             // var params = { id: id }
             // var that = this

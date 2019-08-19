@@ -3,7 +3,7 @@
     <div class="contenter_box">
       <div class="form_box">
         <!-- 标题 -->
-        <p>涂鸦机器人后台管理系统</p>
+        <p>MCN后台管理系统</p>
         <!-- 表单 -->
         <div class="login-wrapper">
           <!-- 登录表单 -->
@@ -41,6 +41,8 @@
             <!-- 登录按钮&重置按钮 -->
             <el-form-item>
               <el-button
+                ref="loginForm"
+                @click="submitForm('loginForm')"
                 style="width:100%;
                 height:70px;
                 font-size:21px;
@@ -116,6 +118,13 @@ export default {
         */
       }
     };
+  },
+  methods:{
+    submitForm(form){
+      this.$router.push({
+        path: '/echarts',
+      })
+    },
   }
 };
 </script>

@@ -1,10 +1,38 @@
 <template>
     <div>
+		<el-row :gutter="20">
+			<el-col :span="4">
+				<el-select placeholder="筛选子公司" v-model="search.company">
+					<el-option
+					v-for="item in companyOptions"
+					:key="item.id"
+					:label="item.name"
+					:value="item.id">
+					</el-option>
+				</el-select>
+			</el-col>
+			<el-col :span="4">
+				<el-select placeholder="筛选部门" v-model="search.department">
+					<el-option
+					v-for="item in departmentOptions"
+					:key="item.id"
+					:label="item.name"
+					:value="item.id">
+					</el-option>
+				</el-select>
+			</el-col>
+			<el-rol>
+				<el-button type="primary">搜索</el-button>
+			</el-rol>
+		</el-row>
+		<el-row :gutter="20" style="height:342px;">
+			<Total :item="total"></Total>
+		</el-row>
 		<el-row :gutter="20" type="flex">
 			<Plat v-for="(item,key) in plat.list" :key="key" :item="item"></Plat>
 		</el-row>
 		<el-row :gutter="20" type="flex">
-			<MarkLine echart-id="mark-line-total" text="过去30日总营收" subtext="" :data="select_date" :series="series" :span="24"></MarkLine>
+			<MarkLine echart-id="mark-line-total" text="过去30日总营收" subtext="" :data="select_date" :series="series" :SpanNum="24"></MarkLine>
 		</el-row>
 		<el-row :gutter="20">
 			<MarkLine v-for="(item,key) in mark_line_list" :key="key" :echart-id="'mark-line-total_' + key" :text="item.name + '过去30日总营收'" subtext="" :data="item.select_date" :series="item.series" :span-num="12"></MarkLine>
@@ -23,36 +51,157 @@
 import Plat from '@/componets/echarts/Item.vue'
 import MarkLine from '@/componets/echarts/LineMarke.vue'
 import BarLabel from '@/componets/echarts/TenItem.vue'
+import Total from '@/componets/echarts/Total.vue'
 
 export default {
-  components:{ Plat, MarkLine, BarLabel },
+  components:{ Plat, MarkLine, BarLabel, Total },
     data(){
       return {
 		plat: {
 			list: [
                 {
                     name: '映客',
-                    month: '200.67万', //本月总营收
-                    yestoday: '1000.9', //昨日营收
-                    new_users: '200', //昨日新晋主播
+					yestoday: {
+						value: '1000.9',
+						precent: {
+							value: '43.2%',
+							type: 0, //增加
+							content: '环比 8-16 下降43.2%',
+						},
+					}, //昨日流水
+					yestoday_validate_user_count: {
+						value: '200',
+						precent: {
+							value: '43.2%',
+							type: 1, //增加
+							content: '环比 8-16 上升43.2%',
+						},
+					}, //昨日有效主播数量
+					yestoday_new_user_count: {
+						'value': 300,
+						precent: {
+							value: '43.2%',
+							type: 1, //增加
+							content: '环比 8-16 上升43.2%',
+						},
+					}, //昨日新晋主播数量
+					time: {
+						h: '200', //时
+						m: '32', //分
+						precent: {
+							value: '43.2%',
+							type: 1, //增加
+							content: '环比 8-16 上升43.2%',
+						},
+					},
                 },
                 {
                     name: '抖音',
-                    month: '200.67万', //本月总营收
-                    yestoday: '1000.9', //昨日营收
-                    new_users: '200', //昨日新晋主播
+					yestoday: {
+						value: '1000.9',
+						precent: {
+							value: '43.2%',
+							type: 1, //增加
+							content: '环比 8-16 上升43.2%',
+						},
+					}, //昨日流水
+					yestoday_validate_user_count: {
+						value: '200',
+						precent: {
+							value: '43.2%',
+							type: 1, //增加
+							content: '环比 8-16 上升43.2%',
+						},
+					}, //昨日有效主播数量
+					yestoday_new_user_count: {
+						'value': 300,
+						precent: {
+							value: '43.2%',
+							type: 1, //增加
+							content: '环比 8-16 上升43.2%',
+						},
+					}, //昨日新晋主播数量
+					time: {
+						h: '200', //时
+						m: '32', //分
+						precent: {
+							value: '43.2%',
+							type: 1, //增加
+							content: '环比 8-16 上升43.2%',
+						},
+					},
                 },
                 {
                     name: '火山小视频',
-                    month: '200.67万', //本月总营收
-                    yestoday: '1000.9', //昨日营收
-                    new_users: '200', //昨日新晋主播
+					yestoday: {
+						value: '1000.9',
+						precent: {
+							value: '43.2%',
+							type: 1, //增加
+							content: '环比 8-16 上升43.2%',
+						},
+					}, //昨日流水
+					yestoday_validate_user_count: {
+						value: '200',
+						precent: {
+							value: '43.2%',
+							type: 1, //增加
+							content: '环比 8-16 上升43.2%',
+						},
+					}, //昨日有效主播数量
+					yestoday_new_user_count: {
+						'value': 300,
+						precent: {
+							value: '43.2%',
+							type: 1, //增加
+							content: '环比 8-16 上升43.2%',
+						},
+					}, //昨日新晋主播数量
+					time: {
+						h: '200', //时
+						m: '32', //分
+						precent: {
+							value: '43.2%',
+							type: 1, //增加
+							content: '环比 8-16 上升43.2%',
+						},
+					},
                 },
                 {
                     name: '陌陌',
-                    month: '200.67万', //本月总营收
-                    yestoday: '1000.9', //昨日营收
-                    new_users: '200', //昨日新晋主播
+					yestoday: {
+						value: '1000.9',
+						precent: {
+							value: '43.2%',
+							type: 1, //增加
+							content: '环比 8-16 上升43.2%',
+						},
+					}, //昨日流水
+					yestoday_validate_user_count: {
+						value: '200',
+						precent: {
+							value: '43.2%',
+							type: 1, //增加
+							content: '环比 8-16 上升43.2%',
+						},
+					}, //昨日有效主播数量
+					yestoday_new_user_count: {
+						'value': 300,
+						precent: {
+							value: '43.2%',
+							type: 1, //增加
+							content: '环比 8-16 上升43.2%',
+						},
+					}, //昨日新晋主播数量
+					time: {
+						h: '200', //时
+						m: '32', //分
+						precent: {
+							value: '43.2%',
+							type: 1, //增加
+							content: '环比 8-16 上升43.2%',
+						},
+					},
                 },
             ]
 		},
@@ -80,6 +229,7 @@ export default {
 					{
 						name:'映客',
 						type:'line',
+						smooth: true,
 						data:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
 						markPoint: {
 							data: [
@@ -112,6 +262,7 @@ export default {
 					{
 						name:'抖音',
 						type:'line',
+						smooth: true,
 						data:[14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
 						markPoint: {
 							data: [
@@ -144,6 +295,7 @@ export default {
 					{
 						name:'火山小视频',
 						type:'line',
+						smooth: true,
 						data:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
 						markPoint: {
 							data: [
@@ -176,6 +328,7 @@ export default {
 					{
 						name:'陌陌',
 						type:'line',
+						smooth: true,
 						data:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
 						markPoint: {
 							data: [
@@ -207,7 +360,8 @@ export default {
 			{
 				name:'映客',
 				type:'line',
-				data:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+				smooth: true,
+				data:[111, 222, 12, 333, 444, 555, 666, 777, 888, 999, 100, 256, 532, 532],
 				markPoint: {
 					data: [
 						{type: 'max', name: '最大值'},
@@ -218,7 +372,8 @@ export default {
 			{
 				name:'抖音',
 				type:'line',
-				data:[14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+				smooth: true,
+				data:[1561, 999, 12, 888, 747, 666, 777, 547, 658, 516, 568, 5478, 658, 254],
 				markPoint: {
 					data: [
 						{type: 'max', name: '最大值'},
@@ -229,7 +384,8 @@ export default {
 			{
 				name:'火山小视频',
 				type:'line',
-				data:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+				smooth: true,
+				data:[1561, 412, 12, 5235, 747, 4523, 523, 547, 658, 516, 568, 5478, 658, 6346],
 				markPoint: {
 					data: [
 						{type: 'max', name: '最大值'},
@@ -240,7 +396,8 @@ export default {
 			{
 				name:'陌陌',
 				type:'line',
-				data:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+				smooth: true,
+				data:[1561, 124, 12, 43, 747, 4523, 124, 547, 658, 516, 568, 5478, 658, 6346],
 				markPoint: {
 					data: [
 						{type: 'max', name: '最大值'},
@@ -314,6 +471,47 @@ export default {
 				}
 			]
 		},
+		total: {
+			name: '统计',
+			total_money: '20', //总收入
+			total_validate_user_count: '2000', //全部有效主播数量
+			time: { //总在线时长
+				h: '2310',
+				m: '56',
+			}
+		},
+		search: {
+			company: "",
+			department: "",
+		},
+		companyOptions: [
+			{
+				id: "",
+				name: '全部'
+			},
+			{
+				id: 1,
+				name: '子公司一'
+			},
+			{
+				id: 2,
+				name: '子公司二'
+			},
+		],
+		departmentOptions: [
+			{
+				id: "",
+				name: '全部'
+			},
+			{
+				id: 1,
+				name: '运营部一'
+			},
+			{
+				id: 1,
+				name: '运营部二'
+			},
+		]
       }
     },
     mounted(){

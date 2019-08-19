@@ -43,6 +43,7 @@
         <!-- 财务结算 -->
         <el-submenu index="/finance">
           <template slot="title">
+            <!-- <icon class="el-icon-tickets" style="color: gray;"></icon> -->
             <img :src="userguanli_icon" width="20" style="margin-right:10px" height="20" alt />
             <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">财务结算</span>
           </template>

@@ -1,6 +1,6 @@
 <template>
     <el-card class="box-card">
-        <div slot="header" class="clearfix">
+        <!-- <div slot="header" class="clearfix">
             <el-select v-model="search.type" placeholder="场景类型">
                 <el-option
                 v-for="item in search.types"
@@ -12,18 +12,16 @@
             <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button>
             <el-button class="right" type="primary" @click="add(0)">新增</el-button>
             <el-button class="right" @click="">删除</el-button>
-        </div>
+        </div> -->
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
                 <el-table-column label="序号" type="index"></el-table-column>
-                <el-table-column label="场景类型" prop="type"></el-table-column>
-                <el-table-column label="更新时间" prop="update_time"></el-table-column>
-                <el-table-column label="备注" prop="remark"></el-table-column>
+                <el-table-column label="权限名" prop="name"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button @click="add(scope.row.id)" type="text" size="small">编辑</el-button>
-                        <el-button @click="showDetail(scope.row.id)" type="text" size="small">查看</el-button>
-                        <el-button @click="" type="text" size="small">删除</el-button>
+                        <!-- <el-button @click="showDetail(scope.row.id)" type="text" size="small">查看</el-button> -->
+                        <!-- <el-button @click="" type="text" size="small">删除</el-button> -->
                     </template>
                 </el-table-column>
             </el-table>
@@ -112,21 +110,19 @@ export default {
             list: [
                 {
                     id : 1,
-                    type: '建筑',
-                    update_time: "2019-08-09 10:20",
-                    remark: '备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注',
+                    name: '数据报表模块', //权限名称
                 },
                 {
                     id : 2,
-                    type: '人物',
-                    update_time: "2019-08-09 10:20",
-                    remark: '备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注',
+                    name: '艺人管理模块', //权限名称
                 },
                 {
                     id : 3,
-                    type: '动物',
-                    update_time: "2019-08-09 10:20",
-                    remark: '备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注',
+                    name: '财务结算模块', //权限名称
+                },
+                {
+                    id : 4,
+                    name: '分组与平台模块', //权限名称
                 },
             ],
             detail: {

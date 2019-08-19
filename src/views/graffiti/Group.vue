@@ -9,18 +9,22 @@
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
                 <el-table-column label="序号" type="index"></el-table-column>
-                <el-table-column label="名称">
+                <el-table-column label="分组名" prop="name"></el-table-column>
+                <el-table-column label="管理员">
                     <template slot-scope="scope">
-                        <span class="link" v-text="scope.row.name"></span>
+                        <template v-for="(item,key) in scope.row.users">
+                            <template v-if="typeof(scope.row.users[key + 1]) != 'undefined'">
+                                <span :key="key" v-text="item.name + ','"></span>
+                            </template>
+                            <template v-else>
+                                <span :key="key" v-text="item.name"></span>
+                            </template>
+                        </template>
                     </template>
                 </el-table-column>
-                <el-table-column label="场景分类" prop="type"></el-table-column>
-                <el-table-column label="标签" prop="tag"></el-table-column>
-                <el-table-column label="提供者" prop="provide"></el-table-column>
-                <el-table-column label="更新时间" prop="update_time"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="add(scope.row.id)" type="text" size="small">编辑</el-button>
+                        <!-- <el-button @click="add(scope.row.id)" type="text" size="small">编辑</el-button> -->
                         <el-button @click="showDetail(scope.row.id)" type="text" size="small">详情</el-button>
                         <el-button @click="" type="text" size="small">删除</el-button>
                     </template>
@@ -114,27 +118,42 @@ export default {
             list: [
                 {
                     id : 1,
-                    name: "动漫人物",
-                    type: '建筑',
-                    tag: "标签",
-                    provide: "成都恒速科技",
-                    update_time: "2019-08-09 10:20",
+                    name: "运营小组一",
+                    users: [
+                        {
+                            id: 1,
+                            name: 'admin'
+                        },{
+                            id: 2,
+                            name: 'test1'
+                        },
+                    ]
                 },
                 {
-                    id : 2,
-                    name: "动漫人物",
-                    type: '建筑',
-                    tag: "标签",
-                    provide: "成都恒速科技",
-                    update_time: "2019-08-09 10:20",
+                    id : 1,
+                    name: "运营小组二",
+                    users: [
+                        {
+                            id: 1,
+                            name: 'admin'
+                        },{
+                            id: 2,
+                            name: 'test1'
+                        },
+                    ]
                 },
                 {
-                    id : 3,
-                    name: "动漫人物",
-                    type: '建筑',
-                    tag: "标签",
-                    provide: "成都恒速科技",
-                    update_time: "2019-08-09 10:20",
+                    id : 1,
+                    name: "运营小组儿",
+                    users: [
+                        {
+                            id: 1,
+                            name: 'admin'
+                        },{
+                            id: 2,
+                            name: 'test1'
+                        },
+                    ]
                 },
             ],
             detail: {

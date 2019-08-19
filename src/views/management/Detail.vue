@@ -1,7 +1,7 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            <el-input class="card-header-input" placeholder="艺人/运营负责人" v-model="search.keywords"></el-input>
+            <!-- <el-input class="card-header-input" placeholder="艺人/运营负责人" v-model="search.keywords"></el-input>
             <el-select v-model="search.plats" placeholder="平台" class="offset-left-30">
                 <el-option
                 v-for="item in search.platsList"
@@ -17,6 +17,22 @@
                 :label="item.name"
                 :value="item.id">
                 </el-option>
+            </el-select> -->
+            <el-select v-model="search.company" placeholder="公司">
+                <el-option
+                v-for="item in search.companies"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+                </el-option>
+            </el-select>
+            <el-select v-model="search.department" placeholder="部门" class="offset-left-30">
+                <el-option
+                v-for="item in search.departments"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+                </el-option>
             </el-select>
             <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button>
             <!-- <el-button class="right" type="primary" @click="addUser(0)">新增</el-button>
@@ -26,10 +42,12 @@
                 <!-- <el-table-column type="selection"></el-table-column> -->
                 <el-table-column label="序号" type="index"></el-table-column>
                 <el-table-column label="主播名" prop="username"></el-table-column>
-                <el-table-column label="年龄" prop="age"></el-table-column>
                 <el-table-column label="所属平台" prop="plat.name"></el-table-column>
-                <el-table-column label="昨日礼物流水" prop="yestoday_money"></el-table-column>
-                <el-table-column label="上月应发工资" prop="last_month_money"></el-table-column>
+                <el-table-column label="礼物收入" prop="yestoday_money"></el-table-column>
+                <el-table-column label="分成模式" prop="cal_type"></el-table-column>
+                <el-table-column label="公司收益" prop="company_money"></el-table-column>
+                <el-table-column label="个人收益" prop="person_money"></el-table-column>
+                <el-table-column label="时长" prop="time"></el-table-column>
                 <el-table-column label="备注" prop="remark" show-overflow-tooltip="true"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
@@ -75,14 +93,8 @@
                         <el-form-item prop="username" label="主播名：" :label-width="addUserDialog.formLabelWidth">
                             <el-input v-model="addUserDialog.form.username" autocomplete="off" required></el-input>
                         </el-form-item>
-                        <el-form-item prop="age" label="年龄：" :label-width="addUserDialog.formLabelWidth">
-                            <el-input v-model="addUserDialog.form.age" autocomplete="off" required></el-input>
-                        </el-form-item>
                         <el-form-item prop="yestoday_money" label="昨日礼物流水：" :label-width="addUserDialog.formLabelWidth">
                             <el-input v-model="addUserDialog.form.yestoday_money" autocomplete="off" required></el-input>
-                        </el-form-item>
-                        <el-form-item prop="last_month_money" label="上月应发工资：" :label-width="addUserDialog.formLabelWidth">
-                            <el-input v-model="addUserDialog.form.last_month_money" autocomplete="off" required></el-input>
                         </el-form-item>
                         <el-form-item label="所属平台：" :label-width="addUserDialog.formLabelWidth">
                             <el-select style="width:100%;" v-model="addUserDialog.form.plat.name" placeholder="请选择平台" required>
@@ -133,6 +145,28 @@ export default {
                 keywords : "",
                 plats: "",
                 fenzu: "",
+                company: "",
+                department: "",
+                companies: [
+                    {
+                        id: "",
+                        name: "全部"
+                    },
+                    {
+                        id: 1,
+                        name: "子公司一"
+                    },
+                ],
+                departments: [
+                    {
+                        id: "",
+                        name: "全部"
+                    },
+                    {
+                        id: 1,
+                        name: "运营部一"
+                    },
+                ],
                 fenzuList: [
                     {
                         id: 1,
@@ -197,46 +231,56 @@ export default {
                 {
                     id: 1,
                     username: '晓晓',
-                    age: 21,
                     plat: {
                         id: 1,
                         name: '抖音'
                     },
                     yestoday_money: 2000,
-                    last_month_money: 15000,
                     remark: '备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注',
+                    date: '2019年7月23日',
+                    gift_in: '2000',
+                    cal_type: '基础工资+流水*0.6',
+                    time: '8小25分', //在线时长,
+                    company_money: '1500', //公司收益,
+                    person_money: '400', //个人收益
                 },
                 {
                     id: 2,
                     username: '晓晓1',
-                    age: 21,
                     plat: {
                         id: 1,
                         name: '抖音'
                     },
                     yestoday_money: 2000,
-                    last_month_money: 15000,
                     remark: '备注备注备注',
+                    date: '2019年7月23日',
+                    gift_in: '2000',
+                    cal_type: '基础工资+流水*0.6',
+                    time: '8小25分', //在线时长,
+                    company_money: '1500', //公司收益,
+                    person_money: '400', //个人收益
                 },
                 {
                     id: 2,
                     username: '晓晓2',
-                    age: 21,
                     plat: {
                         id: 1,
                         name: '抖音'
                     },
                     yestoday_money: 2000,
-                    last_month_money: 15000,
                     remark: '备注备注备注',
+                    date: '2019年7月23日',
+                    gift_in: '2000',
+                    cal_type: '基础工资+流水*0.6',
+                    time: '8小25分', //在线时长,
+                    company_money: '1500', //公司收益,
+                    person_money: '400', //个人收益
                 },
             ],
             detail: {
                 id: 1,
                 username: '晓晓',
-                age: 21,
                 yestoday_money: 2100,
-                last_month_money: 15000,
                 remark: '备注备注备注备注',
                 plat: {
                     id: 1,

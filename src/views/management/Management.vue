@@ -14,8 +14,8 @@
                 :picker-options="pickerOptions">
             </el-date-picker>
             <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button> -->
-            <el-button @click="" type="primary">新增</el-button>
-            <el-button @click="" icon="el-icon-download">导出</el-button>
+            <el-button type="primary">新增</el-button>
+            <el-button icon="el-icon-download">导出</el-button>
         </div>
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
@@ -157,8 +157,7 @@
 </template>
 
 <script>
-import { mkdir } from 'fs';
-import { fPost, get, post} from '@/api/index.js';
+import { post} from '@/api/index.js';
 import userApi from '@/api/user.js';
 export default {
     created(){
@@ -358,37 +357,34 @@ export default {
             })
         },
         getData(){
-            var params = { current : this.current, size : this.size, buyerEmail : this.keywords, begin : this.select_date[0], end : this.select_date[1] }
-            var that = this
-            post(userApi.phoneUserList, params)
-            .then(function(res){
-                that.list = res.data.list
-                that.total = res.data.total
-                that.current = res.data.pageNum
-                that.totalPage = res.data.totalPage
-            }).catch(function(err){
-                console.log('error')
-                console.log(err)
-            })
+            // var params = { current : this.current, size : this.size, buyerEmail : this.keywords, begin : this.select_date[0], end : this.select_date[1] }
+            // var that = this
+            // post(userApi.phoneUserList, params)
+            // .then(function(res){
+            //     that.list = res.data.list
+            //     that.total = res.data.total
+            //     that.current = res.data.pageNum
+            //     that.totalPage = res.data.totalPage
+            // })
         },
         signDetail(id){
             //签约信息查看
+            this.signDetailDialog.id = id
             this.signDetailDialog.show = true
             return false
-            var params = { id: id }
-            var that = this
-            fPost(userApi.phoneUserDetail, params).then(function(res){
-                that.detail = res.data
-                that.centerDialogVisible = true
-            }).catch(function(err){
-                console.log('error')
-                console.log(err)
-            })
+            // let params = { id: id }
+            // let that = this
+            // fPost(userApi.phoneUserDetail, params).then(function(res){
+            //     that.detail = res.data
+            //     that.centerDialogVisible = true
+            // })
         },
         userDetail(id){
+            this.userDetailDialog.id = id
             this.userDetailDialog.show = true
         },
         bankDetail(id){
+            this.bankDetailDialog.id = id
             this.bankDetailDialog.show = true
         },
         handleCurrentChange(val){
