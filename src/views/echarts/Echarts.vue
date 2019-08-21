@@ -3,35 +3,28 @@
 		<el-row :gutter="20">
 			<el-col :span="4">
 				<el-select placeholder="筛选子公司" v-model="search.company">
-					<el-option
-					v-for="item in companyOptions"
-					:key="item.id"
-					:label="item.name"
-					:value="item.id">
-					</el-option>
+					<el-option v-for="item in companyOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
 				</el-select>
 			</el-col>
 			<el-col :span="4">
 				<el-select placeholder="筛选部门" v-model="search.department">
-					<el-option
-					v-for="item in departmentOptions"
-					:key="item.id"
-					:label="item.name"
-					:value="item.id">
-					</el-option>
+					<el-option v-for="item in departmentOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
 				</el-select>
+			</el-col>
+			<el-col :span="4">
+				<el-date-picker v-model="search.date" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"></el-date-picker>
 			</el-col>
 			<el-rol>
 				<el-button type="primary">搜索</el-button>
 			</el-rol>
 		</el-row>
-		<el-row :gutter="20" style="height:342px;">
+		<el-row :gutter="20" style="height:382px;">
 			<Total :item="total"></Total>
 		</el-row>
 		<el-row :gutter="20" type="flex">
 			<Plat v-for="(item,key) in plat.list" :key="key" :item="item"></Plat>
 		</el-row>
-		<el-row :gutter="20" type="flex">
+		<!-- <el-row :gutter="20" type="flex">
 			<MarkLine echart-id="mark-line-total" text="过去30日总营收" subtext="" :data="select_date" :series="series" :SpanNum="24"></MarkLine>
 		</el-row>
 		<el-row :gutter="20">
@@ -42,7 +35,7 @@
 		</el-row>
 		<el-row :gutter="20">
 			<BarLabel v-for="(item,key) in users.list" :key="key" :echart-id="'user-bar-line-total_' + key" :text="item.title" :Series="item.series" :Ydata="item.ydata" :legend="item.legend" subtext="" :span-num="12"></BarLabel>
-		</el-row>
+		</el-row> -->
     </div>
 </template>
 
@@ -483,6 +476,7 @@ export default {
 		search: {
 			company: "",
 			department: "",
+			date: "",
 		},
 		companyOptions: [
 			{

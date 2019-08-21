@@ -30,14 +30,14 @@
                 </div>
             </el-card>
         </el-col>
-        <MarkLine echart-id="mark-line-total_all_plat" text="过去30日总营收" subtext="" :data="select_date" :series="series" :SpanNum="12"></MarkLine>
+        <TotalMarkLine echart-id="mark-line-total_all_plat" text="过去30日总营收" subtext="" :data="select_date" :series="series" :SpanNum="12"></TotalMarkLine>
     </div>
 </template>
 <script>
 //分渠道
-import MarkLine from '@/componets/echarts/LineMarke.vue'
+import TotalMarkLine from '@/componets/echarts/TotalMarkLine.vue'
 export default {
-    components: {MarkLine},
+    components: {TotalMarkLine},
     props: [
         "item"
     ],
