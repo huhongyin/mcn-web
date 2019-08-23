@@ -1,48 +1,54 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            <!-- <el-input class="card-header-input" placeholder="艺人/运营负责人" v-model="search.keywords"></el-input>
-            <el-select v-model="search.plats" placeholder="平台" class="offset-left-30">
-                <el-option
-                v-for="item in search.platsList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-                </el-option>
-            </el-select>
-            <el-select v-model="search.fenzu" placeholder="运营分组" class="offset-left-30">
-                <el-option
-                v-for="item in search.fenzuList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-                </el-option>
-            </el-select> -->
-            <el-select v-model="search.company" placeholder="公司">
-                <el-option
-                v-for="item in search.companies"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-                </el-option>
-            </el-select>
-            <el-select v-model="search.department" placeholder="部门" class="offset-left-30">
-                <el-option
-                v-for="item in search.departments"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-                </el-option>
-            </el-select>
-            <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button>
-            <!-- <el-button class="right" type="primary" @click="addUser(0)">新增</el-button>
-            <el-button class="right" @click="deleteData()">删除</el-button> -->
+            <el-row :gutter="20">
+                <el-col :span="3" :xs="3" :sm="3" :md="3" :lg="3" :xl="3">
+                    <el-input class="card-header-input" placeholder="关键词" v-model="search.keywords"></el-input>
+                </el-col>
+                <el-col :span="3" :xs="3" :sm="3" :md="3" :lg="3" :xl="3">
+                    <el-select v-model="search.company" placeholder="公司">
+                        <el-option
+                        v-for="item in search.companies"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-col>
+                <el-col :span="3" :xs="3" :sm="3" :md="3" :lg="3" :xl="3">
+                    <el-select v-model="search.department" placeholder="部门">
+                        <el-option
+                        v-for="item in search.departments"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-col>
+                <el-col :span="7" :xs="3" :sm="3" :md="10" :lg="8" :xl="8">
+                    <el-date-picker
+                        style="width:100%;"
+                        v-model="search.select_date"
+                        type="datetimerange"
+                        range-separator="-"
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        start-placeholder="开始时间"
+                        end-placeholder="结束时间"
+                        :picker-options="pickerOptions">
+                    </el-date-picker>
+                </el-col>
+                <el-col :span="2" :xs="2" :sm="2" :md="3" :lg="5" :xl="5">
+                    <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button>
+                </el-col>
+            </el-row>
         </div>
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
                 <!-- <el-table-column type="selection"></el-table-column> -->
                 <el-table-column label="序号" type="index"></el-table-column>
                 <el-table-column label="主播名" prop="username"></el-table-column>
                 <el-table-column label="所属平台" prop="plat.name"></el-table-column>
+                <el-table-column label="扶持金额" prop="more_money"></el-table-column>
                 <el-table-column label="礼物收入" prop="yestoday_money"></el-table-column>
                 <el-table-column label="分成模式" prop="cal_type"></el-table-column>
                 <el-table-column label="公司收益" prop="company_money"></el-table-column>
@@ -142,6 +148,7 @@ export default {
                         name: '火山小视频'
                     },
                 ],
+                select_date: '',
                 keywords : "",
                 plats: "",
                 fenzu: "",
@@ -181,6 +188,33 @@ export default {
                         name: '运营小组三'
                     },
                 ]
+            },
+            pickerOptions: {
+                shortcuts: [{
+                    text: '最近一周',
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近一个月',
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近三个月',
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }]
             },
             addUserDialog:{
                 addUserTitle : '新增用户',
@@ -231,6 +265,7 @@ export default {
                 {
                     id: 1,
                     username: '晓晓',
+                    more_money: 2001,
                     plat: {
                         id: 1,
                         name: '抖音'
@@ -247,6 +282,7 @@ export default {
                 {
                     id: 2,
                     username: '晓晓1',
+                    more_money: 2001,
                     plat: {
                         id: 1,
                         name: '抖音'
@@ -263,6 +299,7 @@ export default {
                 {
                     id: 2,
                     username: '晓晓2',
+                    more_money: 2001,
                     plat: {
                         id: 1,
                         name: '抖音'
