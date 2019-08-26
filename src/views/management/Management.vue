@@ -20,19 +20,22 @@
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
                 <el-table-column label="序号" type="index"></el-table-column>
-                <el-table-column label="姓名" prop="username"></el-table-column>
-                <el-table-column label="运营分组" prop="group.name"></el-table-column>
+                <el-table-column label="姓名" prop="name"></el-table-column>
+                <el-table-column label="昵称" prop="nickname"></el-table-column>
+                <el-table-column label="电话" prop="phone"></el-table-column>
+                <el-table-column label="签约人" prop="sign.name"></el-table-column>
+                <!-- <el-table-column label="运营分组" prop="group.name"></el-table-column>
                 <el-table-column label="等级" prop="level"></el-table-column>
                 <el-table-column label="签约时间" prop="sign_time"></el-table-column>
-                <el-table-column label="分成模式" prop="cal_type"></el-table-column>
+                <el-table-column label="分成模式" prop="cal_type"></el-table-column> -->
                 <el-table-column label="签约平台">
                     <template slot-scope="scope">
                         <template v-for="(item,i)  in scope.row.plats">
                             <template v-if="typeof(scope.row.plats[i + 1]) != 'undefined'">
-                                <span :key="i" v-text="item.name + ','"></span>
+                                <span :key="i" v-text="item.plat.name + ','"></span>
                             </template>
                             <template v-else>
-                                <span :key="i" v-text="item.name"></span>
+                                <span :key="i" v-text="item.plat.name"></span>
                             </template>
                         </template>
                     </template>
@@ -45,7 +48,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :page-count="totalPage" @current-change="handleCurrentChange"></el-pagination>
+            <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :total="total" @current-change="handleCurrentChange"></el-pagination>
             <el-dialog title="签约信息" :visible.sync="signDetailDialog.show" width="70%" center>
                 <el-row :gutter="20">
                     <el-col :span="8">
@@ -157,7 +160,7 @@
 </template>
 
 <script>
-import { post} from '@/api/index.js';
+import { fPost, get} from '@/api/index.js';
 import userApi from '@/api/user.js';
 export default {
     created(){
@@ -235,48 +238,7 @@ export default {
                     ali_pay: '18215185813', //支付宝
                 }
             },
-            list: [
-                {
-                    username: '张三',
-                    group: {
-                        id: 1,
-                        name: '运营组一'
-                    },
-                    level: 'B级',
-                    sign_time: '2019-08-07 14:44:13',
-                    cal_type: '上月总流水*0.8*0.8',
-                    plats: [
-                        {
-                            id: 1,
-                            name: '抖音',
-                        },
-                        {
-                            id: 2,
-                            name: '火山小视频'
-                        }
-                    ]
-                },
-                {
-                    username: '张三',
-                    group: {
-                        id: 1,
-                        name: '运营组一'
-                    },
-                    level: 'B级',
-                    sign_time: '2019-08-07 14:44:13',
-                    cal_type: '上月总流水*0.8*0.8',
-                    plats: [
-                        {
-                            id: 1,
-                            name: '抖音',
-                        },
-                        {
-                            id: 2,
-                            name: '火山小视频'
-                        }
-                    ]
-                },
-            ],
+            list: [],
             multipleSelection : [],
             selectedIDs: [],
             pickerOptions: {
@@ -357,15 +319,15 @@ export default {
             })
         },
         getData(){
-            // var params = { current : this.current, size : this.size, buyerEmail : this.keywords, begin : this.select_date[0], end : this.select_date[1] }
-            // var that = this
-            // post(userApi.phoneUserList, params)
-            // .then(function(res){
-            //     that.list = res.data.list
-            //     that.total = res.data.total
-            //     that.current = res.data.pageNum
-            //     that.totalPage = res.data.totalPage
-            // })
+            var params = { page: this.current}
+            var that = this
+            get(userApi.list, params)
+                .then(function(res){
+                    that.list = res.data.list.data
+                    that.total = res.data.list.total
+                    that.current = res.data.list.current_page
+                    // that.totalPage = res.data.totalPage
+                })
         },
         signDetail(id){
             //签约信息查看

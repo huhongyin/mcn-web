@@ -3,7 +3,7 @@ import qs from 'qs'
 import { Message } from 'element-ui';
 
 // 环境切换
-axios.defaults.baseURL = 'http://192.168.2.128:9099'
+axios.defaults.baseURL = 'http://sk.dev.com/api/v1/'
 // if (process.env.NODE_ENV === 'development') {
 //   axios.defaults.baseURL = 'https://official.cdhengsu.com'
 //   // console.log('开发环境api接口url')
@@ -37,7 +37,7 @@ export function get (url, params) {
       params: params
     })
       .then(res => {
-        if(res.data.code != 200){
+        if(res.data.code != 1){
           Message.error(res.data.msg);
           return false;
         }
@@ -55,7 +55,7 @@ export function post (url, params) {
     // axios.post(url, params)
       .then(res => {
         if(res.data.code != null && typeof(res.data.code) != 'undefined'){
-          if(res.data.code != 200){
+          if(res.data.code != 1){
             Message.error(res.data.msg);
             return false;
           }
@@ -73,7 +73,7 @@ export function fPost (url, params) {
     axios.post(url, qs.stringify(params))
       .then(res => {
         if(res.data.code != null && typeof(res.data.code) != 'undefined'){
-          if(res.data.code != 200){
+          if(res.data.code != 1){
             Message({
               message: res.data.message,
               duration: 1000,
