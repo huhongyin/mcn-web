@@ -10,6 +10,16 @@
         class="el-menu-vertical-demo"
         router
       >
+      <!-- 签约统计 -->
+      <el-submenu index="/echarts">
+          <template slot="title">
+            <img :src="homepage_icon" width="20" style="margin-right:10px" height="20" alt />
+            <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">签约统计</span>
+          </template>
+          <el-menu-item-group class="el-item">
+            <el-menu-item index="/echarts?type=sign" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">概况</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
         <!-- 主页 -->
         <el-submenu index="/echarts">
           <template slot="title">
@@ -34,10 +44,10 @@
         <el-submenu index="/management">
           <template slot="title">
             <img :src="userguanli_icon" width="20" style="margin-right:10px" height="20" alt />
-            <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">艺人管理</span>
+            <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">基础信息</span>
           </template>
           <el-menu-item-group class="el-item">
-            <el-menu-item index="/management" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">艺人列表</el-menu-item>
+            <el-menu-item index="/management" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">主播信息</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <!-- 财务结算 -->

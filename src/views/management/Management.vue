@@ -20,29 +20,18 @@
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
                 <el-table-column label="序号" type="index"></el-table-column>
-                <el-table-column label="姓名" prop="name"></el-table-column>
-                <el-table-column label="昵称" prop="nickname"></el-table-column>
-                <el-table-column label="电话" prop="phone"></el-table-column>
-                <el-table-column label="签约人" prop="sign.name"></el-table-column>
-                <!-- <el-table-column label="运营分组" prop="group.name"></el-table-column>
-                <el-table-column label="等级" prop="level"></el-table-column>
-                <el-table-column label="签约时间" prop="sign_time"></el-table-column>
-                <el-table-column label="分成模式" prop="cal_type"></el-table-column> -->
-                <el-table-column label="签约平台">
-                    <template slot-scope="scope">
-                        <template v-for="(item,i)  in scope.row.plats">
-                            <template v-if="typeof(scope.row.plats[i + 1]) != 'undefined'">
-                                <span :key="i" v-text="item.plat.name + ','"></span>
-                            </template>
-                            <template v-else>
-                                <span :key="i" v-text="item.plat.name"></span>
-                            </template>
-                        </template>
-                    </template>
-                </el-table-column>
+                <el-table-column label="主播实名" prop="name" width="80px"></el-table-column>
+                <el-table-column label="主播昵称" prop="nickname" width="80px"></el-table-column>
+                <el-table-column label="平台" prop="plat.name" width="80px"></el-table-column>
+                <el-table-column label="身份证号" prop="id_card_no"></el-table-column>
+                <el-table-column label="联系电话" prop="phone" width="120px"></el-table-column>
+                <el-table-column label="分成比例" prop="fencheng_bili" width="80px"></el-table-column>
+                <el-table-column label="保底工资" prop="baodi_salary" width="80px"></el-table-column>
+                <el-table-column label="开播时间" prop="start_time" width="120px"></el-table-column>
+                <el-table-column label="签约人" prop="sign.name" width="80px"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="signDetail(scope.row.id)" type="text" size="small">签约信息</el-button>
+                        <el-button @click="signDetail(scope.row.id)" type="text" size="small">流水信息</el-button>
                         <el-button @click="userDetail(scope.row.id)" type="text" size="small">艺人信息</el-button>
                         <el-button @click="bankDetail(scope.row.id)" type="text" size="small">银行资料</el-button>
                     </template>
@@ -52,39 +41,81 @@
             <el-dialog title="签约信息" :visible.sync="signDetailDialog.show" width="70%" center>
                 <el-row :gutter="20">
                     <el-col :span="8">
-                        <span class="user-detail-text">运营分组：</span><span class="user-detail-value" v-text="signDetailDialog.detail.group.name"></span>
+                        <span class="user-detail-text">当日直播时长（分）：</span><span class="user-detail-value" v-text="signDetailDialog.detail.day_live_minutes"></span>
                     </el-col>
                     <el-col :span="8">
-                        <span class="user-detail-text">运营负责人：</span><span class="user-detail-value" v-text="signDetailDialog.detail.prop_user.name"></span>
+                        <span class="user-detail-text">当日流水：</span><span class="user-detail-value" v-text="signDetailDialog.detail.day_money"></span>
                     </el-col>
                     <el-col :span="8">
-                        <span class="user-detail-text">招募负责人：</span><span class="user-detail-value" v-text="signDetailDialog.detail.get_user.name"></span>
+                        <span class="user-detail-text">当日小视频数：</span><span class="user-detail-value" v-text="signDetailDialog.detail.day_min_video"></span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="20">
                     <el-col :span="8">
-                        <span class="user-detail-text">签约时间：</span><span class="user-detail-value" v-text="signDetailDialog.detail.sign_time"></span>
+                        <span class="user-detail-text">当日点赞量：</span><span class="user-detail-value" v-text="signDetailDialog.detail.day_dianzan"></span>
                     </el-col>
                     <el-col :span="8">
-                        <span class="user-detail-text">等级：</span><span class="user-detail-value" v-text="signDetailDialog.detail.level"></span>
+                        <span class="user-detail-text">当日转发量：</span><span class="user-detail-value" v-text="signDetailDialog.detail.day_zhuanfa"></span>
                     </el-col>
                     <el-col :span="8">
-                        <span class="user-detail-text">分成模式：</span><span class="user-detail-value" v-text="signDetailDialog.detail.cal_type"></span>
+                        <span class="user-detail-text">有效直播天数：</span><span class="user-detail-value" v-text="signDetailDialog.detail.intime_days"></span>
                     </el-col>
                 </el-row>
-                <template v-for="(plat,key) in signDetailDialog.detail.plats">
-                    <el-row :gutter="20" :key="key">
-                        <el-col :span="8">
-                            <span class="user-detail-text">签约平台：</span><span class="user-detail-value" v-text="plat.name"></span>
-                        </el-col>
-                        <el-col :span="8">
-                            <span class="user-detail-text">签约平台ID：</span><span class="user-detail-value" v-text="plat.id"></span>
-                        </el-col>
-                        <el-col :span="8">
-                            <span class="user-detail-text">签约有效期：</span><span class="user-detail-value" v-text="plat.untill"></span>
-                        </el-col>
-                    </el-row>
-                </template>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <span class="user-detail-text">当月应播时长：</span><span class="user-detail-value" v-text="signDetailDialog.detail.month_should_time"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">每日应播时长：</span><span class="user-detail-value" v-text="signDetailDialog.detail.day_should_time"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">当月未达标时长：</span><span class="user-detail-value" v-text="signDetailDialog.detail.month_less_time"></span>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <span class="user-detail-text">当月未达标天数：</span><span class="user-detail-value" v-text="signDetailDialog.detail.month_less_day"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">当月总时长：</span><span class="user-detail-value" v-text="signDetailDialog.detail.month_total_time"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">扶持截止时间：</span><span class="user-detail-value" v-text="signDetailDialog.detail.fuchi_end_time"></span>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <span class="user-detail-text">扶持金额：</span><span class="user-detail-value" v-text="signDetailDialog.detail.fuchi_money"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">已扶持金额：</span><span class="user-detail-value" v-text="signDetailDialog.detail.had_fuchi_money"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">已充值主播账户：</span><span class="user-detail-value" v-text="signDetailDialog.detail.had_pay_actor"></span>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <span class="user-detail-text">已投放都加金额：</span><span class="user-detail-value" v-text="signDetailDialog.detail.had_doujia"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">已投入刷币：</span><span class="user-detail-value" v-text="signDetailDialog.detail.had_pay"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">总流水：</span><span class="user-detail-value" v-text="signDetailDialog.detail.total_money"></span>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <span class="user-detail-text">奖励：</span><span class="user-detail-value" v-text="signDetailDialog.detail.draw"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">扣除其他：</span><span class="user-detail-value" v-text="signDetailDialog.detail.other"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">应付主播收益：</span><span class="user-detail-value" v-text="signDetailDialog.detail.should_pay"></span>
+                    </el-col>
+                </el-row>
                 <span slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="signDetailDialog.show = false">确 定</el-button>
                 </span>
@@ -92,40 +123,29 @@
             <el-dialog title="艺人信息" :visible.sync="userDetailDialog.show" width="70%" center>
                 <el-row :gutter="20">
                     <el-col :span="8">
-                        <span class="user-detail-text">真实姓名：</span><span class="user-detail-value" v-text="userDetailDialog.detail.name"></span>
+                        <span class="user-detail-text">微信号：</span><span class="user-detail-value" v-text="userDetailDialog.detail.wx_code"></span>
                     </el-col>
                     <el-col :span="8">
-                        <span class="user-detail-text">照片：</span><span class="user-detail-value" v-text="userDetailDialog.detail.photo"></span>
+                        <span class="user-detail-text">原始ID：</span><span class="user-detail-value" v-text="userDetailDialog.detail.old_id"></span>
                     </el-col>
                     <el-col :span="8">
-                        <span class="user-detail-text">手机号：</span><span class="user-detail-value" v-text="userDetailDialog.detail.phone"></span>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="20">
-                    <el-col :span="8">
-                        <span class="user-detail-text">微信：</span><span class="user-detail-value" v-text="userDetailDialog.detail.wechat"></span>
-                    </el-col>
-                    <el-col :span="8">
-                        <span class="user-detail-text">QQ：</span><span class="user-detail-value" v-text="userDetailDialog.detail.qq"></span>
-                    </el-col>
-                    <el-col :span="8">
-                        <span class="user-detail-text">邮箱：</span><span class="user-detail-value" v-text="userDetailDialog.detail.email"></span>
+                        <span class="user-detail-text">现用ID：</span><span class="user-detail-value" v-text="userDetailDialog.detail.now_id"></span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="20">
                     <el-col :span="8">
-                        <span class="user-detail-text">个人简介：</span><span class="user-detail-value" v-text="userDetailDialog.detail.desc"></span>
+                        <span class="user-detail-text">等级：</span><span class="user-detail-value" v-text="userDetailDialog.detail.level"></span>
                     </el-col>
                     <el-col :span="8">
-                        <span class="user-detail-text">特长：</span><span class="user-detail-value" v-text="userDetailDialog.detail.special"></span>
+                        <span class="user-detail-text">运营负责人：</span><span class="user-detail-value" v-text="userDetailDialog.detail.work.name"></span>
                     </el-col>
                     <el-col :span="8">
-                        <span class="user-detail-text">外站经验：</span><span class="user-detail-value" v-text="userDetailDialog.detail.out_websiete_exp"></span>
+                        <span class="user-detail-text">所属部门：</span><span class="user-detail-value" v-text="userDetailDialog.detail.department.name"></span>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="24">
-                        <span class="user-detail-text">备注：</span><span class="user-detail-value" v-text="userDetailDialog.detail.remark"></span>
+                        <span class="user-detail-text">所属公司：</span><span class="user-detail-value" v-text="userDetailDialog.detail.company.name"></span>
                     </el-col>
                 </el-row>
                 <span slot="footer" class="dialog-footer">
@@ -134,22 +154,11 @@
             </el-dialog>
             <el-dialog title="银行信息" :visible.sync="bankDetailDialog.show" width="70%" center>
                 <el-row :gutter="20">
-                    <el-col :span="8">
-                        <span class="user-detail-text">开户姓名：</span><span class="user-detail-value" v-text="bankDetailDialog.detail.name"></span>
-                    </el-col>
-                    <el-col :span="8">
+                    <el-col :span="12">
                         <span class="user-detail-text">银行卡号：</span><span class="user-detail-value" v-text="bankDetailDialog.detail.bank_no"></span>
                     </el-col>
-                    <el-col :span="8">
+                    <el-col :span="12">
                         <span class="user-detail-text">开户银行：</span><span class="user-detail-value" v-text="bankDetailDialog.detail.bank_name"></span>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="20">
-                    <el-col :span="8">
-                        <span class="user-detail-text">开户支行：</span><span class="user-detail-value" v-text="bankDetailDialog.detail.o_bank_name"></span>
-                    </el-col>
-                    <el-col :span="8">
-                        <span class="user-detail-text">支付宝：</span><span class="user-detail-value" v-text="bankDetailDialog.detail.ali_pay"></span>
                     </el-col>
                 </el-row>
                 <span slot="footer" class="dialog-footer">
@@ -178,67 +187,84 @@ export default {
             signDetailDialog: {
                 show: false,
                 detail: {
-                    id: 1,
-                    group: {
-                        id: 1,
-                        name: '运营小组一'
-                    },
-                    prop_user: {
-                        id: 1,
-                        name: '负责人一',
-                    },
-                    get_user: {
-                        id: 1,
-                        name: '招募人一',
-                    },
-                    sign_time: '2019-08-15 10:14:20', //签约时间,
-                    sign_type: '游戏主播', //签约类型
-                    level: 'A级',
-                    cal_type: '上月总流水*0.8*0.5', //提成计算公式
-                    plats: [
-                        {
-                            id: 1,
-                            name: '火山小视频',
-                            untill: '2020-07-08'
-                        },
-                        {
-                            id: 2,
-                            name: '抖音',
-                            untill: '2020-07-08'
-                        },
-                    ],
+                    day_live_minutes: '60分钟',
+                    day_money: '1000元',
+                    day_min_video: '2000',
+                    day_dianzan: '31241',
+                    day_zhuanfa: '21',
+                    intime_days: '15天',
+                    month_should_time: '100小时',
+                    day_should_time: '6小时',
+                    month_less_time: '10小时',
+                    month_less_day: '0.5天',
+                    month_total_time: '90小时',
+                    fuchi_end_time: '2019-09-29',
+                    fuchi_money: '2000元',
+                    had_fuchi_money: '1000元',
+                    had_pay_actor: '800元',
+                    had_doujia: '100元',
+                    had_pay: '20',
+                    total_money: '20000',
+                    draw: '1000',
+                    other: '200元',
+                    should_pay: '5000元',
                 }
             },
             userDetailDialog: {
                 show: false,
                 detail: {
-                    id: 1,
-                    name: '张三',
-                    photo: 'http://www.baidu.com', //照片,
-                    phone: '18244192319', //手机号
-                    id_card: '511323199403294011',
-                    cal_type: '上月总流水*0.8*0.5', //提成计算公式
-                    wechat: 'zhangsan', //微信
-                    qq: '1186121410',
-                    email: 'zhangsan@qq.com',
-                    desc: '个人简介个人简介',
-                    special: '唱歌', //特长
-                    out_websiete_exp: '外站经验',
-                    remark: '备注备注备注备注',
+                    wx_code: 'point_this', //微信号
+                    old_id: '124124', //原始id
+                    new_id: '21414', //现用id
+                    level: '100级', //主播等级
+                    work: {
+                        name: '张三', //运营负责人
+                    },
+                    department: {
+                        name: '测试部门', //所属部门
+                    },
+                    company: {
+                        name: '成都', //所属公司
+                    }
                 }
             },
             bankDetailDialog: {
                 show: false,
                 detail: {
-                    id: 1,
-                    name: '张三',
                     bank_no: '623105105819538283', //银行卡号,
                     bank_name: '中国银行', //开户行
-                    o_bank_name: '工行', //支行
-                    ali_pay: '18215185813', //支付宝
                 }
             },
-            list: [],
+            list: [
+                {
+                    name: '李静',   //真实姓名
+                    id_card_no: '211323199403244011', //身份证
+                    phone: '18244251418',   //电话
+                    wx_code: 'point_this',  //微信号
+                    old_id: '12345',   //原始id
+                    now_id: '21221',  //现用id
+                    fencheng_bili: '50%',  //分成比例
+                    baodi_salary: '2000', //保底工资
+                    nickname: '梦', //主播昵称
+                    level: '100级', //主播等级
+                    start_time: '每晚八点', //开播时间
+                    sign:{
+                        name: '张三', //签约人
+                    },
+                    work: {
+                        name: '李四', //运营负责人
+                    },
+                    department: {
+                        name: '测试部门', //所属部门
+                    },
+                    company: {
+                        name: '北京', //所属公司
+                    },
+                    plat: {
+                        name: '抖音', //所属平台
+                    }
+                }
+            ],
             multipleSelection : [],
             selectedIDs: [],
             pickerOptions: {
@@ -319,15 +345,15 @@ export default {
             })
         },
         getData(){
-            var params = { page: this.current}
-            var that = this
-            get(userApi.list, params)
-                .then(function(res){
-                    that.list = res.data.list.data
-                    that.total = res.data.list.total
-                    that.current = res.data.list.current_page
-                    // that.totalPage = res.data.totalPage
-                })
+            // var params = { page: this.current}
+            // var that = this
+            // get(userApi.list, params)
+            //     .then(function(res){
+            //         that.list = res.data.list.data
+            //         that.total = res.data.list.total
+            //         that.current = res.data.list.current_page
+            //         // that.totalPage = res.data.totalPage
+            //     })
         },
         signDetail(id){
             //签约信息查看

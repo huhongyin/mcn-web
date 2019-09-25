@@ -1,6 +1,36 @@
 <template>
     <div style="height:100%;">
-        <el-col :span="12"  style="height:100%;">
+        <el-col :span="6"  style="height:100%;">
+            <el-card class="plat">
+                <div class="plat-row">
+                    <span class="name" v-text="item.name"></span>
+                </div>
+                <div class="plat-row">
+                    <span class="plat-row-title">总流水</span>
+                    <div class="inline">
+                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.total_money" class="plat-row-detail"></span></a>
+                        <span class="plat-row-unit">万</span>
+                    </div>
+                </div>
+                <div class="plat-row">
+                    <span class="plat-row-title">有效主播数量</span>
+                    <div class="inline">
+                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.total_validate_user_count" class="plat-row-detail"></span></a>
+                        <span class="plat-row-unit">人</span>
+                    </div>
+                </div>
+                <div class="plat-row">
+                    <span class="plat-row-title">在线总时长</span>
+                    <div class="inline">
+                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.time.h" class="plat-row-detail"></span></a>
+                        <span class="plat-row-unit">时</span>
+                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.time.m" class="plat-row-detail"></span></a>
+                        <span class="plat-row-unit">分</span>
+                    </div>
+                </div>
+            </el-card>
+        </el-col>
+        <el-col :span="6"  style="height:100%;">
             <el-card class="plat">
                 <div class="plat-row">
                     <span class="name" v-text="item.name"></span>
