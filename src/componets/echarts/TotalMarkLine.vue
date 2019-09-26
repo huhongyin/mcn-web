@@ -1,7 +1,7 @@
 <template>
     <el-col :span="SpanNum">
         <el-card>
-            <el-button-group>
+            <el-button-group v-show="Type != 'operate'">
                 <el-button>天</el-button>
                 <el-button>周</el-button>
                 <el-button>月</el-button>
@@ -18,8 +18,15 @@ export default {
         "Subtext",
         "Data",
         "Series",
-        "SpanNum"
+        "SpanNum",
+        "Type",
+        "Formatter"
     ],
+    created(){
+        if(this.Formatter == null || typeof(this.Formatter) == 'undefined'){
+            this.Formatter = '元'
+        }
+    },
     data(){
         return {
             lineOptions: {
@@ -59,7 +66,7 @@ export default {
                 yAxis: {
                     type: 'value',
                     axisLabel: {
-                        formatter: '{value} 元'
+                        formatter: '{value} ' + this.Formatter
                     }
                 },
                 series: this.Series

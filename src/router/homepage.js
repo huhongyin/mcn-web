@@ -2,6 +2,7 @@ import Index from '../views/index/Index.vue'
 import Echarts from './echartss'
 import Equipment from './equipment'
 import Management from './management'
+import Operate from './operate'
 import Graffiti from './graffiti'
 import Banner from './banner'
 import Finance from './finance'
@@ -22,8 +23,8 @@ export default
       ...Banner,
       ...Finance,
       ...Contact,
-      ...Operation
-
+      ...Operation,
+      ...Operate,
     ]
   },
 ]

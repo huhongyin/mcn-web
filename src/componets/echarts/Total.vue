@@ -1,75 +1,23 @@
 <template>
     <div style="height:100%;">
         <el-col :span="6"  style="height:100%;">
-            <el-card class="plat">
-                <div class="plat-row">
-                    <span class="name" v-text="item.name"></span>
-                </div>
-                <div class="plat-row">
-                    <span class="plat-row-title">总流水</span>
-                    <div class="inline">
-                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.total_money" class="plat-row-detail"></span></a>
-                        <span class="plat-row-unit">万</span>
-                    </div>
-                </div>
-                <div class="plat-row">
-                    <span class="plat-row-title">有效主播数量</span>
-                    <div class="inline">
-                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.total_validate_user_count" class="plat-row-detail"></span></a>
-                        <span class="plat-row-unit">人</span>
-                    </div>
-                </div>
-                <div class="plat-row">
-                    <span class="plat-row-title">在线总时长</span>
-                    <div class="inline">
-                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.time.h" class="plat-row-detail"></span></a>
-                        <span class="plat-row-unit">时</span>
-                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.time.m" class="plat-row-detail"></span></a>
-                        <span class="plat-row-unit">分</span>
-                    </div>
-                </div>
-            </el-card>
+            <SignItem echart-id="sign_total" :item="item" :SpanNum="12"></SignItem>
         </el-col>
         <el-col :span="6"  style="height:100%;">
-            <el-card class="plat">
-                <div class="plat-row">
-                    <span class="name" v-text="item.name"></span>
-                </div>
-                <div class="plat-row">
-                    <span class="plat-row-title">总流水</span>
-                    <div class="inline">
-                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.total_money" class="plat-row-detail"></span></a>
-                        <span class="plat-row-unit">万</span>
-                    </div>
-                </div>
-                <div class="plat-row">
-                    <span class="plat-row-title">有效主播数量</span>
-                    <div class="inline">
-                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.total_validate_user_count" class="plat-row-detail"></span></a>
-                        <span class="plat-row-unit">人</span>
-                    </div>
-                </div>
-                <div class="plat-row">
-                    <span class="plat-row-title">在线总时长</span>
-                    <div class="inline">
-                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.time.h" class="plat-row-detail"></span></a>
-                        <span class="plat-row-unit">时</span>
-                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.time.m" class="plat-row-detail"></span></a>
-                        <span class="plat-row-unit">分</span>
-                    </div>
-                </div>
-            </el-card>
+            <SignItem echart-id="company_sign_total" :item="company" :SpanNum="12"></SignItem>
         </el-col>
-        <TotalMarkLine echart-id="mark-line-total_all_plat" text="过去30日总营收" subtext="" :data="select_date" :series="series" :SpanNum="12"></TotalMarkLine>
+        <TotalMarkLine echart-id="mark-line-total_all_plat" formatter="元" text="过去30日总营收" subtext="" :data="select_date" :series="series" :SpanNum="12"></TotalMarkLine>
     </div>
 </template>
 <script>
 //分渠道
 import TotalMarkLine from '@/componets/echarts/TotalMarkLine.vue'
+import SignItem from '@/componets/echarts/Sign.vue'
 export default {
-    components: {TotalMarkLine},
+    components: {TotalMarkLine, SignItem},
     props: [
-        "item"
+        "item",
+        "company"
     ],
     data(){
         return {

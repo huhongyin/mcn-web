@@ -19,7 +19,7 @@
 			</el-rol>
 		</el-row>
 		<el-row :gutter="20" style="height:382px;">
-			<Total :item="total"></Total>
+			<Total :item="total" :company="company_total"></Total>
 		</el-row>
 		<el-row :gutter="20" type="flex">
 			<Plat v-for="(item,key) in plat.list" :key="key" :item="item"></Plat>
@@ -465,9 +465,20 @@ export default {
 			]
 		},
 		total: {
-			name: '统计',
+			name: '您的数据统计',
 			total_money: '20', //总收入
+			total_sign_user_count: '100', //签约主播数量
 			total_validate_user_count: '2000', //全部有效主播数量
+			time: { //总在线时长
+				h: '2310',
+				m: '56',
+			}
+		},
+		company_total: {
+			name: '公司数据统计',
+			total_money: '100', //总收入
+			total_sign_user_count: '1000', //签约主播数量
+			total_validate_user_count: '900', //全部有效主播数量
 			time: { //总在线时长
 				h: '2310',
 				m: '56',

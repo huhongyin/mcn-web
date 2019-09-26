@@ -15,9 +15,9 @@
             </el-date-picker>
             <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button> -->
             <el-button type="primary">新增</el-button>
-            <el-button icon="el-icon-download">导出</el-button>
+            <el-button icon="el-icon-download" @click="exportExcel">导出</el-button>
         </div>
-        <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
+        <el-table id="managementTable" stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
                 <el-table-column label="序号" type="index"></el-table-column>
                 <el-table-column label="主播实名" prop="name" width="80px"></el-table-column>
@@ -171,6 +171,8 @@
 <script>
 import { fPost, get} from '@/api/index.js';
 import userApi from '@/api/user.js';
+import FileSaver from 'file-saver';
+import XLSX from 'xlsx';
 export default {
     created(){
         this.getData()
@@ -378,7 +380,21 @@ export default {
         handleCurrentChange(val){
             this.current = val
             this.getData()
-        }
+        },
+        exportExcel () {
+            /* generate workbook object from table */
+            let wb = XLSX.utils.table_to_book(document.querySelector('#managementTable'));
+            /* get binary string as output */
+            let wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' });
+            try {
+                FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '主播数据.xlsx');
+            } catch (e)
+            {
+                if (typeof console !== 'undefined')
+                    console.log(e, wbout)
+            }
+            return wbout
+        },
     }
 }
 </script>
