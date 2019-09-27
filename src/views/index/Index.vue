@@ -68,10 +68,17 @@
             <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">财务结算</span>
           </template>
           <el-menu-item-group class="el-item">
-            <el-menu-item index="/patterns" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">分成模式</el-menu-item>
+            <el-menu-item index="/financeDetail" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">概况</el-menu-item>
           </el-menu-item-group>
+        </el-submenu>
+        <el-submenu index="/tips">
+          <template slot="title">
+            <!-- <icon class="el-icon-tickets" style="color: gray;"></icon> -->
+            <img :src="userguanli_icon" width="20" style="margin-right:10px" height="20" alt />
+            <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">艺人提醒</span>
+          </template>
           <el-menu-item-group class="el-item">
-            <el-menu-item index="/datas" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">运营数据</el-menu-item>
+            <el-menu-item index="/tipsList" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">提醒列表</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <!-- 分组与平台 -->
