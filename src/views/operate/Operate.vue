@@ -1,28 +1,35 @@
 <template>
     <div>
-		<!-- <el-row :gutter="20">
+		<el-row :gutter="20">
 			<el-col :span="4">
 				<el-select placeholder="筛选子公司" v-model="search.company">
-					<el-option v-for="item in companyOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+					<el-option v-for="item in companyOptions" :key="item.name" :label="item.name" :value="item.id"></el-option>
 				</el-select>
 			</el-col>
 			<el-col :span="4">
 				<el-select placeholder="筛选部门" v-model="search.department">
-					<el-option v-for="item in departmentOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+					<el-option v-for="item in departmentOptions" :key="item.name" :label="item.name" :value="item.id"></el-option>
 				</el-select>
 			</el-col>
 			<el-col :span="4">
 				<el-date-picker v-model="search.date" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"></el-date-picker>
 			</el-col>
-			<el-rol>
+			<el-col>
 				<el-button type="primary">搜索</el-button>
-			</el-rol>
-		</el-row> -->
-		<el-row :gutter="20" style="height:382px;">
+			</el-col>
+		</el-row>
+		<el-row :gutter="20" style="height:200px;">
 			<OperateTotal :item="total" :company="company_total" :department="department"></OperateTotal>
 		</el-row>
 		<el-row :gutter="20">
 			<ActorDayMoney :money="operate.money" :time="operate.time"></ActorDayMoney>
+		</el-row>
+		<el-row :gutter="20" style="height:300px;">
+			<el-col :span="12" v-for="item in department_echarts" :key="item.id" style="height:100%;">
+				<el-card style="height:300px;">
+					<div class="marl-line-div" :id="item.id" style="height:100%;"></div>
+				</el-card>
+			</el-col>
 		</el-row>
     </div>
 </template>
@@ -36,6 +43,39 @@ export default {
   components:{ OperateTotal, ActorDayMoney },
     data(){
       return {
+				search: {
+					company: "",
+					department: "",
+					date: "",
+				},
+				companyOptions: [
+					{
+						id: "",
+						name: '全部'
+					},
+					{
+						id: 1,
+						name: '成都'
+					},
+					{
+						id: 2,
+						name: '北京'
+					},
+				],
+				departmentOptions: [
+					{
+						id: "",
+						name: '全部'
+					},
+					{
+						id: 1,
+						name: '签约部一'
+					},
+					{
+						id: 1,
+						name: '签约部二'
+					},
+				],
 				total: {
 					name: '运营组一主播日常数据',
 					total_money: '20', //总收入
@@ -129,12 +169,130 @@ export default {
 						id: 1,
 						name: '运营部二'
 					},
+				],
+				department_echarts:[
+					//以部门为单位的统计图
+					{
+						id: 'yungyingbu_1',
+						options: {
+							title: {
+							text: '运营部一统计'
+						},
+						tooltip: {
+							trigger: 'axis'
+						},
+						legend: {
+							data:['时长','收入','主播数量']
+						},
+						grid: {
+							// left: '3%',
+							// right: '4%',
+							// bottom: '3%',
+							// containLabel: true
+						},
+						toolbox: {
+							feature: {
+								saveAsImage: {}
+							}
+						},
+						xAxis: {
+							type: 'category',
+							boundaryGap: false,
+							data: ['09-25','09-26','09-27','09-28']
+						},
+						yAxis: {
+							type: 'value'
+						},
+						series: [
+							{
+								name:'时长',
+								type:'line',
+								stack: '总量',
+								data:[50, 100, 150, 200]
+							},
+							{
+								name:'收入',
+								type:'line',
+								stack: '总量',
+								data:[50, 100, 150, 200]
+							},
+							{
+								name:'主播数量',
+								type:'line',
+								stack: '总量',
+								data:[50, 100, 150, 200]
+							}
+						]
+						}
+					},
+					{
+						id: 'yungyingbu_2',
+						options: {
+							title: {
+							text: '运营部二统计'
+						},
+						tooltip: {
+							trigger: 'axis'
+						},
+						legend: {
+							data:['时长','收入','主播数量']
+						},
+						grid: {
+							// left: '3%',
+							// right: '4%',
+							// bottom: '3%',
+							// containLabel: true
+						},
+						toolbox: {
+							feature: {
+								saveAsImage: {}
+							}
+						},
+						xAxis: {
+							type: 'category',
+							boundaryGap: false,
+							data: ['09-25','09-26','09-27','09-28']
+						},
+						yAxis: {
+							type: 'value'
+						},
+						series: [
+							{
+								name:'时长',
+								type:'line',
+								stack: '总量',
+								data:[10, 20, 0, 30]
+							},
+							{
+								name:'收入',
+								type:'line',
+								stack: '总量',
+								data:[1, 2, 4, 6]
+							},
+							{
+								name:'主播数量',
+								type:'line',
+								stack: '总量',
+								data:[0, 1, 2, 3]
+							}
+						]
+						}
+					}
 				]
       }
     },
     mounted(){
+		this.initMarkLine()
     },
     methods:{
+			initMarkLine(){
+				let that = this
+				this.department_echarts.forEach(function(item){
+					console.log(item)
+					let myChart = that.$echarts.init(document.getElementById(item.id), 'macarons');
+					myChart.setOption(item.options);
+				})
+			},
 			getDateByDays(days, format){
 				let data = []
 				let flag = 'before'
@@ -191,7 +349,12 @@ export default {
     }
 }
 </script>
+<style>
 
+	.el-card__body{
+		height: 100%;
+	}
+</style>
 <style scoped>
     .el-row {
         margin-bottom: 20px;
