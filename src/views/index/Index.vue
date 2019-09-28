@@ -86,9 +86,9 @@
           <el-menu-item-group class="el-item">
             <el-menu-item index="/users" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">用户管理</el-menu-item>
           </el-menu-item-group>
-          <el-menu-item-group class="el-item">
+          <!-- <el-menu-item-group class="el-item">
             <el-menu-item index="/groups" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">运营分组</el-menu-item>
-          </el-menu-item-group>
+          </el-menu-item-group> -->
         </el-submenu>
         <!-- 涂鸦管理 -->
         <!-- <el-submenu index="/graffiti">

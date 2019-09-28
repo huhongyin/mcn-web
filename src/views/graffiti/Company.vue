@@ -1,5 +1,8 @@
 <template>
     <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <el-button type="primary" @click="add(0)">新增</el-button>
+        </div>
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <!-- <el-table-column type="selection"></el-table-column> -->
                 <el-table-column label="序号" type="index"></el-table-column>
@@ -39,7 +42,7 @@
                             <el-input v-model="addDialog.form.name" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="公司类型：" :label-width="addDialog.formLabelWidth">
-                            <el-select v-model="value" placeholder="请选择" style="width:100%;">
+                            <el-select v-model="company_select" placeholder="请选择" style="width:100%;">
                                 <el-option
                                 v-for="item in company_type_options"
                                 :key="item.value"
@@ -68,6 +71,7 @@ export default {
     },
     data(){
         return {
+            company_select:'',
             company_type_options: [{
                 value: '选项1',
                 label: '主公司'
