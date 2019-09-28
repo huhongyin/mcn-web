@@ -1,20 +1,19 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            <el-select v-model="search.type" placeholder="场景类型">
-                <el-option
-                v-for="item in search.types"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                </el-option>
-            </el-select>
-            <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button>
-            <el-button class="right" type="primary" @click="add(0)">新增</el-button>
-            <el-button class="right" @click="">删除</el-button>
+            <el-row :gutter="10">
+                <el-col :span="4">
+                    <el-input placeholder="关键字"></el-input>
+                </el-col>
+                <el-col :span="6" offset="14">
+                    <el-button class="offset-left-30 right" type="primary" style="float:right;" @click="add(0)">新增</el-button>
+                    <el-button class="btn-search" style="float:right;" @click="getData">搜索</el-button>
+                </el-col>
+            </el-row>
+            <!-- <el-button class="right" @click="">删除</el-button> -->
         </div>
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
-                <el-table-column type="selection"></el-table-column>
+                <!-- <el-table-column type="selection"></el-table-column> -->
                 <el-table-column label="序号" type="index"></el-table-column>
                 <el-table-column label="用户名" prop="username"></el-table-column>
                 <el-table-column label="手机号" prop="phone"></el-table-column>

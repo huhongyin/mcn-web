@@ -2,7 +2,7 @@
   <el-container class="main">
     <el-aside width="242px" class="nav_list">
       <div class="img_title">
-        <!-- <img :src="paizhao" width="32" height="29" alt /> -->
+        <img :src="plat_icon" width="32" alt />
         <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:500;">MCN</span>
       </div>
       <el-menu
@@ -23,7 +23,7 @@
       <!-- 签约统计 -->
       <el-submenu index="/echarts">
         <template slot="title">
-          <img :src="homepage_icon" width="20" style="margin-right:10px" height="20" alt />
+          <img :src="sign_icon" width="20" style="margin-right:10px" height="20" alt />
           <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">签约统计</span>
         </template>
         <el-menu-item-group class="el-item">
@@ -33,7 +33,7 @@
       <!-- 运营统计 -->
       <el-submenu index="/operate">
         <template slot="title">
-          <img :src="homepage_icon" width="20" style="margin-right:10px" height="20" alt />
+          <img :src="yunying_icon" width="20" style="margin-right:10px" height="20" alt />
           <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">运营统计</span>
         </template>
         <el-menu-item-group class="el-item">
@@ -64,7 +64,7 @@
         <el-submenu index="/finance">
           <template slot="title">
             <!-- <icon class="el-icon-tickets" style="color: gray;"></icon> -->
-            <img :src="userguanli_icon" width="20" style="margin-right:10px" height="20" alt />
+            <img :src="finanace_icon" width="20" style="margin-right:10px" height="20" alt />
             <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">财务结算</span>
           </template>
           <el-menu-item-group class="el-item">
@@ -74,7 +74,7 @@
         <!-- 分组与平台 -->
         <el-submenu index="/department">
           <template slot="title">
-            <img :src="userguanli_icon" width="20" style="margin-right:10px" height="20" alt />
+            <img :src="sys_icon" width="20" style="margin-right:10px" height="20" alt />
             <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">分组与平台</span>
           </template>
           <el-menu-item-group class="el-item">
@@ -181,7 +181,11 @@
 export default {
   data() {
     return {
-      paizhao: require("../../assets/imgs/paizhao.png"),
+      plat_icon: require("../../assets/imgs/plat_icon.png"),
+      sign_icon: require("../../assets/imgs/sign_data.png"),
+      yunying_icon: require("../../assets/imgs/yunying_data.png"),
+      finanace_icon: require("../../assets/imgs/finance_icon.png"),
+      sys_icon: require("../../assets/imgs/sys_icon.png"),
       homepage_icon: require("../../assets/imgs/homepage.png"),
       userguanli_icon: require("../../assets/imgs/userguanli.png"),
       tuyaguanli_icon: require("../../assets/imgs/tuyaguanli.png"),

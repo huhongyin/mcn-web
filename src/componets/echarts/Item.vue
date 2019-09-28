@@ -112,14 +112,15 @@ export default {
 }
 .plat-row-title{
     color: #8492A6;
+    font-size: 0.8vw;
 }
 .plat-row-detail{
     color:#475669;
     font-weight: 500;
-    font-size: 20px;
+    font-size: 1vw;
 }
 .plat-row-unit{
-    font-size: 12px;
+    font-size: 0.8vw;
     color: #8492A6;
 }
 .el-row {

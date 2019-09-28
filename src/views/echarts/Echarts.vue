@@ -496,11 +496,11 @@ export default {
 			},
 			{
 				id: 1,
-				name: '子公司一'
+				name: '成都'
 			},
 			{
 				id: 2,
-				name: '子公司二'
+				name: '北京'
 			},
 		],
 		departmentOptions: [
@@ -510,11 +510,11 @@ export default {
 			},
 			{
 				id: 1,
-				name: '运营部一'
+				name: '签约部一'
 			},
 			{
 				id: 1,
-				name: '运营部二'
+				name: '签约部二'
 			},
 		]
       }
@@ -524,7 +524,12 @@ export default {
     methods:{
     },
     created(){
-      
+		let token = localStorage.getItem('token')
+		if(token == null){
+			this.$router.push({
+				path: '/login',
+			})
+		}
     }
 }
 </script>

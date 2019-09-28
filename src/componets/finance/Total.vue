@@ -1,28 +1,16 @@
 <template>
-    <div style="height:100%;">
-        <el-col :span="8"  style="height:100%;">
-            <!-- 以组为单位 -->
-            <SignItem echart-id="sign_total" :item="item" :SpanNum="12"></SignItem>
-        </el-col>
-        <el-col :span="8"  style="height:100%;">
-            <!-- 以所属公司为单位 -->
-            <SignItem echart-id="company_sign_total" :item="company" :SpanNum="12"></SignItem>
-        </el-col>
-        <el-col :span="8"  style="height:100%;">
-            <!-- 以组为单位的部门 -->
-            <SignItem echart-id="department_sign_total" :item="department" :SpanNum="12"></SignItem>
-        </el-col>
-    </div>
+    <el-col :span="6"  style="height:100%;margin-bottom:10px;">
+        <!-- 以组为单位 -->
+        <Item echart-id="sign_total" :item="item" :SpanNum="12"></Item>
+    </el-col>
 </template>
 <script>
 //分渠道
-import SignItem from '@/componets/echarts/Sign.vue'
+import Item from '@/componets/finance/Item.vue'
 export default {
-    components: {SignItem},
+    components: {Item},
     props: [
         "item",
-        "company",
-        "department"
     ],
     data(){
         return {}

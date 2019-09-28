@@ -14,7 +14,7 @@
             <el-button class="right" @click="">删除</el-button>
         </div> -->
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
-                <el-table-column type="selection"></el-table-column>
+                <!-- <el-table-column type="selection"></el-table-column> -->
                 <el-table-column label="序号" type="index"></el-table-column>
                 <el-table-column label="部门名" prop="name"></el-table-column>
                 <el-table-column label="负责人" prop="user"></el-table-column>

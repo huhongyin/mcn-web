@@ -1,7 +1,7 @@
 <template>
     <el-card class="box-card">
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
-                <el-table-column type="selection"></el-table-column>
+                <!-- <el-table-column type="selection"></el-table-column> -->
                 <el-table-column label="序号" type="index"></el-table-column>
                 <el-table-column label="公司名称" prop="name"></el-table-column>
                 <el-table-column label="公司类型" prop="type.name"></el-table-column>

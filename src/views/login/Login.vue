@@ -35,9 +35,9 @@
               ></el-input>
             </el-form-item>
             <!-- 记住密码 -->
-            <div>
+            <!-- <div>
               <el-checkbox v-model="checked">记住密码</el-checkbox>
-            </div>
+            </div> -->
             <!-- 登录按钮&重置按钮 -->
             <el-form-item>
               <el-button
@@ -121,6 +121,7 @@ export default {
   },
   methods:{
     submitForm(form){
+      localStorage.setItem('token', 1)
       this.$router.push({
         path: '/echarts',
       })
