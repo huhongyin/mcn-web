@@ -71,16 +71,6 @@
             <el-menu-item index="/financeDetail" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">概况</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
-        <el-submenu index="/tips">
-          <template slot="title">
-            <!-- <icon class="el-icon-tickets" style="color: gray;"></icon> -->
-            <img :src="userguanli_icon" width="20" style="margin-right:10px" height="20" alt />
-            <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">艺人提醒</span>
-          </template>
-          <el-menu-item-group class="el-item">
-            <el-menu-item index="/tipsList" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">提醒列表</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
         <!-- 分组与平台 -->
         <el-submenu index="/department">
           <template slot="title">
@@ -88,7 +78,10 @@
             <span class="e-menu-span" style="font-size:14px;color:#8492A6;font-weight:400;letter-spacing:2px;color:white;">分组与平台</span>
           </template>
           <el-menu-item-group class="el-item">
-            <el-menu-item index="/rules" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">权限</el-menu-item>
+            <el-menu-item index="/company" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">公司管理</el-menu-item>
+          </el-menu-item-group>
+          <el-menu-item-group class="el-item">
+            <el-menu-item index="/rules" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">部门管理</el-menu-item>
           </el-menu-item-group>
           <el-menu-item-group class="el-item">
             <el-menu-item index="/users" class="el-item e-menu-span" style="color:#C0CCDA;font-size:13px;">用户管理</el-menu-item>
@@ -165,6 +158,20 @@
       </el-header>
       <el-main class="main_box">
         <router-view />
+        <el-drawer
+          title="相关财务统计"
+          :visible.sync="drawer"
+          :direction="direction"
+          size="50%"
+          :before-close="handleClose">
+            <el-table :data="gridData" id="tongji-table">
+              <el-table-column property="title" label="统计标题" width="150"></el-table-column>
+              <el-table-column property="value" label="统计结果" width="200"></el-table-column>
+              <el-table-column label="操作" width="200">
+                <el-button @click="showDetail" size="mini" type="primary">去看看</el-button>
+              </el-table-column>
+            </el-table>
+        </el-drawer>
       </el-main>
     </el-container>
   </el-container>
@@ -183,10 +190,42 @@ export default {
       lianxi_icon: require("../../assets/imgs/lianxi.png"),
       fankui_icon: require("../../assets/imgs/fankui.png"),
       caozuo_icon: require("../../assets/imgs/caozuo.png"),
-      header_left_icon: require("../../assets/imgs/header_left.png")
+      header_left_icon: require("../../assets/imgs/header_left.png"),
+      drawer: false,
+      direction: 'rtl',
+      gridData: [
+        {
+          title: '流水达100万',
+          value: '200人',
+        }, 
+        {
+          title: '流水达500万',
+          value: '10人',
+        }, 
+        {
+          title: '流水达1000万',
+          value: '200人',
+        }, 
+        {
+          title: '流水达100万',
+          value: '200人',
+        }, 
+      ],
     };
   },
+  created(){
+      this.drawer = true
+  },
   methods: {
+      handleClose(done) {
+        done();
+      },
+      showDetail(){
+        this.$message({
+          type: 'info',
+          message: '该功能暂未开放，参考艺人列表类似的列表页面，点击查看统计详情'
+        })
+      }
     // handleOpen(key, keyPath) {
     //   console.log(key, keyPath);
     // },
@@ -208,6 +247,9 @@ export default {
     }
 </style>
 <style lang='less' scoped>
+.el-table__body-wrapper > table,.el-table__header-wrapper > table{
+  width: 100%;
+} 
 .el-menu-item.is-active{
   box-sizing: border-box;
   color: #409EFF;

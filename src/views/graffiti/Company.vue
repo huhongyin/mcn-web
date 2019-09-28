@@ -1,23 +1,10 @@
 <template>
     <el-card class="box-card">
-        <!-- <div slot="header" class="clearfix">
-            <el-select v-model="search.type" placeholder="场景类型">
-                <el-option
-                v-for="item in search.types"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                </el-option>
-            </el-select>
-            <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button>
-            <el-button class="right" type="primary" @click="add(0)">新增</el-button>
-            <el-button class="right" @click="">删除</el-button>
-        </div> -->
         <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
                 <el-table-column label="序号" type="index"></el-table-column>
-                <el-table-column label="部门名" prop="name"></el-table-column>
-                <el-table-column label="负责人" prop="user"></el-table-column>
+                <el-table-column label="公司名称" prop="name"></el-table-column>
+                <el-table-column label="公司类型" prop="type.name"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button @click="add(scope.row.id)" type="text" size="small">编辑</el-button>
@@ -48,13 +35,13 @@
                     <el-form :model="addDialog.form">
                         <el-input v-model="addDialog.form.id" type="hidden" autocomplete="off"></el-input>
                         <!-- <el-form-item label="账号" class="add-user-dialog-label" :label-width="addUserDialog.formLabelWidth"> -->
-                        <el-form-item label="部门名称：" :label-width="addDialog.formLabelWidth">
+                        <el-form-item label="公司名称：" :label-width="addDialog.formLabelWidth">
                             <el-input v-model="addDialog.form.name" autocomplete="off"></el-input>
                         </el-form-item>
-                        <el-form-item label="负责人：" :label-width="addDialog.formLabelWidth">
+                        <el-form-item label="公司类型：" :label-width="addDialog.formLabelWidth">
                             <el-select v-model="value" placeholder="请选择" style="width:100%;">
                                 <el-option
-                                v-for="item in user_options"
+                                v-for="item in company_type_options"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
@@ -81,38 +68,20 @@ export default {
     },
     data(){
         return {
-            user_options: [{
+            company_type_options: [{
                 value: '选项1',
-                label: '张三'
+                label: '主公司'
                 }, {
                 value: '选项2',
-                label: '李四'
+                label: '子公司'
                 }
             ],
-            search:{
-                types:[
-                    {
-                        value: 1,
-                        label: "建筑"
-                    },
-                    {
-                        value: 2,
-                        label: "人物"
-                    },
-                    {
-                        value: 3,
-                        label: "动物"
-                    },
-                ],
-                type: "",
-            },
             addDialog:{
-                addTitle : '新增部门',
+                addTitle : '新增公司',
                 addDialogVisible: false,
                 form:{
                     id: 0,
-                    name : '建筑',
-                    remark: '备注备注',
+                    name : '成都公司',
                 },
                 formLabelWidth: '130px',
             },
@@ -126,13 +95,17 @@ export default {
             list: [
                 {
                     id : 1,
-                    name: '签约部一', //权限名称
-                    user: '张三'
+                    name: '成都', //权限名称
+                    type: {
+                        name: '主公司'
+                    }
                 },
                 {
                     id : 2,
-                    name: '签约部二', //权限名称
-                    user: '李四'
+                    name: '北京', //权限名称
+                    type: {
+                        name: '子公司'
+                    }
                 },
             ],
             detail: {
@@ -140,13 +113,6 @@ export default {
                 remark: "备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注",
             },
             multipleSelection : [],
-            ruleList:[
-                {label:"用户管理-手机用户", value: "1"},
-                {label:"用户管理-管理员", value: "2"},
-                {label:"用户管理-角色管理", value: "3"},
-                {label:"用户管理-修改密码", value: "4"},
-                {label:"用户管理-涂鸦分类", value: "5"},
-            ],
         }
     },
     methods:{
@@ -197,9 +163,9 @@ export default {
         add(id){
             if(id > 0){
                 //编辑时要获取对应角色的权限数据
-                this.addDialog.addTitle = '编辑部门'
+                this.addDialog.addTitle = '编辑公司信息'
             }else{
-                this.addDialog.addTitle = '新增部门'
+                this.addDialog.addTitle = '新增公司信息'
             }
             this.addDialog.addDialogVisible = true
         },
