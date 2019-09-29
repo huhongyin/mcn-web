@@ -1,36 +1,36 @@
 <template>
     <div>
-		<el-row :gutter="20">
-			<el-col :span="4">
-				<el-select placeholder="筛选子公司" v-model="search.company">
-					<el-option v-for="item in companyOptions" :key="item.name" :label="item.name" :value="item.id"></el-option>
-				</el-select>
-			</el-col>
-			<el-col :span="4">
-				<el-select placeholder="筛选部门" v-model="search.department">
-					<el-option v-for="item in departmentOptions" :key="item.name" :label="item.name" :value="item.id"></el-option>
-				</el-select>
-			</el-col>
-			<el-col :span="4">
-				<el-date-picker v-model="search.date" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"></el-date-picker>
-			</el-col>
-			<el-col>
-				<el-button type="primary">搜索</el-button>
-			</el-col>
-		</el-row>
-		<el-row :gutter="20" style="height:200px;">
-			<OperateTotal :item="total" :company="company_total" :department="department"></OperateTotal>
-		</el-row>
-		<el-row :gutter="20">
-			<ActorDayMoney :money="operate.money" :time="operate.time"></ActorDayMoney>
-		</el-row>
-		<el-row :gutter="20" style="height:300px;">
-			<el-col :span="12" v-for="item in department_echarts" :key="item.id" style="height:100%;">
-				<el-card style="height:300px;">
-					<div class="marl-line-div" :id="item.id" style="height:100%;"></div>
-				</el-card>
-			</el-col>
-		</el-row>
+			<el-row :gutter="10">
+				<el-col :span="4" :md="4">
+					<el-select placeholder="筛选公司" v-model="search.company">
+						<el-option v-for="item in companyOptions" :key="item.name" :label="item.name" :value="item.id"></el-option>
+					</el-select>
+				</el-col>
+				<el-col :span="4" :md="4">
+					<el-select placeholder="筛选部门" v-model="search.department">
+						<el-option v-for="item in departmentOptions" :key="item.name" :label="item.name" :value="item.id"></el-option>
+					</el-select>
+				</el-col>
+				<el-col :span="8" :md="8">
+					<el-date-picker v-model="search.date" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"></el-date-picker>
+				</el-col>
+				<el-col :span="2" :md="2">
+					<el-button type="primary">搜索</el-button>
+				</el-col>
+			</el-row>
+			<el-row :gutter="10" style="height:fit-content;">
+				<OperateTotal :item="total" :company="company_total" :department="department"></OperateTotal>
+			</el-row>
+			<el-row :gutter="10">
+				<ActorDayMoney :money="operate.money" :time="operate.time"></ActorDayMoney>
+			</el-row>
+			<el-row :gutter="10" style="height:300px;">
+				<el-col :span="12" v-for="item in department_echarts" :key="item.id" style="height:100%;">
+					<el-card style="height:300px;">
+						<div class="marl-line-div" :id="item.id" style="height:100%;"></div>
+					</el-card>
+				</el-col>
+			</el-row>
     </div>
 </template>
 
