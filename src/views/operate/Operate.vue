@@ -176,7 +176,13 @@ export default {
 						id: 'yungyingbu_1',
 						options: {
 							title: {
-							text: '运营部一统计'
+							text: '运营部一统计',
+							textStyle: {
+									color: 'rgb(46, 56, 74)'
+							},
+						},
+						textStyle: {
+								color: 'rgb(46, 56, 74)'
 						},
 						tooltip: {
 							trigger: 'axis'
@@ -227,10 +233,16 @@ export default {
 					},
 					{
 						id: 'yungyingbu_2',
+						textStyle: {
+								color: 'rgb(46, 56, 74)'
+						},
 						options: {
 							title: {
-							text: '运营部二统计'
-						},
+								text: '运营部二统计',
+								textStyle: {
+										color: 'rgb(46, 56, 74)'
+								},
+							},
 						tooltip: {
 							trigger: 'axis'
 						},
