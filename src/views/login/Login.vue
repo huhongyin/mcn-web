@@ -167,7 +167,7 @@ export default {
 }
 </style>
 
-<style>
+<style scoped>
 .el-form-item__content {
   font-size: 18px;
 }
