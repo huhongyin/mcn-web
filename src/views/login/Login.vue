@@ -62,6 +62,8 @@
 </template>
 
 <script>
+import { post} from '@/api/index.js';
+import loginApi from '@/api/login.js';
 export default {
   data() {
     // 包含特殊字符的函数
@@ -123,10 +125,44 @@ export default {
   },
   methods:{
     submitForm(form){
-      localStorage.setItem('token', 1)
-      this.$router.push({
-        path: '/echarts',
-      })
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          var params = { name : this.loginForm.username, password: this.loginForm.password }
+          var that = this
+          post(loginApi.login, params)
+            .then(function(res){
+				console.log(res)
+                if(res.code != 1){
+					that.$message({
+						type: 'error',
+						message: res.msg
+					})
+					return false
+				}
+				
+				let token_type = res.data.login_res.token_type
+				let access_token = res.data.login_res.access_token
+				let userInfo = res.data.user
+
+				localStorage.setItem("token_type", token_type)
+				localStorage.setItem("access_token", access_token)
+				localStorage.setItem("user", JSON.stringify(userInfo))
+				that.$router.push({
+				  path: '/echarts',
+				})
+            })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '请输入正确的用户名或密码'
+          })
+          return false;
+        }
+      });
+      // localStorage.setItem('token', 1)
+      // this.$router.push({
+      //   path: '/echarts',
+      // })
     },
   }
 };

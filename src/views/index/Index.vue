@@ -152,7 +152,17 @@
             </div>
           </el-col>
           <el-col :span="12">
-            <div class="grid-content bg-purple-light"></div>
+            <div class="grid-content bg-purple-light" style="text-align:right;">
+                <el-dropdown style="cursor:pointer;" trigger="click" @command="handleCommand">
+                  <span class="el-dropdown-link">
+                    {{ userInfo.name+'欢迎您！'}}<i class="el-icon-arrow-down el-icon--right el-icon-user-solid"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="logout">退出</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+
+            </div>
           </el-col>
         </el-row>
       </el-header>
@@ -215,6 +225,7 @@ export default {
           value: '200人',
         }, 
       ],
+      userInfo: JSON.parse(localStorage.getItem("user"))
     };
   },
   created(){
@@ -229,7 +240,27 @@ export default {
           type: 'info',
           message: '该功能暂未开放，参考艺人列表类似的列表页面，点击查看统计详情'
         })
-      }
+      },
+      handleCommand(command) {
+        switch(command){
+          case 'logout':
+              this.logout()
+            break;
+        }
+      },
+      logout(){
+        this.$message({
+          type: 'success', 
+          message: '退出成功',
+          duration: 1000,
+        })
+        localStorage.removeItem("token_type")
+        localStorage.removeItem("access_token", "")
+        localStorage.removeItem("user")
+        this.$router.push({
+          path: '/login',
+        })
+      },
     // handleOpen(key, keyPath) {
     //   console.log(key, keyPath);
     // },

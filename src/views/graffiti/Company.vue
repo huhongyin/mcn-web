@@ -3,35 +3,25 @@
         <div slot="header" class="clearfix">
             <el-button type="primary" @click="add(0)">新增</el-button>
         </div>
-        <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
+        <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
                 <!-- <el-table-column type="selection"></el-table-column> -->
                 <el-table-column label="序号" type="index"></el-table-column>
                 <el-table-column label="公司名称" prop="name"></el-table-column>
-                <el-table-column label="公司类型" prop="type.name"></el-table-column>
+                <el-table-column label="公司类型">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.type==1">主公司</span>
+                        <span v-else>子公司</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="add(scope.row.id)" type="text" size="small">编辑</el-button>
+                        <el-button @click="add(scope.row)" type="text" size="small">编辑</el-button>
                         <!-- <el-button @click="showDetail(scope.row.id)" type="text" size="small">查看</el-button> -->
                         <!-- <el-button @click="" type="text" size="small">删除</el-button> -->
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :page-count="totalPage" @current-change="handleCurrentChange"></el-pagination>
-            <el-dialog title="场景类型详情" :visible.sync="showDetailDialog.centerDialogVisible" width="800px" center>
-                <div class="center">
-                    <div>
-                        <span class="user-detail-text">部门名称：</span><span class="user-detail-value" v-html="detail.type"></span>
-                    </div>
-                    <div>
-                        <span class="user-detail-text">负责人：</span><span class="user-detail-value" v-html="detail.remark"></span>
-                    </div>
-                </div>
-                <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="showDetailDialog.centerDialogVisible = false">保存</el-button>
-                    <el-button type="default" @click="showDetailDialog.centerDialogVisible = false">取消</el-button>
-                </span>
-                
-            </el-dialog>
+            <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :total="total" @current-change="handleCurrentChange"></el-pagination>
             <!-- TODO 文字间距设置 -->
             <el-dialog :title="addDialog.addTitle" :visible.sync="addDialog.addDialogVisible" width="800px" center>
                 <div class="center break">
@@ -42,7 +32,7 @@
                             <el-input v-model="addDialog.form.name" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="公司类型：" :label-width="addDialog.formLabelWidth">
-                            <el-select v-model="company_select" placeholder="请选择" style="width:100%;">
+                            <el-select v-model="addDialog.form.type" placeholder="请选择" style="width:100%;">
                                 <el-option
                                 v-for="item in company_type_options"
                                 :key="item.value"
@@ -54,7 +44,7 @@
                     </el-form>
                 </div>
                 <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="doAddUser()">保 存</el-button>
+                    <el-button type="primary" @click="doSave()">保 存</el-button>
                     <el-button @click="addDialog.addDialogVisible = false">取 消</el-button>
                 </span>
             </el-dialog>
@@ -64,7 +54,7 @@
 <script>
 import { mkdir } from 'fs';
 import { get, post} from '@/api/index.js';
-import userApi from '@/api/user.js';
+import companyApi from '@/api/company.js';
 export default {
     created(){
         this.getData()
@@ -72,12 +62,14 @@ export default {
     data(){
         return {
             company_select:'',
-            company_type_options: [{
-                value: '选项1',
-                label: '主公司'
-                }, {
-                value: '选项2',
-                label: '子公司'
+            company_type_options: [
+                {
+                    value: 1,
+                    label: '主公司'
+                }, 
+                {
+                    value: 0,
+                    label: '子公司'
                 }
             ],
             addDialog:{
@@ -85,33 +77,15 @@ export default {
                 addDialogVisible: false,
                 form:{
                     id: 0,
-                    name : '成都公司',
+                    name: '',
+                    type: '',
                 },
                 formLabelWidth: '130px',
             },
-            showDetailDialog: {
-                centerDialogVisible: false,
-            },
             size : 10,
             current : 1,
-            totalPage: 0,
             total: 0,
-            list: [
-                {
-                    id : 1,
-                    name: '成都', //权限名称
-                    type: {
-                        name: '主公司'
-                    }
-                },
-                {
-                    id : 2,
-                    name: '北京', //权限名称
-                    type: {
-                        name: '子公司'
-                    }
-                },
-            ],
+            list: [],
             detail: {
                 type: "人物",
                 remark: "备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注",
@@ -132,46 +106,41 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
-        frozen(type){
-            console.log(type)
-        },
         getData(){
-            // var params = { current : this.current, size : this.size, buyerEmail : this.search.keywords }
-            // var that = this
-            // post(userApi.phoneUserList, params)
-            // .then(function(res){
-            //     that.list = res.data.list
-            //     that.total = res.data.total
-            //     that.current = res.data.pageNum
-            //     that.totalPage = res.data.totalPage
-            // }).catch(function(err){
-            //     console.log('error')
-            //     console.log(err)
-            // })
+            var params = { page : this.current, size : this.size, }
+            var that = this
+            get(companyApi.list, params).then(function(res){
+                that.list = res.data.list.data
+                that.total = res.data.list.total
+            })
         },
-        showDetail(id){
-            this.showDetailDialog.centerDialogVisible = true
-            // var params = { id: id }
-            // var that = this
-            // post(userApi.phoneUserDetail, params).then(function(res){
-            //     console.log(res)
-            //     that.detail = res.data
-            //     that.centerDialogVisible = true
-            //     console.log(that.detail)
-            // }).catch(function(err){
-            //     console.log('error')
-            //     console.log(err)
-            // })
-            // console.log(this.detail)
-        },
-        add(id){
-            if(id > 0){
+        add(row){
+            if(row.id > 0){
                 //编辑时要获取对应角色的权限数据
-                this.addDialog.addTitle = '编辑公司信息'
+                this.addDialog.addTitle = '编辑公司'
             }else{
-                this.addDialog.addTitle = '新增公司信息'
+                this.addDialog.addTitle = '新增公司'
             }
+            this.addDialog.form.id = row.id
+            this.addDialog.form.name = row.name
+            this.addDialog.form.type = row.type
             this.addDialog.addDialogVisible = true
+        },
+        doSave(){
+            let that = this
+            if(typeof(this.addDialog.form.id) == 'undefined'){
+                this.addDialog.form.id = 0
+            }
+            let url = companyApi.add + '/' + this.addDialog.form.id
+            post(url, {info: this.addDialog.form}).then((res) => {
+                that.$message({
+                    type: 'success',
+                    message: res.msg
+                })                
+
+                that.addDialog.addDialogVisible = false
+                that.getData()
+            })
         },
         handleCurrentChange(val){
             this.current = val
