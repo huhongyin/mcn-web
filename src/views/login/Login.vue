@@ -23,6 +23,7 @@
                 prefix-icon="el-icon-user-solid"
                 placeholder="请输入您的账号"
                 v-model="loginForm.username"
+                style="height: 70px;line-height:70px;font-size:18px;"
               ></el-input>
             </el-form-item>
             <!-- 密码 -->
@@ -32,6 +33,7 @@
                 prefix-icon="el-icon-lock"
                 placeholder="请输入您的密码"
                 v-model="loginForm.password"
+                style="height: 70px;line-height:70px;font-size:18px;"
               ></el-input>
             </el-form-item>
             <!-- 记住密码 -->
