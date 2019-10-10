@@ -3,14 +3,13 @@
     <div class="contenter_box">
       <div class="form_box">
         <!-- 标题 -->
-        <p>MCN后台管理系统</p>
+        <p>账号密码登录</p>
         <!-- 表单 -->
         <div class="login-wrapper">
           <!-- 登录表单 -->
           <el-form
             :model="loginForm"
             status-icon
-            style="margin:auto"
             :rules="rules"
             ref="loginForm"
             class="demo-ruleForm"
@@ -23,7 +22,7 @@
                 prefix-icon="el-icon-user-solid"
                 placeholder="请输入您的账号"
                 v-model="loginForm.username"
-                style="height: 70px;line-height:70px;font-size:18px;"
+                class="username-input"
               ></el-input>
             </el-form-item>
             <!-- 密码 -->
@@ -33,7 +32,7 @@
                 prefix-icon="el-icon-lock"
                 placeholder="请输入您的密码"
                 v-model="loginForm.password"
-                style="height: 70px;line-height:70px;font-size:18px;"
+                class="username-input"
               ></el-input>
             </el-form-item>
             <!-- 记住密码 -->
@@ -41,16 +40,11 @@
               <el-checkbox v-model="checked">记住密码</el-checkbox>
             </div> -->
             <!-- 登录按钮&重置按钮 -->
-            <el-form-item>
+            <el-form-item class="login-btn-div">
               <el-button
                 ref="loginForm"
                 @click="submitForm('loginForm')"
-                style="width:100%;
-                height:70px;
-                font-size:21px;
-                letter-spacing:2px;
-                margin-top:70px;
-                border-radius:10px;"
+                class="login-btn"
                 type="primary"
               >立即登录</el-button>
             </el-form-item>
@@ -167,7 +161,21 @@ export default {
   }
 };
 </script>
-
+<style>
+.el-input__inner{
+    -webkit-appearance: none;
+    border: none;
+    display: inline-block;
+    height: 2.916667rem;
+    line-height:2.916667rem;
+    font-size: 0.9375rem;
+    outline: 0;
+    padding: 0 15px;
+    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    width: 100%;
+}
+</style>
 <style lang="less" scoped>
 .main_box {
   display: flex;
@@ -179,26 +187,63 @@ export default {
   background-repeat: no-repeat;
   background-size: 100% 100%;
   .contenter_box {
-    width: 674px;
-    height: 689px;
+    width: 28rem;
+    height: 24rem;
     background: #fff;
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 100px 104px;
+    padding: 2rem;
     border-radius: 12px;
+    background-color: #f8f8f8;
     .form_box {
       width: 100%;
       height: 100%;
-
+      position: relative;
       p {
         text-align: center;
-        font-size: 34px;
-        font-weight: 500;
-        color: rgba(51, 51, 51, 1);
+        font-size: 1.5rem;
+        color: #373737;
         letter-spacing: 2px;
+        margin: 0 0 3rem 0;
       }
       .login-wrapper {
-        margin-top: 100px;
-        width: 100%;
+        width: 24rem;
+        height: 18.5rem;
+        .el-form{
+          width: 100%;
+          height: 100%;
+          .el-form-item{
+            margin-bottom: 0rem;
+            .el-form-item__content{
+              color: red;
+              height: 4.166666rem;
+              line-height: 4.166666rem;
+              font-size: .9375rem;
+              .username-input{
+                height:  4.166666rem;
+                line-height: 4.166666rem;
+                font-size: 0.9375rem;
+                border: none;
+              }
+            }
+          }
+          .login-btn-div{
+            position: absolute;
+            width: 24rem;
+            bottom: 1rem;
+          }
+        }
+
+        .login-btn{
+          width: 100%;
+          height: 2.916667rem;
+          border-radius: .208333rem;
+          color: #fff;
+          background-color: #4179f9;
+          border: none;
+          cursor: pointer;
+          margin-top: 1.239583rem;
+        }
       }
     }
   }
@@ -206,21 +251,22 @@ export default {
 </style>
 
 <style scoped>
-.el-form-item__content {
+/* .el-form-item__content {
   font-size: 18px;
 }
 .el-input {
-  height: 70px;
+  height: 2.916667rem;
   background: #fff;
-  font-size: 18px;
+  font-size: 0.9375rem;
 }
 .el-input--prefix {
-  height: 70px;
+  height: 2.916667rem;
+  line-height: 2.916667rem;
 }
 .el-input__inner {
-  height: 70px;
-  line-height: 70px;
-  font-size: 18px;
+  height: 2.916667rem;
+  line-height: 2.916667rem;
+  font-size: 0.9375rem;
 }
 .el-icon-user-solid:before {
   color: #2e8cff;
@@ -230,6 +276,10 @@ export default {
   color: #2e8cff;
   font-size: 20px;
 }
+
+.el-input--prefix .el-input__inner{
+  padding-left: 2rem;
+} */
 </style>
 
 
