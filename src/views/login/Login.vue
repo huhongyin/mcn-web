@@ -121,19 +121,44 @@ export default {
     submitForm(form){
       this.$refs[form].validate((valid) => {
         if (valid) {
+          
+				let res = {
+          data : {
+            login_res: {
+              token_type: '134213',
+              access_token: '1q235154',
+            },
+            user: {
+              id: 1,
+              name: 'admin'
+            }
+          }
+        }
+        
+				let token_type = res.data.login_res.token_type
+				let access_token = res.data.login_res.access_token
+				let userInfo = res.data.user
+
+				localStorage.setItem("token_type", token_type)
+				localStorage.setItem("access_token", access_token)
+        localStorage.setItem("user", JSON.stringify(userInfo))
+        
+				this.$router.push({
+				  path: '/echarts',
+        })
+        return false
+
           var params = { name : this.loginForm.username, password: this.loginForm.password }
           var that = this
           post(loginApi.login, params)
             .then(function(res){
-				console.log(res)
                 if(res.code != 1){
-					that.$message({
-						type: 'error',
-						message: res.msg
-					})
-					return false
-				}
-				
+                that.$message({
+                  type: 'error',
+                  message: res.msg
+                })
+                return false
+              }
 				let token_type = res.data.login_res.token_type
 				let access_token = res.data.login_res.access_token
 				let userInfo = res.data.user

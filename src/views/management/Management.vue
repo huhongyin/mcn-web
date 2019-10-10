@@ -19,9 +19,9 @@
         </div>
         <el-table id="managementTable" stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
-                <el-table-column label="序号" type="index"></el-table-column>
-                <el-table-column label="主播实名" prop="name" width="80px"></el-table-column>
-                <el-table-column label="主播昵称" prop="nickname" width="80px"></el-table-column>
+                <el-table-column fixed label="序号" type="index"></el-table-column>
+                <el-table-column fixed label="主播实名" prop="name" width="80px"></el-table-column>
+                <el-table-column fixed label="主播昵称" prop="nickname" width="80px"></el-table-column>
                 <el-table-column label="平台" prop="plat.name" width="80px"></el-table-column>
                 <el-table-column label="身份证号" prop="id_card_no"></el-table-column>
                 <el-table-column label="联系电话" prop="phone" width="120px"></el-table-column>

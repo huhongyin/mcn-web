@@ -1,20 +1,20 @@
 <template>
     <div>
 		<el-row :gutter="20">
-			<el-col :span="4">
+			<el-col :lg="3" :md="3" :sm="3">
 				<el-select placeholder="筛选子公司" v-model="search.company">
 					<el-option v-for="item in companyOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
 				</el-select>
 			</el-col>
-			<el-col :span="4">
+			<el-col :lg="3" :md="3" :sm="3">
 				<el-select placeholder="筛选部门" v-model="search.department">
 					<el-option v-for="item in departmentOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
 				</el-select>
 			</el-col>
-			<el-col :span="4">
+			<el-col :lg="8" :md="11" :sm="11">
 				<el-date-picker v-model="search.date" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"></el-date-picker>
 			</el-col>
-			<el-rol>
+			<el-rol :lg="10" :md="5" :sm="5">
 				<el-button type="primary">搜索</el-button>
 			</el-rol>
 		</el-row>
@@ -492,7 +492,7 @@ export default {
 		companyOptions: [
 			{
 				id: "",
-				name: '全部'
+				name: '全部公司'
 			},
 			{
 				id: 1,
@@ -506,7 +506,7 @@ export default {
 		departmentOptions: [
 			{
 				id: "",
-				name: '全部'
+				name: '全部部门'
 			},
 			{
 				id: 1,

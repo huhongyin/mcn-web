@@ -31,7 +31,7 @@
         </el-row>
       </el-header>
 
-    <el-aside width="14%" class="nav_list">
+    <el-aside width="16%" class="nav_list">
       <el-menu
         :default-active="this.$route.path"
         active-text-color="#4285f4"
@@ -197,6 +197,12 @@ export default {
 };
 </script>
 <style>
+    .el-button--primary{
+      background-color: #4285f4;
+      border-color:#4285f4;
+      border-radius:2px;
+    }
+    
     .el-menu-vertical-demo > .el-submenu > .el-submenu__title:hover{ background: #ccc };
     .el-menu-vertical-demo > .el-submenu > .el-menu--inline > .el-menu-item-group > ul > li:hover{ background: #ccc };
 </style>
@@ -213,6 +219,7 @@ export default {
   width: 100%;
   height: 100%;
   .nav_list {
+    overflow-x: hidden;
     box-sizing: border-box;
     height: 100%;
     border-right: 1px solid rgba(211, 220, 230, 1);
@@ -311,13 +318,15 @@ export default {
     }
   }
   .main_box{
-    width: 86%;
+    width: 84%;
     height: 100%;
     box-sizing: border-box;
     padding: 30px;
     position: absolute;
     left: 14%;
     top: 60px;
+    overflow-y: hidden;
+    margin-left: 2%;
   }
 }
 </style>
