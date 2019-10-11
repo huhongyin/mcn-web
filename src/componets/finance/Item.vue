@@ -4,14 +4,7 @@
             <span class="name" v-text="item.name"></span>
         </div>
         <div class="plat-row">
-            <span class="plat-row-title" v-text="start_date+'-'+end_date"></span>
-            <div class="inline">
-                <a class="plat-row-a" href="javascript:void(0)"><span class="plat-row-detail"></span></a>
-                <span class="plat-row-unit">|今日</span>
-            </div>
-        </div>
-        <div class="plat-row">
-            <span class="plat-row-title">今日</span>
+            <span class="plat-row-title" v-text="start_date+'一'+end_date"></span>
             <div class="inline">
                 <a class="plat-row-a" href="javascript:void(0)"><span class="plat-row-detail"></span></a>
                 <span class="plat-row-unit"></span>
@@ -20,7 +13,14 @@
         <div class="plat-row">
             <span class="plat-row-title"></span>
             <div class="inline">
-                <a class="plat-row-a" @click="showModal" href="javascript:void(0)"><span style="font-size:40px;color:#475669;" v-text="item.total_money" class="plat-row-detail"></span></a>
+                <a class="plat-row-a" href="javascript:void(0)"><span class="plat-row-detail"></span></a>
+                <span class="plat-row-unit"></span>
+            </div>
+        </div>
+        <div class="plat-row">
+            <span class="plat-row-title"></span>
+            <div class="inline">
+                <a class="plat-row-a" @click="goTo(item)" href="javascript:void(0)"><span style="font-size:40px;color:#475669;" v-text="item.total_money" class="plat-row-detail"></span></a>
                 <span class="plat-row-unit">万</span>
             </div>
         </div>
@@ -55,10 +55,12 @@ export default {
         }
     },
     methods:{
-        showModal(){
-            this.$message({
-                message: '点击数量查看对应的数据列表，页面样式参考用户列表或其他列表',
-                type: 'success',
+        goTo(item){
+            this.$router.push({
+                path: item.url,
+                query:{
+
+                }
             })
         }
     }
