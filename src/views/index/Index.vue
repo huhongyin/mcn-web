@@ -1,6 +1,5 @@
 <template>
   <el-container class="main">
-    <el-container class="container_box">
       <!-- 头部 -->
       <el-header class="header">
         <el-row style="height:100%;">
@@ -30,86 +29,88 @@
           </el-col>
         </el-row>
       </el-header>
-
-    <el-aside width="16%" class="nav_list">
-      <el-menu
-        :default-active="this.$route.path"
-        active-text-color="#4285f4"
-        class="el-menu-vertical-demo"
-        router
-      >
-        <!-- 艺人管理 -->
-        <el-submenu index="/management">
-          <template slot="title">
-            <img :src="userguanli_icon" width="20" style="margin-right:10px" height="20" alt />
-            <span class="e-menu-span router-link">基础信息</span>
-          </template>
-          <el-menu-item-group class="el-item">
-            <el-menu-item index="/management" class="el-item e-menu-span" style="font-size:13px;">主播信息</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-      <!-- 签约统计 -->
-      <el-submenu index="/echarts?type=sign">
-        <template slot="title">
-          <img :src="sign_icon" width="20" style="margin-right:10px" height="20" alt />
-          <span class="e-menu-span router-link">签约统计</span>
-        </template>
-        <el-menu-item-group class="el-item">
-          <el-menu-item index="/echarts?type=sign" class="el-item e-menu-span" style="font-size:13px;">概况</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-      <!-- 运营统计 -->
-      <el-submenu index="/operate">
-        <template slot="title">
-          <img :src="yunying_icon" width="20" style="margin-right:10px" height="20" alt />
-          <span class="e-menu-span router-link">运营统计</span>
-        </template>
-        <el-menu-item-group class="el-item">
-          <el-menu-item index="/operate" class="el-item e-menu-span" style="font-size:13px;">概况</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-        <!-- 财务结算 -->
-        <el-submenu index="/financeDetail">
-          <template slot="title">
-            <img :src="finanace_icon" width="20" style="margin-right:10px" height="20" alt />
-            <span class="e-menu-span router-link">财务结算</span>
-          </template>
-          <el-menu-item-group class="el-item">
-            <el-menu-item index="/financeDetail" class="el-item e-menu-span" style="font-size:13px;">概况</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-        <!-- 分组与平台 -->
-        <el-submenu index="/company">
-          <template slot="title">
-            <img :src="sys_icon" width="20" style="margin-right:10px" height="20" alt />
-            <span class="e-menu-span router-link">分组与平台</span>
-          </template>
-          <el-menu-item-group class="el-item">
-            <el-menu-item index="/company" class="el-item e-menu-span" style="font-size:13px;">公司管理</el-menu-item>
-            <el-menu-item index="/rules" class="el-item e-menu-span" style="font-size:13px;">部门管理</el-menu-item>
-            <el-menu-item index="/users" class="el-item e-menu-span" style="font-size:13px;">用户管理</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-      </el-menu>
-    </el-aside>
-      <el-main class="main_box">
-        <router-view />
-        <el-drawer
-          title="相关财务统计"
-          :visible.sync="drawer"
-          :direction="direction"
-          size="50%"
-          :before-close="handleClose">
-            <el-table :data="gridData" id="tongji-table">
-              <el-table-column property="title" label="统计标题" width="150"></el-table-column>
-              <el-table-column property="value" label="统计结果" width="200"></el-table-column>
-              <el-table-column label="操作" width="200">
-                <el-button @click="showDetail" size="mini" type="primary">去看看</el-button>
-              </el-table-column>
-            </el-table>
-        </el-drawer>
-      </el-main>
-    </el-container>
+      <el-container class="container_box">
+        <div style="width:16%;background:#f5f5f5;">
+          <el-aside width="100%" class="nav_list">
+            <el-menu
+              :default-active="this.$route.path"
+              active-text-color="#4285f4"
+              class="el-menu-vertical-demo"
+              router
+            >
+              <!-- 艺人管理 -->
+              <el-submenu index="/management">
+                <template slot="title">
+                  <img :src="userguanli_icon" width="20" style="margin-right:10px" height="20" alt />
+                  <span class="e-menu-span router-link">基础信息</span>
+                </template>
+                <el-menu-item-group class="el-item">
+                  <el-menu-item index="/management" class="el-item e-menu-span" style="font-size:13px;">主播信息</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+            <!-- 签约统计 -->
+            <el-submenu index="/echarts">
+              <template slot="title">
+                <img :src="sign_icon" width="20" style="margin-right:10px" height="20" alt />
+                <span class="e-menu-span router-link">签约统计</span>
+              </template>
+              <el-menu-item-group class="el-item">
+                <el-menu-item index="/echarts" class="el-item e-menu-span" style="font-size:13px;">概况</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
+            <!-- 运营统计 -->
+            <el-submenu index="/operate">
+              <template slot="title">
+                <img :src="yunying_icon" width="20" style="margin-right:10px" height="20" alt />
+                <span class="e-menu-span router-link">运营统计</span>
+              </template>
+              <el-menu-item-group class="el-item">
+                <el-menu-item index="/operate" class="el-item e-menu-span" style="font-size:13px;">概况</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
+              <!-- 财务结算 -->
+              <el-submenu index="/financeDetail">
+                <template slot="title">
+                  <img :src="finanace_icon" width="20" style="margin-right:10px" height="20" alt />
+                  <span class="e-menu-span router-link">财务结算</span>
+                </template>
+                <el-menu-item-group class="el-item">
+                  <el-menu-item index="/financeDetail" class="el-item e-menu-span" style="font-size:13px;">概况</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+              <!-- 分组与平台 -->
+              <el-submenu index="/company">
+                <template slot="title">
+                  <img :src="sys_icon" width="20" style="margin-right:10px" height="20" alt />
+                  <span class="e-menu-span router-link">分组与平台</span>
+                </template>
+                <el-menu-item-group class="el-item">
+                  <el-menu-item index="/company" class="el-item e-menu-span" style="font-size:13px;">公司管理</el-menu-item>
+                  <el-menu-item index="/rules" class="el-item e-menu-span" style="font-size:13px;">部门管理</el-menu-item>
+                  <el-menu-item index="/users" class="el-item e-menu-span" style="font-size:13px;">用户管理</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+            </el-menu>
+          </el-aside>
+        </div>
+        <el-main class="main_box">
+          <router-view />
+          <el-drawer
+            title="相关财务统计"
+            :visible.sync="drawer"
+            :direction="direction"
+            size="50%"
+            :before-close="handleClose">
+              <el-table :data="gridData" id="tongji-table">
+                <el-table-column property="title" label="统计标题" width="150"></el-table-column>
+                <el-table-column property="value" label="统计结果" width="200"></el-table-column>
+                <el-table-column label="操作" width="200">
+                  <el-button @click="showDetail" size="mini" type="primary">去看看</el-button>
+                </el-table-column>
+              </el-table>
+          </el-drawer>
+        </el-main>
+      </el-container>
   </el-container>
 </template>
 
@@ -202,6 +203,9 @@ export default {
       border-color:#4285f4;
       border-radius:2px;
     }
+    .nav_list{
+      background: #f5f5f5;
+    }
     
     .el-menu-vertical-demo > .el-submenu > .el-submenu__title:hover{ background: #ccc };
     .el-menu-vertical-demo > .el-submenu > .el-menu--inline > .el-menu-item-group > ul > li:hover{ background: #ccc };
@@ -237,7 +241,10 @@ export default {
     }
     .el-menu{
       border: none;
+      background: #f5f5f5;
       ul{
+          border-top: 1px solid #e6e6e6;
+          border-bottom: 1px solid #e6e6e6;
         li{
           background: #eeeeee;
         }
@@ -278,55 +285,56 @@ export default {
       box-sizing: border-box;
       padding-top: 20px;
       width: 100%;
-      background: #eee;
+      background: #f5f5f5;
       height: auto;
     }
     
   }
-  .container_box {
-    background: #eee;
-    .header {
-      width: 100%;
-      background-color: #ffffff;
-      border-bottom: 1px solid rgba(211,220,230,1);
 
-      .grid-content{
-        height: 100%;
-      }
-      .el-divider--vertical{
-        position: absolute;
-        top: .9rem;
-        left: 2.5rem;
-        width:.05rem;
-        height:2rem;
-        margin:0 .4rem;
-      }
-      .img{
-          position: absolute;
-          width: 2.5rem;
-          height: 1.8rem;
-          top: 1rem;
-      }
+  .header {
+    width: 100%;
+    background-color: #ffffff;
+    border-bottom: 1px solid rgba(211,220,230,1);
 
-      .title-web{
+    .grid-content{
+      height: 100%;
+    }
+    .el-divider--vertical{
+      position: absolute;
+      top: .9rem;
+      left: 2.5rem;
+      width:.05rem;
+      height:2rem;
+      margin:0 .4rem;
+    }
+    .img{
         position: absolute;
-        font-size: 1.8rem;
-        left: 3.3rem;
-        color: #706e6e;
-        top: .5rem;
-      }
+        width: 2.5rem;
+        height: 1.8rem;
+        top: 1rem;
+    }
+
+    .title-web{
+      position: absolute;
+      font-size: 1.8rem;
+      left: 3.3rem;
+      color: #706e6e;
+      top: .5rem;
     }
   }
+  .container_box {
+    background: #eee;
+  }
   .main_box{
-    width: 84%;
-    height: 100%;
-    box-sizing: border-box;
-    padding: 30px;
-    position: absolute;
-    left: 14%;
-    top: 60px;
-    overflow-y: hidden;
-    margin-left: 2%;
+    padding: 1.6%;
+    // width: 84%;
+    // height: 100%;
+    // box-sizing: border-box;
+    // position: absolute;
+    // left: 14%;
+    // padding-top: 5%;
+    // overflow-y: scroll;
+    // margin-left: 2%;
   }
 }
 </style>

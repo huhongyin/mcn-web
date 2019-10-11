@@ -6,30 +6,30 @@
                 <div class="plat-row">
                     <span class="plat-row-title">总流水</span>
                     <div class="inline">
-                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.total_money" class="plat-row-detail"></span></a>
+                        <a class="plat-row-a" href="javascript:void(0)" @click="showTotalMoney('签约主播流水')"><span v-text="item.total_money" class="plat-row-detail"></span></a>
                         <span class="plat-row-unit">万</span>
                     </div>
                 </div>
                 <div class="plat-row">
                     <span class="plat-row-title">签约主播数量</span>
                     <div class="inline">
-                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.total_sign_user_count" class="plat-row-detail"></span></a>
+                        <a class="plat-row-a" href="javascript:void(0)" @click="showSignActor('签约主播数量')"><span v-text="item.total_sign_user_count" class="plat-row-detail"></span></a>
                         <span class="plat-row-unit">人</span>
                     </div>
                 </div>
                 <div class="plat-row">
                     <span class="plat-row-title">有效主播数量</span>
                     <div class="inline">
-                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.total_validate_user_count" class="plat-row-detail"></span></a>
+                        <a class="plat-row-a" href="javascript:void(0)" @click="showEffectiveActor('有效主播数量')"><span v-text="item.total_validate_user_count" class="plat-row-detail"></span></a>
                         <span class="plat-row-unit">人</span>
                     </div>
                 </div>
                 <div class="plat-row">
                     <span class="plat-row-title">在线总时长</span>
                     <div class="inline">
-                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.time.h" class="plat-row-detail"></span></a>
+                        <a class="plat-row-a" href="javascript:void(0)" @click="showOnLine('在线总时长')"><span v-text="item.time.h" class="plat-row-detail"></span></a>
                         <span class="plat-row-unit">时</span>
-                        <a class="plat-row-a" href="javascript:void(0)"><span v-text="item.time.m" class="plat-row-detail"></span></a>
+                        <a class="plat-row-a" href="javascript:void(0)" @click="showOnLine('在线总时长')"><span v-text="item.time.m" class="plat-row-detail"></span></a>
                         <span class="plat-row-unit">分</span>
                     </div>
                 </div>
@@ -44,6 +44,44 @@ export default {
     ],
     data(){
         return {}
+    },
+    methods:{
+        showTotalMoney(title){
+            //查看流水
+            this.$router.push({
+                path: 'signTotalMoney',
+                query: {
+                    title: title
+                }
+            })
+        },
+        showSignActor(title){
+            //签约主播数量
+            this.$router.push({
+                path: 'signActorCount',
+                query: {
+                    title: title
+                }
+            })
+        },
+        showEffectiveActor(title){
+            //有效主播数量
+            this.$router.push({
+                path: 'effectiveActorCount',
+                query: {
+                    title: title
+                }
+            })
+        },
+        showOnLine(title){
+            //在线总时长
+            this.$router.push({
+                path: 'onLineList',
+                query: {
+                    title: title
+                }
+            })
+        }
     }
 }
 </script>
