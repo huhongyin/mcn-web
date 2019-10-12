@@ -102,10 +102,12 @@
             size="50%"
             :before-close="handleClose">
               <el-table :data="gridData" id="tongji-table">
-                <el-table-column property="title" label="统计标题" width="150"></el-table-column>
-                <el-table-column property="value" label="统计结果" width="200"></el-table-column>
-                <el-table-column label="操作" width="200">
-                  <el-button @click="showDetail" size="mini" type="primary">去看看</el-button>
+                <el-table-column property="title" label="统计标题"></el-table-column>
+                <el-table-column property="value" label="统计结果"></el-table-column>
+                <el-table-column label="操作">
+                  <template slot-scope="scope">
+                    <el-button @click="showDetail(scope.row)" size="mini" type="primary">去看看</el-button>
+                  </template>
                 </el-table-column>
               </el-table>
           </el-drawer>
@@ -138,34 +140,42 @@ export default {
         {
           title: '流水达100万',
           value: '200人',
+          type: 'money_100',
         }, 
         {
           title: '流水达500万',
           value: '10人',
+          type: 'money_500',
         }, 
         {
           title: '流水达1000万',
           value: '200人',
-        }, 
-        {
-          title: '流水达100万',
-          value: '200人',
+          type: 'money_1000',
         }, 
       ],
       userInfo: JSON.parse(localStorage.getItem("user"))
     };
   },
   created(){
-      this.drawer = true
+    
+      if(this.$route.query.can_show_drawer || typeof(this.$route.query.can_show_drawer) == 'undefined'){
+        this.drawer = true
+      }else{
+        this.drawer = false
+      }
   },
   methods: {
       handleClose(done) {
         done();
       },
-      showDetail(){
-        this.$message({
-          type: 'info',
-          message: '该功能暂未开放，参考艺人列表类似的列表页面，点击查看统计详情'
+      showDetail(data){
+        this.$router.push({
+          path: '/actorList',
+          query: {
+            title: data.title,
+            type: data.type,
+            can_show_drawer: false,
+          }
         })
       },
       handleCommand(command) {

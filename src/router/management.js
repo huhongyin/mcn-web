@@ -1,6 +1,7 @@
 import Index from '../views/management/Management.vue'
 import Detail from '../views/management/Detail.vue'
 import Total from '../views/management/Total.vue'
+import ActorList from '../views/index/ActorList.vue'
 
 export default
 [
@@ -22,4 +23,10 @@ export default
     name: 'total',
     component: Total,
   },
+  //流水达多少主播列表
+  {
+    path: '/actorList',
+    name: 'actorList',
+    component: ActorList,
+  }
 ]
