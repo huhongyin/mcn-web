@@ -60,6 +60,7 @@ export default {
                 query:{
                     start_date: item.start_date,
                     end_date: item.end_date,
+                    title: item.name,
                 }
             })
         }
