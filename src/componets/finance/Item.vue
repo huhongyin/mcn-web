@@ -4,7 +4,7 @@
             <span class="name" v-text="item.name"></span>
         </div>
         <div class="plat-row">
-            <span class="plat-row-title" v-text="start_date+'一'+end_date"></span>
+            <span class="plat-row-title" v-text="item.start_date+'一'+item.end_date"></span>
             <div class="inline">
                 <a class="plat-row-a" href="javascript:void(0)"><span class="plat-row-detail"></span></a>
                 <span class="plat-row-unit"></span>
@@ -50,8 +50,7 @@ export default {
     ],
     data(){
         return {
-            start_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
-            end_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
+
         }
     },
     methods:{
@@ -59,7 +58,8 @@ export default {
             this.$router.push({
                 path: item.url,
                 query:{
-
+                    start_date: item.start_date,
+                    end_date: item.end_date,
                 }
             })
         }

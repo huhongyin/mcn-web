@@ -22,6 +22,8 @@ export default {
 				total: {
 					name: '毛利润',
 					total_money: '20', //总收入
+					start_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
+					end_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
 					precent: {
 						value: '43.2%',
 						type: 1, //增加
@@ -32,6 +34,8 @@ export default {
 				fuchi: {
 					name: '扶持金额',
 					total_money: '1', //总收入
+					start_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
+					end_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
 					precent: {
 						value: '43.2%',
 						type: 0, //增加
@@ -42,6 +46,8 @@ export default {
 				yifuchijine: {
 					name: '已扶持金额',
 					total_money: '0.3', //总收入
+					start_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
+					end_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
 					precent: {
 						value: '43.2%',
 						type: 0, //增加
@@ -52,12 +58,14 @@ export default {
 				month_should_pay: {
 					name: '应付主播收益',
 					total_money: '0.78', //总收入
+					start_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
+					end_date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
 					precent: {
 						value: '43.2%',
 						type: 0, //增加
 						content: '环比 8-16 下降43.2%',
 					},
-					url: '/shoulPay',
+					url: '/shouldPay',
 				},
       }
     },
