@@ -14,7 +14,7 @@
                 :picker-options="pickerOptions">
             </el-date-picker>
             <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button> -->
-            <el-button type="primary">新增</el-button>
+            <!-- <el-button type="primary">新增</el-button> -->
             <el-button icon="el-icon-download" @click="exportExcel">导出</el-button>
         </div>
         <el-table id="managementTable" stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
