@@ -56,7 +56,7 @@
                 <el-badge :hidden="is_read" style="margin-top:-9px;" :value="msg_count"></el-badge>
               </el-menu-item>
               <!-- 数据录入 -->
-              <el-menu-item index="/import" class="el-item e-menu-span" style="font-size:13px;"><img :src="msg_icon" width="20" style="margin-right:10px" height="20" alt />
+              <el-menu-item index="/import" class="el-item e-menu-span" style="font-size:13px;"><img :src="import_icon" width="20" style="margin-right:10px" height="20" alt />
                 数据录入
               </el-menu-item>
               <!-- 艺人管理 -->
@@ -110,6 +110,7 @@ export default {
       caozuo_icon: require("../../assets/imgs/caozuo.png"),
       header_left_icon: require("../../assets/imgs/header_left.png"),
       msg_icon: require("../../assets/imgs/msg.png"),
+      import_icon: require("../../assets/imgs/import.png"),
       direction: 'rtl',
       userInfo: JSON.parse(localStorage.getItem("user")),
       is_read: false,
