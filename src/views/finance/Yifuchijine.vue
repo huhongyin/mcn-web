@@ -36,10 +36,13 @@ export default {
     created(){
         this.getData()
     },
+    props: [
+        'name',
+        'start_date', 
+        'end_date',
+    ],
     data(){
         return {
-            start_date: '',
-            end_date: '',
             search: {
                 date: '',
             },
@@ -101,13 +104,13 @@ export default {
         }
     },
     created(){
-        this.start_date = this.$route.query.start_date
-        this.end_date = this.$route.query.end_date
         this.search.date = [this.start_date, this.end_date]
-        this.title = this.$route.query.title
+        this.title = this.name
     }, 
     methods:{
-        
+        handleCurrentChange(val) {
+            console.log(`当前页: ${val}`);
+        },
         getData(){
             // var params = { page: this.current}
             // var that = this

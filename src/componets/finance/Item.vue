@@ -63,7 +63,7 @@ export default {
                     title: item.name,
                 }
             })
-        }
+        },
     }
 }
 </script>
@@ -72,9 +72,9 @@ export default {
     border:3px solid transparent;
     height:98%;
 }
-.plat:hover{
+/* .plat:hover{
     border: 3px solid #2DCA93;
-}
+} */
 .name{
     font-weight: 700;
     font-size: 20px;

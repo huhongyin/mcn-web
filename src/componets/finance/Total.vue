@@ -1,7 +1,7 @@
 <template>
     <el-col :span="6"  style="height:100%;margin-bottom:10px;">
         <!-- 以组为单位 -->
-        <Item echart-id="sign_total" :item="item" :SpanNum="12"></Item>
+        <Item :id="item.type" :ref="item.type" @click.native="showList(item)" echart-id="sign_total" :item="item" :SpanNum="12"></Item>
     </el-col>
 </template>
 <script>
@@ -11,9 +11,25 @@ export default {
     components: {Item},
     props: [
         "item",
+        "types",
     ],
     data(){
         return {}
+    },
+    methods:{
+        showList(item){
+            this.removeAllItemClass()
+            let obj = this.$refs[item.type].$el
+            if(obj.className.indexOf("plat-active") > -1){
+                obj.classList.remove('plat-active')
+            }else{
+                obj.classList.add('plat-active')
+                this.$emit('showTable', {type: item.type})
+            }
+        },
+        removeAllItemClass(){
+            this.$emit('removeAllItemClass')
+        }
     }
 }
 </script>
@@ -22,7 +38,10 @@ export default {
     border:3px solid transparent;
     height:98%;
 }
-.plat:hover{
+/* .plat:hover{
+    border: 3px solid #2DCA93;
+} */
+.plat-active{
     border: 3px solid #2DCA93;
 }
 .name{

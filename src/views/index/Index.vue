@@ -90,27 +90,16 @@
                   <el-menu-item index="/users" class="el-item e-menu-span" style="font-size:13px;">用户管理</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
+              <!-- 未读消息 -->
+              <el-menu-item index="/msg" class="el-item e-menu-span" style="font-size:13px;"><img :src="msg_icon" width="20" style="margin-right:10px" height="20" alt />
+                消息列表
+                <el-badge :hidden="is_read" style="margin-top:-9px;" :value="msg_count"></el-badge>
+              </el-menu-item>
             </el-menu>
           </el-aside>
         </div>
         <el-main class="main_box">
           <router-view />
-          <el-drawer
-            title="相关财务统计"
-            :visible.sync="drawer"
-            :direction="direction"
-            size="50%"
-            :before-close="handleClose">
-              <el-table :data="gridData" id="tongji-table">
-                <el-table-column property="title" label="统计标题"></el-table-column>
-                <el-table-column property="value" label="统计结果"></el-table-column>
-                <el-table-column label="操作">
-                  <template slot-scope="scope">
-                    <el-button @click="showDetail(scope.row)" size="mini" type="primary">去看看</el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-          </el-drawer>
         </el-main>
       </el-container>
   </el-container>
@@ -134,49 +123,22 @@ export default {
       fankui_icon: require("../../assets/imgs/fankui.png"),
       caozuo_icon: require("../../assets/imgs/caozuo.png"),
       header_left_icon: require("../../assets/imgs/header_left.png"),
-      drawer: false,
+      msg_icon: require("../../assets/imgs/msg.png"),
       direction: 'rtl',
-      gridData: [
-        {
-          title: '流水达100万',
-          value: '200人',
-          type: 'money_100',
-        }, 
-        {
-          title: '流水达500万',
-          value: '10人',
-          type: 'money_500',
-        }, 
-        {
-          title: '流水达1000万',
-          value: '200人',
-          type: 'money_1000',
-        }, 
-      ],
-      userInfo: JSON.parse(localStorage.getItem("user"))
+      userInfo: JSON.parse(localStorage.getItem("user")),
+      is_read: false,
+      msg_count: 9
     };
   },
   created(){
-    
-      if(this.$route.query.can_show_drawer || typeof(this.$route.query.can_show_drawer) == 'undefined'){
-        this.drawer = true
-      }else{
-        this.drawer = false
-      }
+    let is_read = localStorage.getItem('is_read')
+    if(typeof(is_read) != 'undefined' && is_read == 1){
+      this.is_read = true
+    }
   },
   methods: {
       handleClose(done) {
         done();
-      },
-      showDetail(data){
-        this.$router.push({
-          path: '/actorList',
-          query: {
-            title: data.title,
-            type: data.type,
-            can_show_drawer: false,
-          }
-        })
       },
       handleCommand(command) {
         switch(command){

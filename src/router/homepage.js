@@ -8,6 +8,7 @@ import Banner from './banner'
 import Finance from './finance'
 import Contact from './contact'
 import Operation from './operation'
+import Msg from './msg'
 export default
 [
   //首页
@@ -25,6 +26,7 @@ export default
       ...Contact,
       ...Operation,
       ...Operate,
+      ...Msg,
     ]
   },
 ]

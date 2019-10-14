@@ -47,7 +47,7 @@ export default {
                     data:['总营收']
                 },
                 toolbox: {
-                    show: true,
+                    show: false,
                     feature: {
                         dataZoom: {
                             yAxisIndex: 'none'

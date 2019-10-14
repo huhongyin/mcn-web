@@ -20,7 +20,7 @@
         <el-table show-summary :summary-method="getSummaries" id="managementTable" stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
             <el-table-column fixed label="主播实名" prop="name"></el-table-column>
             <el-table-column fixed label="主播昵称" prop="nickname"></el-table-column>
-            <el-table-column label="平台" prop="plat.name"></el-table-column>
+            <el-table-column label="平台" prop="plat.name" :filters="plats" :filter-method="searchByPlat"></el-table-column>
             <el-table-column label="总流水(元)" prop="total_money"></el-table-column>
         </el-table>
         <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :page-count="totalPage" @current-change="handleCurrentChange"></el-pagination>
@@ -36,13 +36,39 @@ export default {
     created(){
         this.getData()
     },
+    props: [
+        'name',
+        'start_date',
+        'end_date',
+    ],
     data(){
         return {
-            start_date: '',
-            end_date: '',
             search: {
                 date: '',
+                plat: '',
             },
+            plats: [
+                {
+                    text: '抖音',
+                    value: 1,
+                },
+                {
+                    text: '火山',
+                    value: 2,
+                },
+                {
+                    text: '映客',
+                    value: 3,
+                },
+                {
+                    text: '斗鱼',
+                    value: 4,
+                },
+                {
+                    text: '陌陌',
+                    value: 5,
+                },
+            ],
             pickerOptions: {
                 shortcuts: [{
                     text: '最近一周',
@@ -101,10 +127,8 @@ export default {
         }
     },
     created(){
-        this.start_date = this.$route.query.start_date
-        this.end_date = this.$route.query.end_date
         this.search.date = [this.start_date, this.end_date]
-        this.title = this.$route.query.title
+        this.title = this.name
     }, 
     methods:{
         
@@ -118,6 +142,12 @@ export default {
             //         that.current = res.data.list.current_page
             //         // that.totalPage = res.data.totalPage
             //     })
+        },
+        handleCurrentChange(val) {
+            console.log(`当前页: ${val}`);
+        },
+        searchByPlat(value, row, column){
+            this.search.plat = value
         },
         getSummaries(param) {
             const { columns, data } = param;
