@@ -38,6 +38,26 @@
               class="el-menu-vertical-demo"
               router
             >
+            <!-- 签约统计 -->
+            <el-menu-item index="/echarts" class="el-item e-menu-span" style="font-size:13px;"><img :src="sign_icon" width="20" style="margin-right:10px" height="20" alt />
+                签约统计
+                <el-badge :hidden="is_read" style="margin-top:-9px;" :value="msg_count"></el-badge>
+              </el-menu-item>
+            <!-- 运营统计 -->
+            <el-menu-item index="/operate" class="el-item e-menu-span" style="font-size:13px;"><img :src="yunying_icon" width="20" style="margin-right:10px" height="20" alt />
+                运营统计
+                <el-badge :hidden="is_read" style="margin-top:-9px;" :value="msg_count"></el-badge>
+              </el-menu-item>
+              <!-- 财务结算 -->
+            <el-menu-item index="/financeDetail" class="el-item e-menu-span" style="font-size:13px;"><img :src="finanace_icon" width="20" style="margin-right:10px" height="20" alt />
+                财务结算
+                <el-badge :hidden="is_read" style="margin-top:-9px;" :value="msg_count"></el-badge>
+              </el-menu-item>
+              <!-- 未读消息 -->
+              <el-menu-item index="/msg" class="el-item e-menu-span" style="font-size:13px;"><img :src="msg_icon" width="20" style="margin-right:10px" height="20" alt />
+                消息列表
+                <el-badge :hidden="is_read" style="margin-top:-9px;" :value="msg_count"></el-badge>
+              </el-menu-item>
               <!-- 艺人管理 -->
               <el-submenu index="/management">
                 <template slot="title">
@@ -46,36 +66,6 @@
                 </template>
                 <el-menu-item-group class="el-item">
                   <el-menu-item index="/management" class="el-item e-menu-span" style="font-size:13px;">主播信息</el-menu-item>
-                </el-menu-item-group>
-              </el-submenu>
-            <!-- 签约统计 -->
-            <el-submenu index="/echarts">
-              <template slot="title">
-                <img :src="sign_icon" width="20" style="margin-right:10px" height="20" alt />
-                <span class="e-menu-span router-link">签约统计</span>
-              </template>
-              <el-menu-item-group class="el-item">
-                <el-menu-item index="/echarts" class="el-item e-menu-span" style="font-size:13px;">概况</el-menu-item>
-              </el-menu-item-group>
-            </el-submenu>
-            <!-- 运营统计 -->
-            <el-submenu index="/operate">
-              <template slot="title">
-                <img :src="yunying_icon" width="20" style="margin-right:10px" height="20" alt />
-                <span class="e-menu-span router-link">运营统计</span>
-              </template>
-              <el-menu-item-group class="el-item">
-                <el-menu-item index="/operate" class="el-item e-menu-span" style="font-size:13px;">概况</el-menu-item>
-              </el-menu-item-group>
-            </el-submenu>
-              <!-- 财务结算 -->
-              <el-submenu index="/financeDetail">
-                <template slot="title">
-                  <img :src="finanace_icon" width="20" style="margin-right:10px" height="20" alt />
-                  <span class="e-menu-span router-link">财务结算</span>
-                </template>
-                <el-menu-item-group class="el-item">
-                  <el-menu-item index="/financeDetail" class="el-item e-menu-span" style="font-size:13px;">概况</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
               <!-- 分组与平台 -->
@@ -90,11 +80,6 @@
                   <el-menu-item index="/users" class="el-item e-menu-span" style="font-size:13px;">用户管理</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
-              <!-- 未读消息 -->
-              <el-menu-item index="/msg" class="el-item e-menu-span" style="font-size:13px;"><img :src="msg_icon" width="20" style="margin-right:10px" height="20" alt />
-                消息列表
-                <el-badge :hidden="is_read" style="margin-top:-9px;" :value="msg_count"></el-badge>
-              </el-menu-item>
             </el-menu>
           </el-aside>
         </div>

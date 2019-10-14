@@ -5,9 +5,11 @@
                 <el-col :span="4">
                     <el-input placeholder="关键字"></el-input>
                 </el-col>
-                <el-col :span="6" offset="14">
-                    <el-button class="offset-left-30 right" type="primary" style="float:right;" @click="add(0)">新增</el-button>
-                    <el-button class="btn-search" style="float:right;" @click="getData">搜索</el-button>
+                <el-col :sm="8">
+                    <el-button class="btn-search" @click="getData">搜索</el-button>
+                </el-col>
+                <el-col :span="12">
+                    <el-button class="right" type="primary" style="float:right;" @click="add(0)">新增</el-button>
                 </el-col>
             </el-row>
             <!-- <el-button class="right" @click="">删除</el-button> -->
