@@ -9,6 +9,8 @@ import Finance from './finance'
 import Contact from './contact'
 import Operation from './operation'
 import Msg from './msg'
+import Import from './import'
+
 export default
 [
   //首页
@@ -27,6 +29,7 @@ export default
       ...Operation,
       ...Operate,
       ...Msg,
+      ...Import,
     ]
   },
 ]

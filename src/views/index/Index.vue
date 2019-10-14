@@ -41,22 +41,23 @@
             <!-- 签约统计 -->
             <el-menu-item index="/echarts" class="el-item e-menu-span" style="font-size:13px;"><img :src="sign_icon" width="20" style="margin-right:10px" height="20" alt />
                 签约统计
-                <el-badge :hidden="is_read" style="margin-top:-9px;" :value="msg_count"></el-badge>
               </el-menu-item>
             <!-- 运营统计 -->
             <el-menu-item index="/operate" class="el-item e-menu-span" style="font-size:13px;"><img :src="yunying_icon" width="20" style="margin-right:10px" height="20" alt />
                 运营统计
-                <el-badge :hidden="is_read" style="margin-top:-9px;" :value="msg_count"></el-badge>
               </el-menu-item>
               <!-- 财务结算 -->
             <el-menu-item index="/financeDetail" class="el-item e-menu-span" style="font-size:13px;"><img :src="finanace_icon" width="20" style="margin-right:10px" height="20" alt />
                 财务结算
-                <el-badge :hidden="is_read" style="margin-top:-9px;" :value="msg_count"></el-badge>
               </el-menu-item>
               <!-- 未读消息 -->
               <el-menu-item index="/msg" class="el-item e-menu-span" style="font-size:13px;"><img :src="msg_icon" width="20" style="margin-right:10px" height="20" alt />
                 消息列表
                 <el-badge :hidden="is_read" style="margin-top:-9px;" :value="msg_count"></el-badge>
+              </el-menu-item>
+              <!-- 数据录入 -->
+              <el-menu-item index="/import" class="el-item e-menu-span" style="font-size:13px;"><img :src="msg_icon" width="20" style="margin-right:10px" height="20" alt />
+                数据录入
               </el-menu-item>
               <!-- 艺人管理 -->
               <el-submenu index="/management">
