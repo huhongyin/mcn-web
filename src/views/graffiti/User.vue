@@ -3,54 +3,71 @@
         <div slot="header" class="clearfix">
             <el-row :gutter="10">
                 <el-col :span="4">
-                    <el-input placeholder="关键字"></el-input>
+                    <el-select v-model="search.company_id" @change="changeCompany">
+                        <el-option v-for="(item, key) in search.companies" :key="key" :label="item.name" :value="item.id"></el-option>
+                    </el-select>
                 </el-col>
-                <el-col :sm="8">
-                    <el-button class="btn-search" @click="getData">搜索</el-button>
+                <el-col :span="4">
+                    <el-select v-model="search.department_id">
+                        <el-option v-for="(item, key) in search.departments" :key="key" :label="item.name" :value="item.id"></el-option>
+                    </el-select>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="4">
+                    <el-input placeholder="关键字" v-model="search.keywords"></el-input>
+                </el-col>
+                <el-col :sm="4">
+                    <el-button class="btn-search" @click="searchData">搜索</el-button>
+                </el-col>
+                <el-col :span="8">
                     <el-button class="right" type="primary" style="float:right;" @click="add(0)">新增</el-button>
                 </el-col>
             </el-row>
-            <!-- <el-button class="right" @click="">删除</el-button> -->
         </div>
-        <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
-                <!-- <el-table-column type="selection"></el-table-column> -->
+        <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
                 <el-table-column label="序号" type="index"></el-table-column>
-                <el-table-column label="用户名" prop="username"></el-table-column>
-                <el-table-column label="手机号" prop="phone"></el-table-column>
+                <el-table-column label="姓名" prop="rel_name"></el-table-column>
+                <el-table-column label="登录名" prop="name"></el-table-column>
+                <el-table-column label="邮箱" prop="email"></el-table-column>
                 <el-table-column label="公司" prop="company.name"></el-table-column>
-                <el-table-column label="分组" prop="group.name"></el-table-column>
-                <!-- <el-table-column label="部门" prop="department.name"></el-table-column> -->
-                <el-table-column label="状态">
-                    <template slot-scope="scope">
-                        <span v-if="scope.row.status==1">在职</span>
-                        <span v-else>离职</span>
-                    </template>
-                </el-table-column>
+                <el-table-column label="部门" prop="department.name"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button @click="add(scope.row.id)" type="text" size="small">编辑</el-button>
-                        <el-button @click="showDetail(scope.row.id)" type="text" size="small">查看</el-button>
+                        <el-button @click="showDetail(scope.row)" type="text" size="small">查看</el-button>
                         <el-button type="text" size="small">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :page-count="totalPage" @current-change="handleCurrentChange"></el-pagination>
-            <el-dialog title="场景类型详情" :visible.sync="showDetailDialog.centerDialogVisible" width="800px" center>
-                <div class="center">
-                    <div>
-                        <span class="user-detail-text">场景类型：</span><span class="user-detail-value" v-html="detail.type"></span>
-                    </div>
-                    <div>
-                        <span class="user-detail-text">备注：</span><span class="user-detail-value" v-html="detail.remark"></span>
-                    </div>
-                </div>
+            
+            <el-dialog title="用户详情" :visible.sync="detail.centerDialogVisible" center class="user-detail">
+                <el-row>
+                    <el-col :span="3" :offset="8">
+                        用户名:
+                    </el-col>
+                    <el-col :span="12" :offset="1">
+                        <label v-text="detail.data.name"></label>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="3" :offset="8">
+                        邮箱:
+                    </el-col>
+                    <el-col :span="12" :offset="1">
+                        <label v-text="detail.data.email"></label>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="3" :offset="8">
+                        所属公司:
+                    </el-col>
+                    <el-col :span="12" :offset="1">
+                        <label v-text="detail.data.company.name"></label>
+                    </el-col>
+                </el-row>
                 <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="showDetailDialog.centerDialogVisible = false">保存</el-button>
-                    <el-button type="default" @click="showDetailDialog.centerDialogVisible = false">取消</el-button>
+                    <el-button type="primary" @click="detail.centerDialogVisible = false">关闭</el-button>
                 </span>
-                
             </el-dialog>
             <!-- TODO 文字间距设置 -->
             <el-dialog :title="addDialog.addTitle" :visible.sync="addDialog.addDialogVisible" width="800px" center>
@@ -58,11 +75,27 @@
                     <el-form :model="addDialog.form">
                         <el-input v-model="addDialog.form.id" type="hidden" autocomplete="off"></el-input>
                         <!-- <el-form-item label="账号" class="add-user-dialog-label" :label-width="addUserDialog.formLabelWidth"> -->
-                        <el-form-item label="场景类型：" :label-width="addDialog.formLabelWidth">
+                        <el-form-item label="姓名：" :label-width="addDialog.formLabelWidth">
+                            <el-input v-model="addDialog.form.rel_name" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="登录账号：" :label-width="addDialog.formLabelWidth">
                             <el-input v-model="addDialog.form.name" autocomplete="off"></el-input>
                         </el-form-item>
-                        <el-form-item label="备注：" :label-width="addDialog.formLabelWidth">
-                            <el-input type="textarea" v-model="addDialog.form.remark" rows="5"></el-input>
+                        <el-form-item label="邮箱：" :label-width="addDialog.formLabelWidth">
+                            <el-input type="email" v-model="addDialog.form.email" rows="5"></el-input>
+                        </el-form-item>
+                        <el-form-item label="所属公司：" :label-width="addDialog.formLabelWidth">
+                            <el-select v-model="addDialog.form.company_id" style="width:100%;" @change="changeAddCompany">
+                                <el-option v-for="(item,key) in addDialog.companies" :key="key" :value="item.id" :label="item.name"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="所属部门：" :label-width="addDialog.formLabelWidth">
+                            <el-select v-model="addDialog.form.department_id" style="width:100%;">
+                                <el-option v-for="(item,key) in addDialog.departments" :key="key" :value="item.id" :label="item.name"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="密码：" :label-width="addDialog.formLabelWidth">
+                            <el-input type="password" v-model="addDialog.form.password" rows="5" placeholder="不输入密码为默认密码"></el-input>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -75,165 +108,135 @@
 </template>
 
 <script>
-// import { mkdir } from 'fs';
-import { get} from '@/api/index.js';
-// import userApi from '@/api/user.js';
+import { get, post} from '@/api/index.js';
+import userApi from '@/api/user.js';
+import companyApi from '@/api/company.js';
+import departmentApi from '@/api/department.js';
 export default {
     created(){
+        this.getCompany()
         this.getData()
     },
     data(){
         return {
-            search:{
-                types:[
-                    {
-                        value: 1,
-                        label: "建筑"
-                    },
-                    {
-                        value: 2,
-                        label: "人物"
-                    },
-                    {
-                        value: 3,
-                        label: "动物"
-                    },
-                ],
-                type: "",
+            search: {
+                keywords: "",
+                company_id: "",
+                department_id: "",
+                companies: [],
+                departments: [],
             },
             addDialog:{
-                addTitle : '新增场景类型',
+                addTitle : '新增用户',
                 addDialogVisible: false,
+                companies: [],
+                departments: [],
                 form:{
                     id: 0,
-                    name : '建筑',
-                    remark: '备注备注',
+                    rel_name: '',
+                    name : '',
+                    password: '',
+                    email: '',
+                    company_id: "",
+                    department_id: "",
                 },
                 formLabelWidth: '130px',
             },
-            showDetailDialog: {
+            detail: {
+                data: {
+                    name: "",
+                    company: {
+                        name: "",
+                    }
+                },
                 centerDialogVisible: false,
             },
-            size : 10,
             current : 1,
             totalPage: 0,
-            total: 0,
-            list: [
-                {
-                    id : 1,
-                    username: 'admin',
-                    phone: "18244251413",
-                    company: {
-                        id: 1,
-                        name: '子公司一'
-                    },
-                    group: {
-                        id: 1,
-                        name: '运营小组一'
-                    },
-                    status: 1,
-                },
-                {
-                    id : 1,
-                    username: 'admin',
-                    phone: "18244251413",
-                    company: {
-                        id: 1,
-                        name: '子公司一'
-                    },
-                    group: {
-                        id: 1,
-                        name: '运营小组一'
-                    },
-                    status: 1,
-                },
-                {
-                    id : 1,
-                    username: 'admin',
-                    phone: "18244251413",
-                    company: {
-                        id: 1,
-                        name: '子公司一'
-                    },
-                    group: {
-                        id: 1,
-                        name: '运营小组一'
-                    },
-                    // department: {
-                    //     id: 1,
-                    //     name: '人事部'
-                    // },
-                    status: 1,
-                },
-            ],
-            detail: {
-                type: "人物",
-                remark: "备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注",
-            },
-            multipleSelection : [],
-            ruleList:[
-                {label:"用户管理-手机用户", value: "1"},
-                {label:"用户管理-管理员", value: "2"},
-                {label:"用户管理-角色管理", value: "3"},
-                {label:"用户管理-修改密码", value: "4"},
-                {label:"用户管理-涂鸦分类", value: "5"},
-            ],
+            list: [],
         }
     },
     methods:{
-        toggleSelection(rows) {
-            if (rows) {
-            rows.forEach(row => {
-                this.$refs.multipleTable.toggleRowSelection(row);
-            });
-            } else {
-            this.$refs.multipleTable.clearSelection();
-            }
-        },
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
-        },
         getData(){
-            // var params = { current : this.current, size : this.size, buyerEmail : this.search.keywords }
-            // var that = this
-            // post(userApi.phoneUserList, params)
-            // .then(function(res){
-            //     that.list = res.data.list
-            //     that.total = res.data.total
-            //     that.current = res.data.pageNum
-            //     that.totalPage = res.data.totalPage
-            // }).catch(function(err){
-            //     console.log('error')
-            //     console.log(err)
-            // })
+            var params = { page : this.current, keywords: this.search.keywords, company_id: this.search.company_id, department_id: this.search.department_id }
+            let that = this
+            get(userApi.list, params).then((res) => {
+                that.list = res.data.list.data
+                that.totalPage = res.data.list.last_page
+            })
         },
-        showDetail(id){
-            this.showDetailDialog.id = id
-            this.showDetailDialog.centerDialogVisible = true
-            // var params = { id: id }
-            // var that = this
-            // post(userApi.phoneUserDetail, params).then(function(res){
-            //     console.log(res)
-            //     that.detail = res.data
-            //     that.centerDialogVisible = true
-            //     console.log(that.detail)
-            // }).catch(function(err){
-            //     console.log('error')
-            //     console.log(err)
-            // })
-            // console.log(this.detail)
+        getCompany(){
+            let that = this
+            get(companyApi.list, { type: 'select', company_id: this.search.company_id }).then((res) =>{
+                that.search.companies = res.data.list
+                that.addDialog.companies = res.data.list
+            })
+        },
+        getDepartment(company_id){
+            let that = this
+            get(departmentApi.list, { type: 'select', company_id: company_id }).then((res) =>{
+                that.search.departments = res.data.list
+            })
+        },
+        showDetail(data){
+            this.detail.data = data
+            this.detail.centerDialogVisible = true
         },
         add(id){
             if(id > 0){
                 //编辑时要获取对应角色的权限数据
-                this.addDialog.addTitle = '编辑场景类型'
+                this.addDialog.addTitle = '编辑用户'
+                //获取用户详情
+                let that = this
+                get(userApi.detail + '/' + id, {}).then((res) => {
+                    that.addDialog.form.id = id
+                    that.addDialog.form.rel_name = res.data.info.rel_name
+                    that.addDialog.form.name = res.data.info.name
+                    that.addDialog.form.email = res.data.info.email
+                    that.addDialog.form.company_id = res.data.info.company_id
+                })
             }else{
-                this.addDialog.addTitle = '新增场景类型'
+                this.addDialog.addTitle = '新增用户'
             }
+
             this.addDialog.addDialogVisible = true
+        },
+        doAddUser(){
+            let that = this
+            post(userApi.add + '/' + this.addDialog.form.id, { user: this.addDialog.form }).then((res) => {
+                that.$message({
+                    type: 'success',
+                    message: res.msg,
+                })
+
+                that.addDialog.form.id = ""
+                that.addDialog.form.rel_name = ""
+                that.addDialog.form.name = ""
+                that.addDialog.form.email = ""
+                that.addDialog.form.company_id = ""
+                that.addDialog.addDialogVisible = false
+                that.getData()
+            })
         },
         handleCurrentChange(val){
             this.current = val
+            this.getData()
+        },
+        changeCompany(){
+            this.search.department_id = ""
+            this.getDepartment(this.search.company_id)
+        },
+        changeAddCompany(){
+            this.getAddDepartment()
+        },
+        getAddDepartment(){
+            let that = this
+            get(departmentApi.list, { type: 'select', company_id: this.addDialog.form.company_id }).then((res) =>{
+                that.addDialog.departments = res.data.list
+            })
+        },
+        searchData(){
+            this.current = 1
             this.getData()
         },
     }
@@ -244,8 +247,14 @@ export default {
 // .el-dialog--center .el-dialog__body{
 //     text-align: center;
 // }
-.el-form > .add-user-dialog-label > label{
-    color: black;
-    font-weight: 400;
+
+.user-detail{
+    .el-row {
+        margin-bottom: .2rem;
+        .el-col-3{
+            text-align: right;
+            text-align-last: justify;
+        }
+    }
 }
 </style>

@@ -1,4 +1,4 @@
-import Rule from '../views/graffiti/Rule.vue'
+import Department from '../views/graffiti/Department.vue'
 import User from '../views/graffiti/User.vue'
 import Group from '@/views/graffiti/Group.vue'
 import Company from '@/views/graffiti/Company.vue'
@@ -7,9 +7,9 @@ export default
 [
   // 权限
   {
-    path: '/rules',
-    name: 'rule',
-    component: Rule,
+    path: '/department',
+    name: 'department',
+    component: Department,
   },
   //公司管理
   {

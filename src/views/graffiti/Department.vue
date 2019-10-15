@@ -1,0 +1,177 @@
+<template>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <el-row :gutter="10">
+                <el-col :span="4">
+                    <el-select v-model="search.company_id">
+                        <el-option v-for="(item, key) in search.companies" :key="key" :value="item.id" :label="item.name"></el-option>
+                    </el-select>
+                </el-col>
+                <el-col :sm="8">
+                    <el-button class="btn-search" @click="searchData">搜索</el-button>
+                </el-col>
+                <el-col :span="12">
+                    <el-button class="right" type="primary" style="float:right;" @click="add(0)">新增</el-button>
+                </el-col>
+            </el-row>
+        </div>
+        <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
+                <!-- <el-table-column type="selection"></el-table-column> -->
+                <el-table-column label="序号" type="index"></el-table-column>
+                <el-table-column label="部门名" prop="name"></el-table-column>
+                <el-table-column label="负责人" prop="user.rel_name"></el-table-column>
+                <el-table-column label="所属公司" prop="company.name"></el-table-column>
+                <el-table-column label="操作">
+                    <template slot-scope="scope">
+                        <el-button @click="add(scope.row.id)" type="text" size="small">编辑</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :total="total" @current-change="handleCurrentChange"></el-pagination>
+            
+            <!-- TODO 文字间距设置 -->
+            <el-dialog :title="addDialog.addTitle" :visible.sync="addDialog.addDialogVisible" width="800px" center @close="close">
+                <div class="center break">
+                    <el-form :model="addDialog.form">
+                        <el-input v-model="addDialog.form.id" type="hidden" autocomplete="off"></el-input>
+                        <!-- <el-form-item label="账号" class="add-user-dialog-label" :label-width="addUserDialog.formLabelWidth"> -->
+                        <el-form-item label="部门名称：" :label-width="addDialog.formLabelWidth">
+                            <el-input v-model="addDialog.form.name" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="所属公司：" :label-width="addDialog.formLabelWidth">
+                            <el-select style="width:100%;" v-model="addDialog.form.company_id" @change="changeCompany">
+                                <el-option v-for="(item,key) in search.companies" :key="key" :label="item.name" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="负责人：" :label-width="addDialog.formLabelWidth">
+                            <el-select style="width:100%;" v-model="addDialog.form.user_id">
+                                <el-option v-for="(item,key) in search.users" :key="key" :label="item.name" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-form>
+                </div>
+                <span slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="doAdd">保 存</el-button>
+                    <el-button @click="close">取 消</el-button>
+                </span>
+            </el-dialog>
+    </el-card>
+</template>
+
+<script>
+import { get, post} from '@/api/index.js';
+import departmentApi from '@/api/department.js';
+import companyApi from '@/api/company.js';
+import userApi from '@/api/user.js';
+export default {
+    created(){
+        this.getUsers(0)
+        this.getCompany()
+        this.getData()
+    },
+    data(){
+        return {
+            search:{
+                company_id: "",
+                companies: [],
+                users: [],
+            },
+            addDialog:{
+                addTitle : '新增部门',
+                addDialogVisible: false,
+                form:{
+                    id: 0,
+                    company_id : "",
+                    name: "",
+                    user_id: "",
+                },
+                formLabelWidth: '130px',
+            },
+            current : 1,
+            total: 0,
+            list: [],
+        }
+    },
+    methods:{
+        getData(){
+            let params = { current : this.current, company_id: this.search.company_id }
+            let that = this
+            get(departmentApi.list, params).then((res) => {
+                that.list = res.data.list.data
+                that.total = res.data.list.total
+            })
+        },
+        getCompany(){
+            let that = this
+            get(companyApi.list, { type: 'select' }).then((res) =>{
+                that.search.companies = res.data.list
+            })
+        },
+        getUsers(company_id){
+            let that = this
+            get(userApi.list, { type: 'select', company_id: company_id }).then((res) =>{
+                that.search.users = res.data.list
+            })
+        },
+        add(id){
+            if(id > 0){
+                //编辑时要获取对应角色的权限数据
+                this.addDialog.addTitle = '编辑部门'
+                get(departmentApi.detail + '/' + id).then((res) => {
+                    this.addDialog.form.id = id
+                    this.addDialog.form.name = res.data.info.name
+                    this.addDialog.form.company_id = res.data.info.company_id
+                    this.addDialog.form.user_id = res.data.info.user_id
+                })
+            }else{
+                this.addDialog.addTitle = '新增部门'
+            }
+            this.addDialog.addDialogVisible = true
+        },
+        doAdd(){
+            let that = this
+            post(departmentApi.add + '/' + this.addDialog.form.id, { info: this.addDialog.form }).then((res) => {
+                that.$message({
+                    type: 'success',
+                    message: res.msg,
+                })
+
+                that.addDialog.form.id = 0
+                that.addDialog.form.company_id = ""
+                that.addDialog.form.name = ""
+                that.addDialog.form.user_id = ""
+                that.addDialog.addDialogVisible = false
+                that.getData()
+            })
+        },
+        close(){
+            this.addDialog.form.id = 0
+            this.addDialog.form.company_id = ""
+            this.addDialog.form.name = ""
+            this.addDialog.form.user_id = ""
+            this.addDialog.addDialogVisible = false
+        },
+        handleCurrentChange(val){
+            this.current = val
+            this.getData()
+        },
+        searchData(){
+            this.current = 1
+            this.getData()
+        },
+        changeCompany(){
+            this.getUsers(this.addDialog.form.company_id)
+        }
+    }
+}
+</script>
+
+<style lang='less' scoped>
+// .el-dialog--center .el-dialog__body{
+//     text-align: center;
+// }
+.el-form > .add-user-dialog-label > label{
+    color: black;
+    font-weight: 400;
+}
+</style>

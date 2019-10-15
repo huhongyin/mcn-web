@@ -1,3 +1,5 @@
 export default{
-    list : "/actor/list",
+    list : "/user/list",
+    detail: "/user/detail",
+    add: "/user/add", 
 }
