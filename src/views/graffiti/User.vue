@@ -91,7 +91,7 @@
                         </el-form-item>
                         <el-form-item label="所属部门：" :label-width="addDialog.formLabelWidth">
                             <el-select v-model="addDialog.form.department_id" style="width:100%;">
-                                <el-option v-for="(item,key) in addDialog.departments" :key="key" :value="item.id" :label="item.name"></el-option>
+                                <el-option v-for="(item,key) in addDialog   .departments" :key="key" :value="item.id" :label="item.name"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="密码：" :label-width="addDialog.formLabelWidth">
