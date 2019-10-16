@@ -16,6 +16,7 @@
             <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button> -->
             <!-- <el-button type="primary">新增</el-button> -->
             <el-button icon="el-icon-download" @click="exportExcel">导出</el-button>
+            <el-button type="primary" @click="add">新增</el-button>
         </div>
         <el-table id="managementTable" stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
@@ -31,6 +32,7 @@
                 <el-table-column label="签约人" prop="sign.name" width="80px"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
+                        <el-button @click="add(scope.row)" type="text" size="small">编辑</el-button>
                         <el-button @click="signDetail(scope.row.id)" type="text" size="small">流水信息</el-button>
                         <el-button @click="userDetail(scope.row.id)" type="text" size="small">艺人信息</el-button>
                         <el-button @click="bankDetail(scope.row.id)" type="text" size="small">银行资料</el-button>
@@ -165,20 +167,290 @@
                     <el-button type="primary" @click="bankDetailDialog.show = false">确 定</el-button>
                 </span>
             </el-dialog>
+
+            <!-- 新增弹窗 -->
+            <el-dialog title="新增艺人" :visible.sync="addDialog.dialogVisible">
+                
+                <el-form>
+                    <el-tabs v-model="addDialog.activeName" type="border-card">
+                        <el-tab-pane label="艺人信息" name="actor_field" class="actor-tab">
+                            <el-form-item label="">
+                                <el-col :span="4">所属公司</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-select v-model="addDialog.form.actor.company_id" style="width: 100%;" placeholder="请选择公司" @change="changeCompany">
+                                        <el-option v-for="(item,key) in addDialog.companies" :key="key" :label="item.name" :value="item.id"></el-option>
+                                    </el-select>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">实名</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入实名" v-model="addDialog.form.actor.name"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">艺名</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入艺名" v-model="addDialog.form.actor.nickname"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">平台</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-select v-model="addDialog.form.actor.plat_id" style="width: 100%;" placeholder="请选择平台">
+                                        <el-option v-for="(item,key) in addDialog.plats" :key="key" :label="item.name" :value="item.id"></el-option>
+                                    </el-select>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">微信号</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入微信号" v-model="addDialog.form.actor.wx_code"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">联系电话</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入联系电话" v-model="addDialog.form.actor.phone"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">身份证号码</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入身份证号码" v-model="addDialog.form.actor.id_card_no"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">生日</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-date-picker style="width:100%;" placeholder="请选择生日" v-model="addDialog.form.actor.birthday"></el-date-picker>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">住址</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入住址" v-model="addDialog.form.actor.address"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">原始ID</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入原始ID" v-model="addDialog.form.actor.old_id"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">现用ID</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入现用ID" v-model="addDialog.form.actor.now_id"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">等级</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-select v-model="addDialog.form.actor.level" style="width: 100%;" placeholder="请选择等级">
+                                        <el-option v-for="(item,key) in addDialog.levels" :key="key" :label="item.name" :value="item.id"></el-option>
+                                    </el-select>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">运营</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-select v-model="addDialog.form.actor.yunying_user_id" style="width: 100%;" placeholder="请选择运营负责人">
+                                        <el-option v-for="(item,key) in addDialog.yunyings" :key="key" :label="item.name" :value="item.id"></el-option>
+                                    </el-select>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">签约人</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-select v-model="addDialog.form.actor.sign_user_id" style="width: 100%;" placeholder="请选择签约人">
+                                        <el-option v-for="(item,key) in addDialog.sign_users" :key="key" :label="item.name" :value="item.id"></el-option>
+                                    </el-select>
+                                </el-col>
+                            </el-form-item>
+                        </el-tab-pane>
+                        <el-tab-pane label="签约信息" name="money_field" class="sign-tab">
+                            <el-form-item label="">
+                                <el-col :span="4">扶持金额</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入扶持金额" v-model="addDialog.form.sign.fuchijine"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">已扶持金额</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入已扶持金额" v-model="addDialog.form.sign.yifuchijine"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">已投放都加金额</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入已投放都加金额" v-model="addDialog.form.sign.yitoufangdoujiajine"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">每日应播时长</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入每日应播时长" v-model="addDialog.form.sign.meiriyingboshichang"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">已投入刷币</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入已投入刷币" v-model="addDialog.form.sign.yitourushuabi"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">扶持截止时间</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-date-picker style="width:100%;" placeholder="请选择扶持截止时间" v-model="addDialog.form.sign.fuchijiezhishijian"></el-date-picker>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">已充值主播账户</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入已充值主播账户" v-model="addDialog.form.sign.yichongzhizhubozhanghu"></el-input>
+                                </el-col>
+                            </el-form-item>
+                        </el-tab-pane>
+                        <el-tab-pane label="银行资料" name="bank_field" class="bank-tab">
+                            <el-form-item label="">
+                                <el-col :span="4">开户银行</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-select style="width:100%;" v-model="addDialog.form.bank.id">
+                                        <el-option v-for="(item,key) in addDialog.banks" :key="key" :label="item.name" :value="item.id"></el-option>
+                                    </el-select>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">银行卡号</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入银行卡号" v-model="addDialog.form.bank.bank_no"></el-input>
+                                </el-col>
+                            </el-form-item>
+                        </el-tab-pane>
+                    </el-tabs>
+                </el-form>
+
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="addDialog.dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="doAddUser">确 定</el-button>
+                </span>
+            </el-dialog>
     </el-card>
 </template>
 
 <script>
-import { fPost, get} from '@/api/index.js';
+import { post, get} from '@/api/index.js';
 import userApi from '@/api/user.js';
+import bankApi from '@/api/bank.js';
+import companyApi from '@/api/company.js';
 import FileSaver from 'file-saver';
 import XLSX from 'xlsx';
 export default {
     created(){
+        this.getCompany()
         this.getData()
     },
     data(){
         return {
+            addDialog: {
+                dialogVisible: false,
+                activeName: 'actor_field',
+                banks: [],
+                levels: [
+                    {
+                        id: 3,
+                        name: 'S级'
+                    },
+                    {
+                        id: 1,
+                        name: 'A级'
+                    },
+                    {
+                        id: 2,
+                        name: 'B级'
+                    },
+                ],
+                yunyings: [
+                    {
+                        id: 3,
+                        name: '张三'
+                    },
+                    {
+                        id: 1,
+                        name: '李四'
+                    },
+                    {
+                        id: 2,
+                        name: '王二'
+                    },
+                ],
+                companies: [],
+                sign_users: [
+                    {
+                        id: 3,
+                        name: '赵武'
+                    },
+                    {
+                        id: 1,
+                        name: '李夏阁'
+                    },
+                    {
+                        id: 2,
+                        name: '王多宇'
+                    },
+                ],
+                plats: [
+                    {
+                        id: 1,
+                        name: '抖音',
+                    },
+                    {
+                        id: 2,
+                        name: '火山',
+                    },
+                    {
+                        id: 3,
+                        name: '映客',
+                    },
+                    {
+                        id: 4,
+                        name: '陌陌',
+                    },
+                ],
+                form: {
+                    actor: {
+                        name: '',
+                        nickname: '',
+                        plat_id: '',
+                        wx_code: '',
+                        old_id: '',
+                        now_id: '',
+                        level: '',
+                        yunying_user_id: '',
+                        sign_user_id: '',
+                        company_id: '',
+                        phone: '',
+                        id_card_no: '',
+                        birthday: '',
+                        address: '',
+                    },
+                    bank: {
+                        id: "",
+                        bank_no: "",
+                    },
+                    sign: {
+                        fuchijine: 0,
+                        yifuchijine: 0,
+                        yitoufangdoujiajine: 0,
+                        meiriyingboshichang: 0,
+                        yitourushuabi: 0,
+                        fuchijiezhishijian: "",
+                        yichongzhizhubozhanghu: 0,
+                    },
+                }
+            },
             centerDialogVisible : false,
             keywords : "",
             select_date: "",
@@ -316,36 +588,6 @@ export default {
             })
             this.selectedIDs = ids
         },
-        frozen(type, id){
-            if(type == 'checkbox'){
-                id = this.selectedIDs
-            }else{
-                id = [id]
-            }
-            // var params = { "ids" : id }
-            var params = id
-            var that = this
-            post(userApi.frozenUser, params).then(function(res){
-                if(res.code == 200){
-                    that.getData()
-                }
-            })
-        },
-        unFrozen(type, id){
-            if(type == 'checkbox'){
-                id = this.selectedIDs
-            }else{
-                id = [id]
-            }
-            // var params = { "ids" : id }
-            var params = id
-            var that = this
-            post(userApi.unFrozenUser, params).then(function(res){
-                if(res.code == 200){
-                    that.getData()
-                }
-            })
-        },
         getData(){
             // var params = { page: this.current}
             // var that = this
@@ -395,21 +637,32 @@ export default {
             }
             return wbout
         },
+        add(){
+            this.addDialog.dialogVisible = true
+        },
+        doAddUser(){
+            console.log(this.addDialog.form)
+        },
+        changeCompany(){
+            this.getBankOptions()
+        },
+        getBankOptions(){
+            get(bankApi.optionList, { type: 'select', company_id: this.addDialog.form.company_id }).then((res) => {
+                this.addDialog.banks = res.data.list
+            })
+        },
+        getCompany(){
+            get(companyApi.list, { type: 'select' }).then((res) =>{
+                this.addDialog.companies = res.data.list
+            })
+        },
     }
 }
 </script>
 
 <style lang='less' scoped>
-.el-dialog--center .el-dialog__body{
-    text-align: center;
-}
-.color-red:hover{
-    color:red;
-}
-.color-blue:hover{
-    color: #409EFF;
-}
-.el-row{
-    margin-bottom: 20px;
+
+.actor-tab,.bank-tab,.sign-tab .el-col-4{
+    text-align-last: justify;
 }
 </style>

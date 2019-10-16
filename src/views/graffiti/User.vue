@@ -4,11 +4,13 @@
             <el-row :gutter="10">
                 <el-col :span="4">
                     <el-select v-model="search.company_id" @change="changeCompany">
+                                <el-option label="全部" value=""></el-option>
                         <el-option v-for="(item, key) in search.companies" :key="key" :label="item.name" :value="item.id"></el-option>
                     </el-select>
                 </el-col>
                 <el-col :span="4">
                     <el-select v-model="search.department_id">
+                                <el-option label="全部" value=""></el-option>
                         <el-option v-for="(item, key) in search.departments" :key="key" :label="item.name" :value="item.id"></el-option>
                     </el-select>
                 </el-col>
@@ -34,7 +36,7 @@
                     <template slot-scope="scope">
                         <el-button @click="add(scope.row.id)" type="text" size="small">编辑</el-button>
                         <el-button @click="showDetail(scope.row)" type="text" size="small">查看</el-button>
-                        <el-button type="text" size="small">删除</el-button>
+                        <el-button type="text" size="small" @click="deleteUser(scope.row.id)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -86,12 +88,14 @@
                         </el-form-item>
                         <el-form-item label="所属公司：" :label-width="addDialog.formLabelWidth">
                             <el-select v-model="addDialog.form.company_id" style="width:100%;" @change="changeAddCompany">
+                                <el-option label="全部" value=""></el-option>
                                 <el-option v-for="(item,key) in addDialog.companies" :key="key" :value="item.id" :label="item.name"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="所属部门：" :label-width="addDialog.formLabelWidth">
                             <el-select v-model="addDialog.form.department_id" style="width:100%;">
-                                <el-option v-for="(item,key) in addDialog   .departments" :key="key" :value="item.id" :label="item.name"></el-option>
+                                <el-option label="全部" value=""></el-option>
+                                <el-option v-for="(item,key) in addDialog.departments" :key="key" :value="item.id" :label="item.name"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="密码：" :label-width="addDialog.formLabelWidth">
@@ -176,6 +180,7 @@ export default {
             let that = this
             get(departmentApi.list, { type: 'select', company_id: company_id }).then((res) =>{
                 that.search.departments = res.data.list
+                that.addDialog.departments = res.data.list
             })
         },
         showDetail(data){
@@ -194,6 +199,7 @@ export default {
                     that.addDialog.form.name = res.data.info.name
                     that.addDialog.form.email = res.data.info.email
                     that.addDialog.form.company_id = res.data.info.company_id
+                    that.changeAddCompany()
                 })
             }else{
                 this.addDialog.addTitle = '新增用户'
@@ -214,6 +220,7 @@ export default {
                 that.addDialog.form.name = ""
                 that.addDialog.form.email = ""
                 that.addDialog.form.company_id = ""
+                that.addDialog.form.department_id = ""
                 that.addDialog.addDialogVisible = false
                 that.getData()
             })
@@ -239,6 +246,17 @@ export default {
             this.current = 1
             this.getData()
         },
+        deleteUser(id){
+            var params = { ids: [id].join(',') }
+            post(userApi.delete, params).then((res) => {
+                this.$message({
+                    type: 'success',
+                    message: res.msg
+                })
+
+                this.getData()
+            })
+        }
     }
 }
 </script>

@@ -4,6 +4,7 @@
             <el-row :gutter="10">
                 <el-col :span="4">
                     <el-select v-model="search.company_id">
+                        <el-option label="全部" value=""></el-option>
                         <el-option v-for="(item, key) in search.companies" :key="key" :value="item.id" :label="item.name"></el-option>
                     </el-select>
                 </el-col>
@@ -24,6 +25,7 @@
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button @click="add(scope.row.id)" type="text" size="small">编辑</el-button>
+                        <el-button @click="deleteDepartment(scope.row.id)" type="text" size="small">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -45,7 +47,7 @@
                         </el-form-item>
                         <el-form-item label="负责人：" :label-width="addDialog.formLabelWidth">
                             <el-select style="width:100%;" v-model="addDialog.form.user_id">
-                                <el-option v-for="(item,key) in search.users" :key="key" :label="item.name" :value="item.id"></el-option>
+                                <el-option v-for="(item,key) in search.users" :key="key" :label="item.rel_name" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-form>
@@ -122,6 +124,7 @@ export default {
                     this.addDialog.form.name = res.data.info.name
                     this.addDialog.form.company_id = res.data.info.company_id
                     this.addDialog.form.user_id = res.data.info.user_id
+                    this.changeCompany()
                 })
             }else{
                 this.addDialog.addTitle = '新增部门'
@@ -161,7 +164,18 @@ export default {
         },
         changeCompany(){
             this.getUsers(this.addDialog.form.company_id)
-        }
+        },
+        deleteDepartment(id){
+            var params = { ids: [id].join(',') }
+
+            post(departmentApi.delete, params).then( (res) => {
+                this.$message({
+                    type: 'success',
+                    message: res.msg
+                })
+                this.getData()
+            } )
+        },
     }
 }
 </script>

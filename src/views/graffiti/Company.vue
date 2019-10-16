@@ -3,21 +3,21 @@
         <div slot="header" class="clearfix">
             <el-button type="primary" @click="add(0)">新增</el-button>
         </div>
-        <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
+        <el-table row-key="id" lazy :load="load" :tree-props="{children: 'children', hasChildren: 'has_children'}" stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
                 <!-- <el-table-column type="selection"></el-table-column> -->
-                <el-table-column label="序号" type="index"></el-table-column>
+                <!-- <el-table-column label="序号" type="index"></el-table-column> -->
                 <el-table-column label="公司名称" prop="name"></el-table-column>
                 <el-table-column label="公司类型">
                     <template slot-scope="scope">
                         <span v-if="scope.row.type==1">主公司</span>
+                        <span v-else-if="scope.row.type==3">部门</span>
+                        <span v-else-if="scope.row.type==4">员工</span>
                         <span v-else>子公司</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="add(scope.row)" type="text" size="small">编辑</el-button>
-                        <!-- <el-button @click="showDetail(scope.row.id)" type="text" size="small">查看</el-button> -->
-                        <!-- <el-button @click="" type="text" size="small">删除</el-button> -->
+                        <el-button v-if="scope.row.type == 1 || scope.row.type == 0" @click="add(scope.row)" type="text" size="small">编辑</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -55,6 +55,8 @@
 import { mkdir } from 'fs';
 import { get, post} from '@/api/index.js';
 import companyApi from '@/api/company.js';
+import departmentApi from '@/api/department.js';
+
 export default {
     created(){
         this.getData()
@@ -146,6 +148,34 @@ export default {
             this.current = val
             this.getData()
         },
+        load(tree, treeNode, resolve) {
+            switch(tree.data_type){
+                case 'department':
+                        //获取部门下员工
+                        var params = { type: 'select' }
+                        get(departmentApi.users + '/' + tree.id, params).then((res) => {
+                            var data = []
+                            res.data.list.map((item) => {
+                                var item = { id: item.id + '_user', data_type: 'user', name: item.rel_name, type: 4, has_children: false }
+                                data.push(item)
+                            })
+
+                            resolve(data)
+                        })
+                    break;
+                case 'company':
+                        var params = { type: 'select', company_id: tree.id }
+                        get(departmentApi.list, params).then((res) => {
+                            var data = []
+                            res.data.list.map((item) => {
+                                var item = {id: item.id, data_type: 'department', name: item.name,  type: 3, has_children: true}
+                                data.push(item)
+                            })
+                            resolve(data)
+                        })
+                    break;
+            }
+        }
     }
 }
 </script>
