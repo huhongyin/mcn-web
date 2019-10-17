@@ -21,25 +21,26 @@
         <el-table id="managementTable" stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
                 <el-table-column fixed label="序号" type="index"></el-table-column>
-                <el-table-column fixed label="主播实名" prop="name" width="80px"></el-table-column>
-                <el-table-column fixed label="主播昵称" prop="nickname" width="80px"></el-table-column>
-                <el-table-column label="平台" prop="plat.name" width="80px"></el-table-column>
-                <el-table-column label="身份证号" prop="id_card_no"></el-table-column>
-                <el-table-column label="联系电话" prop="phone" width="120px"></el-table-column>
-                <el-table-column label="分成比例" prop="fencheng_bili" width="80px"></el-table-column>
-                <el-table-column label="保底工资" prop="baodi_salary" width="80px"></el-table-column>
-                <el-table-column label="开播时间" prop="start_time" width="120px"></el-table-column>
-                <el-table-column label="签约人" prop="sign.name" width="80px"></el-table-column>
+                <el-table-column fixed label="主播实名" prop="actor.name" ></el-table-column>
+                <el-table-column fixed label="主播昵称" prop="nickname"></el-table-column>
+                <el-table-column label="平台" prop="plat.name"></el-table-column>
+                <el-table-column label="身份证号" prop="actor.id_card_no"></el-table-column>
+                <el-table-column label="联系电话" prop="actor.phone"></el-table-column>
+                <el-table-column label="分成比例" prop="fencheng_bili"></el-table-column>
+                <el-table-column label="保底工资" prop="baodi_salary"></el-table-column>
+                <el-table-column label="开播时间" prop="start_time"></el-table-column>
+                <el-table-column label="签约人" prop="sign_user.rel_name"></el-table-column>
+                <el-table-column label="运营人" prop="operate_user.rel_name"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="add(scope.row)" type="text" size="small">编辑</el-button>
-                        <el-button @click="signDetail(scope.row.id)" type="text" size="small">流水信息</el-button>
-                        <el-button @click="userDetail(scope.row.id)" type="text" size="small">艺人信息</el-button>
-                        <el-button @click="bankDetail(scope.row.id)" type="text" size="small">银行资料</el-button>
+                        <el-button @click="add(scope.row)" type="text" size="small" style="margin-left:10px;display:block;">编辑</el-button>
+                        <el-button @click="signDetail(scope.row.id)" type="text" size="small" style="display:block;">流水信息</el-button>
+                        <el-button @click="userDetail(scope.row.id)" type="text" size="small" style="display:block;">艺人信息</el-button>
+                        <el-button @click="bankDetail(scope.row.id)" type="text" size="small" style="display:block;">银行资料</el-button>
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :total="total" @current-change="handleCurrentChange"></el-pagination>
+            <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :total-page="totalPage" @current-change="handleCurrentChange"></el-pagination>
             <el-dialog title="签约信息" :visible.sync="signDetailDialog.show" width="70%" center>
                 <el-row :gutter="20">
                     <el-col :span="8">
@@ -171,10 +172,10 @@
             <!-- 新增弹窗 -->
             <el-dialog title="新增艺人" :visible.sync="addDialog.dialogVisible">
                 
-                <el-form>
+                <el-form :rules="addDialog.rules" ref="addUserForm" class="demo-ruleForm" :model="addDialog.form">
                     <el-tabs v-model="addDialog.activeName" type="border-card">
                         <el-tab-pane label="艺人信息" name="actor_field" class="actor-tab">
-                            <el-form-item label="">
+                            <el-form-item label="" prop="actor.company_id">
                                 <el-col :span="4">所属公司</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-select v-model="addDialog.form.actor.company_id" style="width: 100%;" placeholder="请选择公司" @change="changeCompany">
@@ -182,22 +183,22 @@
                                     </el-select>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="actor.name">
                                 <el-col :span="4">实名</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入实名" v-model="addDialog.form.actor.name"></el-input>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="actor.nickname">
                                 <el-col :span="4">艺名</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入艺名" v-model="addDialog.form.actor.nickname"></el-input>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="actor.plat_id">
                                 <el-col :span="4">平台</el-col>
                                 <el-col :span="19" :offset="1">
-                                    <el-select v-model="addDialog.form.actor.plat_id" style="width: 100%;" placeholder="请选择平台">
+                                    <el-select v-model="addDialog.form.actor.plat_id" style="width: 100%;" placeholder="请选择平台" @change="changePlat">
                                         <el-option v-for="(item,key) in addDialog.plats" :key="key" :label="item.name" :value="item.id"></el-option>
                                     </el-select>
                                 </el-col>
@@ -223,7 +224,7 @@
                             <el-form-item label="">
                                 <el-col :span="4">生日</el-col>
                                 <el-col :span="19" :offset="1">
-                                    <el-date-picker style="width:100%;" placeholder="请选择生日" v-model="addDialog.form.actor.birthday"></el-date-picker>
+                                    <el-date-picker value-format="yyyy-MM-dd" style="width:100%;" placeholder="请选择生日" v-model="addDialog.form.actor.birthday"></el-date-picker>
                                 </el-col>
                             </el-form-item>
                             <el-form-item label="">
@@ -232,19 +233,19 @@
                                     <el-input placeholder="请输入住址" v-model="addDialog.form.actor.address"></el-input>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="actor.old_id">
                                 <el-col :span="4">原始ID</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入原始ID" v-model="addDialog.form.actor.old_id"></el-input>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" v-show="addDialog.showNowId">
                                 <el-col :span="4">现用ID</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入现用ID" v-model="addDialog.form.actor.now_id"></el-input>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="actor.level">
                                 <el-col :span="4">等级</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-select v-model="addDialog.form.actor.level" style="width: 100%;" placeholder="请选择等级">
@@ -252,7 +253,7 @@
                                     </el-select>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="actor.yunying_user_id">
                                 <el-col :span="4">运营</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-select v-model="addDialog.form.actor.yunying_user_id" style="width: 100%;" placeholder="请选择运营负责人">
@@ -260,7 +261,7 @@
                                     </el-select>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="actor.sign_user_id">
                                 <el-col :span="4">签约人</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-select v-model="addDialog.form.actor.sign_user_id" style="width: 100%;" placeholder="请选择签约人">
@@ -288,7 +289,7 @@
                                     <el-input placeholder="请输入已投放都加金额" v-model="addDialog.form.sign.yitoufangdoujiajine"></el-input>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="sign.meiriyingboshichang">
                                 <el-col :span="4">每日应播时长</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入每日应播时长" v-model="addDialog.form.sign.meiriyingboshichang"></el-input>
@@ -303,7 +304,7 @@
                             <el-form-item label="">
                                 <el-col :span="4">扶持截止时间</el-col>
                                 <el-col :span="19" :offset="1">
-                                    <el-date-picker style="width:100%;" placeholder="请选择扶持截止时间" v-model="addDialog.form.sign.fuchijiezhishijian"></el-date-picker>
+                                    <el-date-picker style="width:100%;" value-format="yyyy-MM-dd" placeholder="请选择扶持截止时间" v-model="addDialog.form.sign.fuchijiezhishijian"></el-date-picker>
                                 </el-col>
                             </el-form-item>
                             <el-form-item label="">
@@ -334,7 +335,7 @@
 
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="addDialog.dialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="doAddUser">确 定</el-button>
+                    <el-button type="primary" @click="submitForm('addUserForm')">确 定</el-button>
                 </span>
             </el-dialog>
     </el-card>
@@ -342,85 +343,38 @@
 
 <script>
 import { post, get} from '@/api/index.js';
-import userApi from '@/api/user.js';
+import actorApi from '@/api/actor.js';
 import bankApi from '@/api/bank.js';
 import companyApi from '@/api/company.js';
+import levelApi from '@/api/level.js';
+import platApi from '@/api/plats.js';
+import departmentApi from '@/api/department.js';
 import FileSaver from 'file-saver';
 import XLSX from 'xlsx';
 export default {
     created(){
+        this.getOperate()
+        this.getSigns()
+        this.getPlats()
+        this.getLevel()
         this.getCompany()
         this.getData()
     },
     data(){
         return {
             addDialog: {
+                showNowId: false,
                 dialogVisible: false,
                 activeName: 'actor_field',
                 banks: [],
-                levels: [
-                    {
-                        id: 3,
-                        name: 'S级'
-                    },
-                    {
-                        id: 1,
-                        name: 'A级'
-                    },
-                    {
-                        id: 2,
-                        name: 'B级'
-                    },
-                ],
-                yunyings: [
-                    {
-                        id: 3,
-                        name: '张三'
-                    },
-                    {
-                        id: 1,
-                        name: '李四'
-                    },
-                    {
-                        id: 2,
-                        name: '王二'
-                    },
-                ],
+                levels: [],
+                yunyings: [],
                 companies: [],
-                sign_users: [
-                    {
-                        id: 3,
-                        name: '赵武'
-                    },
-                    {
-                        id: 1,
-                        name: '李夏阁'
-                    },
-                    {
-                        id: 2,
-                        name: '王多宇'
-                    },
-                ],
-                plats: [
-                    {
-                        id: 1,
-                        name: '抖音',
-                    },
-                    {
-                        id: 2,
-                        name: '火山',
-                    },
-                    {
-                        id: 3,
-                        name: '映客',
-                    },
-                    {
-                        id: 4,
-                        name: '陌陌',
-                    },
-                ],
+                sign_users: [],
+                plats: [],
                 form: {
                     actor: {
+                        id: "",
                         name: '',
                         nickname: '',
                         plat_id: '',
@@ -449,6 +403,40 @@ export default {
                         fuchijiezhishijian: "",
                         yichongzhizhubozhanghu: 0,
                     },
+                },
+                rules: {
+                    actor: {
+                        name: [
+                            { required: true, message: '请输入实名', trigger: 'blur' }
+                        ],
+                        company_id: [
+                            { required:true, message: '请选择公司', trigger: 'change' }
+                        ],
+                        nickname: [
+                            { required: true, message: '请输入艺名', trigger: 'blur' }
+                        ],
+                        plat_id: [
+                            { required: true, message: '请选择平台', trigger: 'change' }
+                        ],
+                        old_id: [
+                            { required: true, message: '请输入原始ID', trigger: 'blur' }
+                        ],
+                        level: [
+                            { required: true, message: '请选择等级', trigger: 'change' }
+                        ],
+                        yunying_user_id: [
+                            { required: true, message: '请选择运营', trigger: 'change' }
+                        ],
+                        sign_user_id: [
+                            { required: true, message: '请选择签约人', trigger: 'change' }
+                        ],
+                    },
+                    sign: {
+                        meiriyingboshichang: [
+                            { required: true, message: '请输入每日应播时长', trigger: 'blur' }
+                            // { required: true, type: 'text', message: '请输入每日应播时长,单位为分钟,并且是数字' }
+                        ],
+                    }
                 }
             },
             centerDialogVisible : false,
@@ -457,7 +445,6 @@ export default {
             size : 10,
             current : 1,
             totalPage: 0,
-            total: 0,
             signDetailDialog: {
                 show: false,
                 detail: {
@@ -509,36 +496,7 @@ export default {
                     bank_name: '中国银行', //开户行
                 }
             },
-            list: [
-                {
-                    name: '李静',   //真实姓名
-                    id_card_no: '211323199403244011', //身份证
-                    phone: '18244251418',   //电话
-                    wx_code: 'point_this',  //微信号
-                    old_id: '12345',   //原始id
-                    now_id: '21221',  //现用id
-                    fencheng_bili: '50%',  //分成比例
-                    baodi_salary: '2000', //保底工资
-                    nickname: '梦', //主播昵称
-                    level: '100级', //主播等级
-                    start_time: '每晚八点', //开播时间
-                    sign:{
-                        name: '张三', //签约人
-                    },
-                    work: {
-                        name: '李四', //运营负责人
-                    },
-                    department: {
-                        name: '测试部门', //所属部门
-                    },
-                    company: {
-                        name: '北京', //所属公司
-                    },
-                    plat: {
-                        name: '抖音', //所属平台
-                    }
-                }
-            ],
+            list: [],
             multipleSelection : [],
             selectedIDs: [],
             pickerOptions: {
@@ -589,15 +547,10 @@ export default {
             this.selectedIDs = ids
         },
         getData(){
-            // var params = { page: this.current}
-            // var that = this
-            // get(userApi.list, params)
-            //     .then(function(res){
-            //         that.list = res.data.list.data
-            //         that.total = res.data.list.total
-            //         that.current = res.data.list.current_page
-            //         // that.totalPage = res.data.totalPage
-            //     })
+            get(actorApi.list, { page: this.current }).then((res) => {
+                this.list = res.data.list.data
+                this.totalPage = res.data.list.last_page
+            })
         },
         signDetail(id){
             //签约信息查看
@@ -640,11 +593,30 @@ export default {
         add(){
             this.addDialog.dialogVisible = true
         },
-        doAddUser(){
-            console.log(this.addDialog.form)
+        submitForm(formName){
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    post(actorApi.add + '/' + this.addDialog.form.actor.id, this.addDialog.form).then((res) => {
+                        this.$message({
+                            type: "success",
+                            message: res.msg
+                        })
+                        this.getData()
+                        this.addDialog.dialogVisible = false
+                    })
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
         },
         changeCompany(){
+            this.addDialog.form.actor.yunying_user_id = ""
+            this.addDialog.form.actor.sign_user_id = ""
+            this.addDialog.form.bank.id = ""
             this.getBankOptions()
+            this.getOperate()
+            this.getSigns()
         },
         getBankOptions(){
             get(bankApi.optionList, { type: 'select', company_id: this.addDialog.form.company_id }).then((res) => {
@@ -656,6 +628,33 @@ export default {
                 this.addDialog.companies = res.data.list
             })
         },
+        getLevel(){
+            get(levelApi.list).then((res) => {
+                this.addDialog.levels = res.data.list
+            })
+        },
+        getPlats(){
+            get(platApi.list).then((res) => {
+                this.addDialog.plats = res.data.list
+            })
+        },
+        changePlat(){
+            if(this.addDialog.form.actor.plat_id == 1){
+                this.addDialog.showNowId = true
+            }else{
+                this.addDialog.showNowId = false
+            }
+        },
+        getOperate(){
+            get(departmentApi.userListByType + '/' + 1, { company_id: this.addDialog.form.actor.company_id }).then((res) => {
+                this.addDialog.yunyings = res.data.list
+            })
+        },
+        getSigns(){
+            get(departmentApi.userListByType + '/' + 2, { company_id: this.addDialog.form.actor.company_id }).then((res) => {
+                this.addDialog.sign_users = res.data.list
+            })
+        }
     }
 }
 </script>

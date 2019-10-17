@@ -50,6 +50,11 @@
                                 <el-option v-for="(item,key) in search.users" :key="key" :label="item.rel_name" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
+                        <el-form-item label="部门类型：" :label-width="addDialog.formLabelWidth">
+                            <el-select style="width:100%;" v-model="addDialog.form.type">
+                                <el-option v-for="(item,key) in search.dep_types" :key="key" :label="item.name" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
                     </el-form>
                 </div>
                 <span slot="footer" class="dialog-footer">
@@ -67,6 +72,7 @@ import companyApi from '@/api/company.js';
 import userApi from '@/api/user.js';
 export default {
     created(){
+        this.getDepTypes()
         this.getUsers(0)
         this.getCompany()
         this.getData()
@@ -77,6 +83,7 @@ export default {
                 company_id: "",
                 companies: [],
                 users: [],
+                dep_types:[],
             },
             addDialog:{
                 addTitle : '新增部门',
@@ -86,6 +93,7 @@ export default {
                     company_id : "",
                     name: "",
                     user_id: "",
+                    type: 0,
                 },
                 formLabelWidth: '130px',
             },
@@ -124,12 +132,14 @@ export default {
                     this.addDialog.form.name = res.data.info.name
                     this.addDialog.form.company_id = res.data.info.company_id
                     this.addDialog.form.user_id = res.data.info.user_id
+                    this.addDialog.form.type = parseInt(res.data.info.type)
                     this.changeCompany()
+                    this.addDialog.addDialogVisible = true
                 })
             }else{
                 this.addDialog.addTitle = '新增部门'
+                this.addDialog.addDialogVisible = true
             }
-            this.addDialog.addDialogVisible = true
         },
         doAdd(){
             let that = this
@@ -144,6 +154,7 @@ export default {
                 that.addDialog.form.name = ""
                 that.addDialog.form.user_id = ""
                 that.addDialog.addDialogVisible = false
+                that.addDialog.form.type = 0
                 that.getData()
             })
         },
@@ -153,6 +164,7 @@ export default {
             this.addDialog.form.name = ""
             this.addDialog.form.user_id = ""
             this.addDialog.addDialogVisible = false
+            this.addDialog.form.type = 0
         },
         handleCurrentChange(val){
             this.current = val
@@ -176,6 +188,11 @@ export default {
                 this.getData()
             } )
         },
+        getDepTypes(){
+            get(departmentApi.types).then((res) => {
+                this.search.dep_types = res.data.list
+            })
+        }
     }
 }
 </script>
