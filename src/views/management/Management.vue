@@ -16,7 +16,7 @@
             <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button> -->
             <!-- <el-button type="primary">新增</el-button> -->
             <el-button icon="el-icon-download" @click="exportExcel">导出</el-button>
-            <el-button type="primary" @click="add">新增</el-button>
+            <el-button type="primary" @click="add(0)">新增</el-button>
         </div>
         <el-table id="managementTable" stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
@@ -33,14 +33,14 @@
                 <el-table-column label="运营人" prop="operate_user.rel_name"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="add(scope.row)" type="text" size="small" style="margin-left:10px;display:block;">编辑</el-button>
-                        <el-button @click="signDetail(scope.row.id)" type="text" size="small" style="display:block;">流水信息</el-button>
+                        <el-button @click="add(scope.row.id)" type="text" size="small" style="margin-left:10px;display:block;">编辑</el-button>
+                        <!-- <el-button @click="signDetail(scope.row.id)" type="text" size="small" style="display:block;">流水信息</el-button> -->
                         <el-button @click="userDetail(scope.row.id)" type="text" size="small" style="display:block;">艺人信息</el-button>
                         <el-button @click="bankDetail(scope.row.id)" type="text" size="small" style="display:block;">银行资料</el-button>
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :total-page="totalPage" @current-change="handleCurrentChange"></el-pagination>
+            <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :page-count="totalPage" @current-change="handleCurrentChange"></el-pagination>
             <el-dialog title="签约信息" :visible.sync="signDetailDialog.show" width="70%" center>
                 <el-row :gutter="20">
                     <el-col :span="8">
@@ -126,29 +126,40 @@
             <el-dialog title="艺人信息" :visible.sync="userDetailDialog.show" width="70%" center>
                 <el-row :gutter="20">
                     <el-col :span="8">
-                        <span class="user-detail-text">微信号：</span><span class="user-detail-value" v-text="userDetailDialog.detail.wx_code"></span>
+                        <span class="user-detail-text">实名：</span><span class="user-detail-value" v-text="userDetailDialog.detail.actor.name"></span>
                     </el-col>
                     <el-col :span="8">
-                        <span class="user-detail-text">原始ID：</span><span class="user-detail-value" v-text="userDetailDialog.detail.old_id"></span>
+                        <span class="user-detail-text">艺名：</span><span class="user-detail-value" v-text="userDetailDialog.detail.nickname"></span>
                     </el-col>
                     <el-col :span="8">
-                        <span class="user-detail-text">现用ID：</span><span class="user-detail-value" v-text="userDetailDialog.detail.now_id"></span>
+                        <span class="user-detail-text">生日：</span><span class="user-detail-value" v-text="userDetailDialog.detail.actor.birthday"></span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="20">
                     <el-col :span="8">
-                        <span class="user-detail-text">等级：</span><span class="user-detail-value" v-text="userDetailDialog.detail.level"></span>
+                        <span class="user-detail-text">联系电话：</span><span class="user-detail-value" v-text="userDetailDialog.detail.actor.phone"></span>
                     </el-col>
                     <el-col :span="8">
-                        <span class="user-detail-text">运营负责人：</span><span class="user-detail-value" v-text="userDetailDialog.detail.work.name"></span>
+                        <span class="user-detail-text">身份证：</span><span class="user-detail-value" v-text="userDetailDialog.detail.actor.id_card_no"></span>
                     </el-col>
                     <el-col :span="8">
-                        <span class="user-detail-text">所属部门：</span><span class="user-detail-value" v-text="userDetailDialog.detail.department.name"></span>
+                        <span class="user-detail-text">住址：</span><span class="user-detail-value" v-text="userDetailDialog.detail.actor.address"></span>
                     </el-col>
                 </el-row>
-                <el-row>
-                    <el-col :span="24">
+                <el-row :gutter="20">
+                    <el-col :span="8">
                         <span class="user-detail-text">所属公司：</span><span class="user-detail-value" v-text="userDetailDialog.detail.company.name"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">运营：</span><span class="user-detail-value" v-text="userDetailDialog.detail.operate_user.rel_name"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">签约人：</span><span class="user-detail-value" v-text="userDetailDialog.detail.sign_user.rel_name"></span>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="24">
+                        <span class="user-detail-text">所属平台：</span><span class="user-detail-value" v-text="userDetailDialog.detail.plat.name"></span>
                     </el-col>
                 </el-row>
                 <span slot="footer" class="dialog-footer">
@@ -161,7 +172,7 @@
                         <span class="user-detail-text">银行卡号：</span><span class="user-detail-value" v-text="bankDetailDialog.detail.bank_no"></span>
                     </el-col>
                     <el-col :span="12">
-                        <span class="user-detail-text">开户银行：</span><span class="user-detail-value" v-text="bankDetailDialog.detail.bank_name"></span>
+                        <span class="user-detail-text">开户银行：</span><span class="user-detail-value" v-text="bankDetailDialog.detail.bank.name"></span>
                     </el-col>
                 </el-row>
                 <span slot="footer" class="dialog-footer">
@@ -203,31 +214,31 @@
                                     </el-select>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="actor.wx_code">
                                 <el-col :span="4">微信号</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入微信号" v-model="addDialog.form.actor.wx_code"></el-input>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="actor.phone">
                                 <el-col :span="4">联系电话</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入联系电话" v-model="addDialog.form.actor.phone"></el-input>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="actor.id_card_no">
                                 <el-col :span="4">身份证号码</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入身份证号码" v-model="addDialog.form.actor.id_card_no"></el-input>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="actor.birthday">
                                 <el-col :span="4">生日</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-date-picker value-format="yyyy-MM-dd" style="width:100%;" placeholder="请选择生日" v-model="addDialog.form.actor.birthday"></el-date-picker>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="actor.address">
                                 <el-col :span="4">住址</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入住址" v-model="addDialog.form.actor.address"></el-input>
@@ -239,7 +250,7 @@
                                     <el-input placeholder="请输入原始ID" v-model="addDialog.form.actor.old_id"></el-input>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="" v-show="addDialog.showNowId">
+                            <el-form-item label="" v-show="addDialog.showNowId" prop="actor.now_id">
                                 <el-col :span="4">现用ID</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入现用ID" v-model="addDialog.form.actor.now_id"></el-input>
@@ -271,19 +282,19 @@
                             </el-form-item>
                         </el-tab-pane>
                         <el-tab-pane label="签约信息" name="money_field" class="sign-tab">
-                            <el-form-item label="">
+                            <el-form-item label="" prop="sign.fuchijine">
                                 <el-col :span="4">扶持金额</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入扶持金额" v-model="addDialog.form.sign.fuchijine"></el-input>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="sign.yifuchijine">
                                 <el-col :span="4">已扶持金额</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入已扶持金额" v-model="addDialog.form.sign.yifuchijine"></el-input>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="sign.yitoufangdoujiajine">
                                 <el-col :span="4">已投放都加金额</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入已投放都加金额" v-model="addDialog.form.sign.yitoufangdoujiajine"></el-input>
@@ -295,19 +306,19 @@
                                     <el-input placeholder="请输入每日应播时长" v-model="addDialog.form.sign.meiriyingboshichang"></el-input>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="sign.yitourushuabi">
                                 <el-col :span="4">已投入刷币</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入已投入刷币" v-model="addDialog.form.sign.yitourushuabi"></el-input>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="sign.fuchijiezhishijian">
                                 <el-col :span="4">扶持截止时间</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-date-picker style="width:100%;" value-format="yyyy-MM-dd" placeholder="请选择扶持截止时间" v-model="addDialog.form.sign.fuchijiezhishijian"></el-date-picker>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="sign.yichongzhizhubozhanghu">
                                 <el-col :span="4">已充值主播账户</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入已充值主播账户" v-model="addDialog.form.sign.yichongzhizhubozhanghu"></el-input>
@@ -315,7 +326,7 @@
                             </el-form-item>
                         </el-tab-pane>
                         <el-tab-pane label="银行资料" name="bank_field" class="bank-tab">
-                            <el-form-item label="">
+                            <el-form-item label="" prop="bank.id">
                                 <el-col :span="4">开户银行</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-select style="width:100%;" v-model="addDialog.form.bank.id">
@@ -323,7 +334,7 @@
                                     </el-select>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="">
+                            <el-form-item label="" prop="bank.bank_no">
                                 <el-col :span="4">银行卡号</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入银行卡号" v-model="addDialog.form.bank.bank_no"></el-input>
@@ -353,6 +364,7 @@ import FileSaver from 'file-saver';
 import XLSX from 'xlsx';
 export default {
     created(){
+        this.getBankOptions()
         this.getOperate()
         this.getSigns()
         this.getPlats()
@@ -474,26 +486,37 @@ export default {
             userDetailDialog: {
                 show: false,
                 detail: {
-                    wx_code: 'point_this', //微信号
-                    old_id: '124124', //原始id
-                    new_id: '21414', //现用id
-                    level: '100级', //主播等级
-                    work: {
-                        name: '张三', //运营负责人
+                    nickname: '',
+                    operate_user: {
+                        id: '',
+                        rel_name: '',
                     },
-                    department: {
-                        name: '测试部门', //所属部门
+                    sign_user: {
+                        id: '',
+                        rel_name: '',
                     },
                     company: {
-                        name: '成都', //所属公司
+                        id: '',
+                        name: '',
+                    },
+                    plat: {
+                        id: '',
+                        name: '',
+                    },
+                    actor: {
+                        id: '',
+                        name: '',
                     }
                 }
             },
             bankDetailDialog: {
                 show: false,
                 detail: {
-                    bank_no: '623105105819538283', //银行卡号,
-                    bank_name: '中国银行', //开户行
+                    id: "",
+                    bank_no: "",
+                    bank: {
+
+                    }
                 }
             },
             list: [],
@@ -552,26 +575,6 @@ export default {
                 this.totalPage = res.data.list.last_page
             })
         },
-        signDetail(id){
-            //签约信息查看
-            this.signDetailDialog.id = id
-            this.signDetailDialog.show = true
-            return false
-            // let params = { id: id }
-            // let that = this
-            // fPost(userApi.phoneUserDetail, params).then(function(res){
-            //     that.detail = res.data
-            //     that.centerDialogVisible = true
-            // })
-        },
-        userDetail(id){
-            this.userDetailDialog.id = id
-            this.userDetailDialog.show = true
-        },
-        bankDetail(id){
-            this.bankDetailDialog.id = id
-            this.bankDetailDialog.show = true
-        },
         handleCurrentChange(val){
             this.current = val
             this.getData()
@@ -590,7 +593,34 @@ export default {
             }
             return wbout
         },
-        add(){
+        add(id){
+            if (this.$refs["addUserForm"]!==undefined) {
+                this.$refs["addUserForm"].resetFields();
+            }
+            if(id > 0){
+                get(actorApi.edit + "/" + id).then((res) => {
+                    var data = res.data.info
+                    data.bank.bank_no = data.bank_no
+                    this.addDialog.form.bank = data.bank
+                    data.actor.nickname = data.nickname
+                    data.actor.plat_id = data.plat_id
+                    data.actor.old_id = data.plat_actor_id
+                    data.actor.now_id = data.now_id
+                    data.actor.level = (data.level_id == 0) ? '' : data.level_id
+                    data.actor.yunying_user_id = data.operate_user_id
+                    data.actor.sign_user_id = data.sign_user_id
+                    data.actor.company_id = data.company_id
+                    this.addDialog.form.actor = data.actor
+                    this.addDialog.form.sign.fuchijine = data.actor_plat_sign.support_money
+                    this.addDialog.form.sign.yifuchijine = data.actor_plat_sign.supported_money
+                    this.addDialog.form.sign.yitoufangdoujiajine = data.actor_plat_sign.yitoufangdoujia
+                    this.addDialog.form.sign.meiriyingboshichang = data.actor_plat_sign.day_time
+                    this.addDialog.form.sign.yitourushuabi = data.actor_plat_sign.yitourushuabi
+                    this.addDialog.form.sign.fuchijiezhishijian = data.actor_plat_sign.support_endtime
+                    this.addDialog.form.sign.yichongzhizhubozhanghu = data.actor_plat_sign.recharge
+                })
+            }
+
             this.addDialog.dialogVisible = true
         },
         submitForm(formName){
@@ -654,7 +684,20 @@ export default {
             get(departmentApi.userListByType + '/' + 2, { company_id: this.addDialog.form.actor.company_id }).then((res) => {
                 this.addDialog.sign_users = res.data.list
             })
-        }
+        },
+        bankDetail(id){
+            //银行信息
+            get(actorApi.bankInfo + '/' + id).then((res) => {
+                this.bankDetailDialog.detail = res.data.info
+                this.bankDetailDialog.show = true
+            })
+        },
+        userDetail(id){
+            get(actorApi.detail + '/' + id).then((res) => {
+                this.userDetailDialog.detail = res.data.info
+                this.userDetailDialog.show = true
+            })
+        },
     }
 }
 </script>
