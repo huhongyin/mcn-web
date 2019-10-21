@@ -4,4 +4,5 @@ export default{
     detail: '/actor/detail',
     bankInfo: '/actor/bank',
     edit: '/actor/edit',
+    import: '/actor/import',
 }

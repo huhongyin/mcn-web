@@ -101,7 +101,7 @@ export default {
         username: [
           // 非空验证
           { required: true, message: "请输入账号", trigger: "blur" },
-          { min: 3, max: 12, message: "账号长度在 3 - 12 位", trigger: "blur" }
+          // { min: 3, max: 12, message: "账号长度在 3 - 12 位", trigger: "blur" }
         ],
         // 验证密码
         password: [

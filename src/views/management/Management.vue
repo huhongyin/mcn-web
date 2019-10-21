@@ -1,22 +1,24 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            <!-- <el-input class="card-header-input" placeholder="账号" v-model="keywords"></el-input>
-            <el-date-picker
-                class="offset-left-30"
-                v-model="select_date"
-                type="datetimerange"
-                range-separator="-"
-                format="yyyy-MM-dd HH:mm:ss"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :picker-options="pickerOptions">
-            </el-date-picker>
-            <el-button class="offset-left-30 btn-search" @click="getData">搜索</el-button> -->
-            <!-- <el-button type="primary">新增</el-button> -->
-            <el-button icon="el-icon-download" @click="exportExcel">导出</el-button>
-            <el-button type="primary" @click="add(0)">新增</el-button>
+            <el-row :gutter="10">
+                <el-col :span="4">
+                    <el-input v-model="search.keyword" placeholder="输入关键字搜索"></el-input>
+                </el-col>
+                <el-col :span="4">
+                    <el-select v-model="search.level" style="width: 100%;">
+                        <el-option label="全部" value=""></el-option>
+                        <el-option v-for="(item,key) in addDialog.levels" :key="key" :value="item.id" :label="item.name"></el-option>
+                    </el-select>
+                </el-col>
+                <el-col :span="2">
+                    <el-button type="primary" @click="getData">搜索</el-button>
+                </el-col>
+                <el-col :span="4" :offset="10">
+                    <el-button icon="el-icon-download" @click="exportExcel">导出</el-button>
+                    <el-button type="primary" @click="add(0)">新增</el-button>
+                </el-col>
+            </el-row>
         </div>
         <el-table id="managementTable" stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
@@ -39,6 +41,20 @@
                         <el-button @click="bankDetail(scope.row.id)" type="text" size="small" style="display:block;">银行资料</el-button>
                     </template>
                 </el-table-column>
+            </el-table>
+            <el-table id="managementExportTble" v-show="showExportTable" stripe :data="export_list" tooltip-effect="dark">
+                <el-table-column type="selection"></el-table-column>
+                <el-table-column fixed label="序号" type="index"></el-table-column>
+                <el-table-column fixed label="主播实名" prop="actor.name" ></el-table-column>
+                <el-table-column fixed label="主播昵称" prop="nickname"></el-table-column>
+                <el-table-column label="平台" prop="plat.name"></el-table-column>
+                <el-table-column label="身份证号" prop="actor.id_card_no"></el-table-column>
+                <el-table-column label="联系电话" prop="actor.phone"></el-table-column>
+                <el-table-column label="分成比例" prop="fencheng_bili"></el-table-column>
+                <el-table-column label="保底工资" prop="baodi_salary"></el-table-column>
+                <el-table-column label="开播时间" prop="start_time"></el-table-column>
+                <el-table-column label="签约人" prop="sign_user.rel_name"></el-table-column>
+                <el-table-column label="运营人" prop="operate_user.rel_name"></el-table-column>
             </el-table>
             <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :page-count="totalPage" @current-change="handleCurrentChange"></el-pagination>
             <el-dialog title="签约信息" :visible.sync="signDetailDialog.show" width="70%" center>
@@ -374,6 +390,10 @@ export default {
     },
     data(){
         return {
+            search: {
+                level: '',
+                keyword: '',
+            },
             addDialog: {
                 showNowId: false,
                 dialogVisible: false,
@@ -520,6 +540,8 @@ export default {
                 }
             },
             list: [],
+            export_list: [],
+            showExportTable: false,
             multipleSelection : [],
             selectedIDs: [],
             pickerOptions: {
@@ -570,7 +592,7 @@ export default {
             this.selectedIDs = ids
         },
         getData(){
-            get(actorApi.list, { page: this.current }).then((res) => {
+            get(actorApi.list, { page: this.current, level: this.search.level, keyword: this.search.keyword }).then((res) => {
                 this.list = res.data.list.data
                 this.totalPage = res.data.list.last_page
             })
@@ -580,18 +602,24 @@ export default {
             this.getData()
         },
         exportExcel () {
-            /* generate workbook object from table */
-            let wb = XLSX.utils.table_to_book(document.querySelector('#managementTable'));
-            /* get binary string as output */
-            let wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' });
-            try {
-                FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '主播数据.xlsx');
-            } catch (e)
-            {
-                if (typeof console !== 'undefined')
-                    console.log(e, wbout)
-            }
-            return wbout
+            //获取导出的数据列表，然后导出
+            get(actorApi.list, { type: 'export', level: this.search.level, keyword: this.search.keyword }).then((res) => {
+                this.export_list = res.data.list
+                this.showExportTable = true
+            
+                /* generate workbook object from table */
+                let wb = XLSX.utils.table_to_book(document.querySelector('#managementExportTble'));
+                /* get binary string as output */
+                let wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' });
+                try {
+                    FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '主播数据.xlsx');
+                } catch (e)
+                {
+                    if (typeof console !== 'undefined')
+                        console.log(e, wbout)
+                }
+                return wbout
+            })
         },
         add(id){
             if (this.$refs["addUserForm"]!==undefined) {

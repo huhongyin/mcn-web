@@ -4,6 +4,13 @@
             数据导入
         </div>
         <el-form label-width="80px">
+            <el-form-item label="公司">
+                <el-col :span="12">
+                    <el-select v-model="form.company_id" style="width:100%;">
+                        <el-option v-for="(item,key) in companies" :key="key" :label="item.name" :value="item.id"></el-option>
+                    </el-select>
+                </el-col>
+            </el-form-item>
             <el-form-item label="数据类型">
                 <el-col :span="12">
                     <el-select v-model="form.data_type" placeholder="请选择数据类型" style="width:100%;" @change="showImport">
@@ -14,7 +21,7 @@
             <el-form-item label="平台类型" v-show="showPlatImport">
                 <el-col :span="12">
                     <el-select v-model="form.plat_id" placeholder="请选择平台" style="width:100%;">
-                        <el-option v-for="(item,key) in plats" :key="key" :label="item.label" :value="item.value"></el-option>
+                        <el-option v-for="(item,key) in plats" :key="key" :label="item.name" :value="item.id"></el-option>
                     </el-select>
                 </el-col>
             </el-form-item>
@@ -27,16 +34,19 @@
             </el-form-item>
             <el-form-item label="导入时间" v-show="showPlatImport">
                 <el-col :span="12">
-                    <el-date-picker type="date" :value-format="valueFormat" :format="valueFormat" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
+                    <el-date-picker type="date" :value-format="valueFormat" :format="valueFormat" placeholder="选择日期" v-model="form.date" style="width: 100%;"></el-date-picker>
                 </el-col>
             </el-form-item>
             <el-form-item label="导入文件">
                 <el-col :span="12">
                     <el-upload
+                    name="file[]"
+                    :show-file-list="true"
+                    :on-success="uploadSuccess"
+                    accept="xlsx"
                     class="upload-demo"
-                    style="width:100%;"
                     drag
-                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :action="uploadUrl"
                     >
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -54,16 +64,26 @@
 </template>
 
 <script>
+import uploadApi from '@/api/upload.js'
+import platApi from '@/api/plats.js'
+import importApi from '@/api/import.js'
+import actorApi from '@/api/actor.js'
+import companyApi from '@/api/company.js';
+import { get,post } from '@/api/index.js'
+
 export default {
     data(){
         return {
+            uploadUrl: 'http://sk.dev.com/' + uploadApi.upload,
             showPlatImport: true,
             valueFormat: 'yyyy-MM-dd',
             form: {
-                date1: "",
+                date: "",
                 data_type: 1,
                 plat_id: 1,
                 money_type: 1,
+                import_file: '',
+                company_id: '',
             },
             data_type: [
                 {
@@ -75,24 +95,7 @@ export default {
                     value: 2,
                 }
             ],
-            plats: [
-                {
-                    label: '抖音',
-                    value: 1,
-                },
-                {
-                    label: '映客',
-                    value: 2,
-                },
-                {
-                    label: '火山小视频',
-                    value: 3,
-                },
-                {
-                    label: '陌陌',
-                    value: 4,
-                },
-            ],
+            plats: [],
             money_types: [
                 {
                     label: '月流水',
@@ -103,14 +106,29 @@ export default {
                     value: 2,
                 }
             ],
+            companies: [],
         }
     },
     created(){
+        this.getCompany()
+        this.getPlats()
         this.isShow()
     },
     methods:{
         onSubmit(){
-            
+            const loading = this.$loading({
+                lock: true,
+                text: '导入中...',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
+            post(importApi.add, this.form).then((res) => {
+                loading.close();
+                this.$message({
+                    type: 'success',
+                    message: res.msg
+                })
+            })
         },
         showImport(value){
             this.form.data_type = value
@@ -120,6 +138,11 @@ export default {
             this.form.money_type = value
             this.isShow()
         },
+        getPlats(){
+            get(platApi.list).then((res) => {
+                this.plats = res.data.list
+            })
+        },
         isShow(){
             if(this.form.data_type == 1){
                 this.showPlatImport = false
@@ -127,12 +150,29 @@ export default {
                 this.showPlatImport = true
             }
 
-            if(this.form.money_type == 1){
+            // if(this.form.money_type == 2){
                 this.valueFormat = 'yyyy-MM-dd'
-            }else{
-                this.valueFormat = 'yyyy-MM'
+            // }else{
+                // this.valueFormat = 'yyyy-MM'
+            // }
+        },
+        uploadSuccess(response, file, fileList){
+            if(response.code != 1){
+                this.$message({
+                    type: 'danger',
+                    message: response.msg
+                })
+
+                return false
             }
-        }
+            this.form.import_file = response.data.list[0].path
+        },
+        getCompany(){
+            get(companyApi.list, { type: 'select' }).then((res) =>{
+                this.form.company_id = res.data.list[0].id
+                this.companies = res.data.list
+            })
+        },
     }
 }
 </script>

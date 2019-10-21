@@ -1,3 +1,3 @@
 export default{
-    list: '/plats/list'
+    list: '/plats/list',
 }
