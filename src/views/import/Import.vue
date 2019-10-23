@@ -40,27 +40,41 @@
             <el-form-item label="导入文件">
                 <el-col :span="12">
                     <el-upload
+                    :on-change="handleChange"
                     name="file[]"
+                    :file-list="fileList"
                     :show-file-list="true"
                     :on-success="uploadSuccess"
-                    accept="xlsx"
+                    :before-upload="beforeAvatarUpload"
                     class="upload-demo"
                     drag
                     :action="uploadUrl"
                     >
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                    <div class="el-upload__tip" slot="tip" style="text-align:center;">只能上传xlsx/xls文件</div>
+                    <div class="el-upload__tip" slot="tip" style="text-align:center;">只能上传xlsx/csv文件</div>
                     </el-upload>
                 </el-col>
             </el-form-item>
             <el-form-item>
                 <el-col :span="12" style="text-align:center;">
-                    <el-button type="primary" @click="onSubmit">提交</el-button>
+                    <el-button type="primary" @click="showConfirm">提交</el-button>
                 </el-col>
             </el-form-item>
         </el-form>
+        <el-dialog
+        title="确认"
+        :visible.sync="centerDialogVisible"
+        width="30%"
+        center>
+        <span>请仔细确认导入的文档是否和平台已经公司对应后提交</span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="centerDialogVisible = false">再确认一下</el-button>
+            <el-button type="primary" @click="onSubmit">我确认好了</el-button>
+        </span>
+        </el-dialog>
     </el-card>
+    
 </template>
 
 <script>
@@ -74,9 +88,11 @@ import { get,post } from '@/api/index.js'
 export default {
     data(){
         return {
+            centerDialogVisible: false,
             uploadUrl: 'http://sk.dev.com/' + uploadApi.upload,
             showPlatImport: true,
             valueFormat: 'yyyy-MM-dd',
+            fileList: [],
             form: {
                 date: "",
                 data_type: 1,
@@ -115,15 +131,19 @@ export default {
         this.isShow()
     },
     methods:{
+        showConfirm(){
+            this.centerDialogVisible = true
+        },
         onSubmit(){
-            const loading = this.$loading({
-                lock: true,
-                text: '导入中...',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-            });
+            // const loading = this.$loading({
+            //     lock: true,
+            //     text: '导入中...',
+            //     spinner: 'el-icon-loading',
+            //     background: 'rgba(0, 0, 0, 0.7)'
+            // });
             post(importApi.add, this.form).then((res) => {
-                loading.close();
+                // loading.close();
+                this.centerDialogVisible = false
                 this.$message({
                     type: 'success',
                     message: res.msg
@@ -173,6 +193,26 @@ export default {
                 this.companies = res.data.list
             })
         },
+         beforeAvatarUpload(file) {
+            const isJPG = file.type === 'text/csv' || file.type === 'application/wps-office.xlsx';
+
+            if (!isJPG) {
+                this.$message.error('请上传csv或者xlsx文件');
+            }
+            return isJPG;
+        },
+        handleChange(file, fileList){
+            if(typeof(file.response) != 'undefined'){
+                if(file.response.code != 1){
+                    this.$message({
+                        type: 'danger',
+                        message: file.response.msg
+                    })
+                }else{
+                    this.fileList = file.response.data.list
+                }
+            }
+        }
     }
 }
 </script>
