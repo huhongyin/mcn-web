@@ -14,9 +14,9 @@
 			<el-col :lg="7" :md="10" :sm="10">
 				<el-date-picker v-model="search.date" style="max-width:100%;" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"></el-date-picker>
 			</el-col>
-			<el-rol :lg="12" :md="8" :sm="5">
+			<el-col :lg="12" :md="8" :sm="5">
 				<el-button type="primary">搜索</el-button>
-			</el-rol>
+			</el-col>
 		</el-row>
 		<el-row :gutter="20" style="height:382px;">
 			<Total :item="total" :company="company_total"></Total>
@@ -513,10 +513,37 @@ export default {
 				name: '签约部一'
 			},
 			{
-				id: 1,
+				id: 2,
 				name: '签约部二'
 			},
-		]
+		],
+		pickerOptions2: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
       }
     },
     mounted(){

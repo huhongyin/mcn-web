@@ -132,6 +132,13 @@ axios.interceptors.response.use(
             });
         }
         return Promise.reject(error.response);
+      }else{
+        Message({
+          message: '服务器异常，请联系管理员',
+          duration: 1500,
+          type: 'danger',
+          forbidClick: true
+        });
       }
   	} 
   );

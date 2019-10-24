@@ -11,11 +11,11 @@
                     <span class="plat-row-unit">万</span>
                     <span class="plat-row-title right">环比
                         <el-tooltip v-if="item.yestoday.precent.type==0" effect="dark" :content="item.yestoday.precent.content" placement="top">
-                            <icon class="el-icon-caret-bottom color-red">{{ item.yestoday.precent.value }}</icon>
+                            <i class="el-icon-caret-bottom color-red">{{ item.yestoday.precent.value }}</i>
                         </el-tooltip>
                         
                         <el-tooltip v-else-if="item.yestoday.precent.type==1" effect="dark" :content="item.yestoday.precent.content" placement="top">
-                            <icon class="el-icon-caret-top color-green">{{ item.yestoday.precent.value }}</icon>
+                            <i class="el-icon-caret-top color-green">{{ item.yestoday.precent.value }}</i>
                         </el-tooltip>
                     </span>
                 </div>
@@ -27,11 +27,11 @@
                     <span class="plat-row-unit">人</span>
                     <span class="plat-row-title right">环比
                         <el-tooltip v-if="item.yestoday_validate_user_count.precent.type==0" effect="dark" :content="item.yestoday_validate_user_count.precent.content" placement="top">
-                            <icon class="el-icon-caret-bottom color-red">{{ item.yestoday_validate_user_count.precent.value }}</icon>
+                            <i class="el-icon-caret-bottom color-red">{{ item.yestoday_validate_user_count.precent.value }}</i>
                         </el-tooltip>
                         
                         <el-tooltip v-else-if="item.yestoday_validate_user_count.precent.type==1" effect="dark" :content="item.yestoday_validate_user_count.precent.content" placement="top">
-                            <icon class="el-icon-caret-top color-green">{{ item.yestoday_validate_user_count.precent.value }}</icon>
+                            <i class="el-icon-caret-top color-green">{{ item.yestoday_validate_user_count.precent.value }}</i>
                         </el-tooltip>
                     </span>
                 </div>
@@ -43,11 +43,11 @@
                     <span class="plat-row-unit">人</span>
                     <span class="plat-row-title right">环比
                         <el-tooltip v-if="item.yestoday_new_user_count.precent.type==0" effect="dark" :content="item.yestoday_new_user_count.precent.content" placement="top">
-                            <icon class="el-icon-caret-bottom color-red">{{ item.yestoday_new_user_count.precent.value }}</icon>
+                            <i class="el-icon-caret-bottom color-red">{{ item.yestoday_new_user_count.precent.value }}</i>
                         </el-tooltip>
                         
                         <el-tooltip v-else-if="item.yestoday_new_user_count.precent.type==1" effect="dark" :content="item.yestoday_new_user_count.precent.content" placement="top">
-                            <icon class="el-icon-caret-top color-green">{{ item.yestoday_new_user_count.precent.value }}</icon>
+                            <i class="el-icon-caret-top color-green">{{ item.yestoday_new_user_count.precent.value }}</i>
                         </el-tooltip>
                     </span>
                 </div>
@@ -61,11 +61,11 @@
                     <span class="plat-row-unit">分</span>
                     <span class="plat-row-title right">环比
                         <el-tooltip v-if="item.time.precent.type==0" effect="dark" :content="item.time.precent.content" placement="top">
-                            <icon class="el-icon-caret-bottom color-red">{{ item.time.precent.value }}</icon>
+                            <i class="el-icon-caret-bottom color-red">{{ item.time.precent.value }}</i>
                         </el-tooltip>
                         
                         <el-tooltip v-else-if="item.time.precent.type==1" effect="dark" :content="item.time.precent.content" placement="top">
-                            <icon class="el-icon-caret-top color-green">{{ item.time.precent.value }}</icon>
+                            <i class="el-icon-caret-top color-green">{{ item.time.precent.value }}</i>
                         </el-tooltip>
                     </span>
                 </div>

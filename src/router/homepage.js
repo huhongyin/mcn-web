@@ -4,7 +4,7 @@ import Equipment from './equipment'
 import Management from './management'
 import Operate from './operate'
 import Graffiti from './graffiti'
-import Banner from './banner'
+import Old from './old'
 import Finance from './finance'
 import Contact from './contact'
 import Operation from './operation'
@@ -23,7 +23,7 @@ export default
       ...Equipment,
       ...Management,
       ...Graffiti,
-      ...Banner,
+      ...Old,
       ...Finance,
       ...Contact,
       ...Operation,

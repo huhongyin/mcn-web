@@ -56,9 +56,19 @@
                 <el-badge :hidden="is_read" style="margin-top:-9px;" :value="msg_count"></el-badge>
               </el-menu-item>
               <!-- 数据录入 -->
-              <el-menu-item index="/import" class="el-item e-menu-span" style="font-size:13px;"><img :src="import_icon" width="20" style="margin-right:10px" height="20" alt />
+              <el-submenu index="/company">
+                <template slot="title">
+                  <img :src="sys_icon" width="20" style="margin-right:10px" height="20" alt />
+                  <span class="e-menu-span router-link">数据查询</span>
+                </template>
+                <el-menu-item-group class="el-item">
+                  <el-menu-item index="/old" class="el-item e-menu-span" style="font-size:13px;">日数据查看</el-menu-item>
+                  <el-menu-item index="/import" class="el-item e-menu-span" style="font-size:13px;">数据录入</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+              <!-- <el-menu-item index="/import" class="el-item e-menu-span" style="font-size:13px;"><img :src="import_icon" width="20" style="margin-right:10px" height="20" alt />
                 数据录入
-              </el-menu-item>
+              </el-menu-item> -->
               <!-- 艺人管理 -->
               <el-submenu index="/management">
                 <template slot="title">
