@@ -167,6 +167,9 @@ export default {
 };
 </script>
 <style>
+    body{
+      overflow-x: scroll;
+    }
     .el-button--primary{
       background-color: #4285f4;
       border-color:#4285f4;

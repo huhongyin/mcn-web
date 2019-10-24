@@ -17,7 +17,7 @@ axios.defaults.baseURL = 'http://sk.dev.com/api/v1/'
 // }
 
 // 请求超时时间
-axios.defaults.timeout = 20000
+axios.defaults.timeout = 40000
 
 // post请求头
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'

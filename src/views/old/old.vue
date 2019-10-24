@@ -5,11 +5,11 @@
         </div>
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane :data-id="item.id" v-for="(item,key) in plats" :key="key" :label="item.name" :name="'plat_' + item.id">
-                <el-row>
+                <el-row :gutter="10">
                         <el-col :xl="4" :lg="5" :md="4" :sm="2">
                             <el-input v-model="form.keyword" placeholder="输入关键词搜索"></el-input>
                         </el-col>
-                        <el-col :xl="4" :lg="5" :md="7" :sm="10" :offset="1">
+                        <el-col :xl="4" :lg="5" :md="8" :sm="10">
                             <el-date-picker
                             :disabledDate="disabledDate"
                             style="max-width:100%;"
@@ -70,10 +70,7 @@
                 <el-row v-else-if="form.plat_id == 3">
                      <el-row>
                         <el-col :span="24">
-                            <el-table
-                                :data="tableData"
-                                stripe
-                                style="width: 100%">
+                            <el-table show-summary :summary-method="getSummaryThree" :data="tableData" stripe style="width: 100%">
                                 <el-table-column fixed prop="date" label="日期"> </el-table-column>
                                 <el-table-column fixed prop="nickname" label="昵称"></el-table-column>
                                 <el-table-column prop="add_fans_num" label="新增粉丝数"></el-table-column>
@@ -97,10 +94,7 @@
                 <el-row v-else-if="form.plat_id == 4">
                      <el-row>
                         <el-col :span="24">
-                            <el-table
-                                :data="tableData"
-                                stripe
-                                style="width: 100%">
+                            <el-table show-summary :summary-method="getSummaryFour" :data="tableData" stripe style="width: 100%">
                                 <el-table-column fixed prop="date" label="日期"> </el-table-column>
                                 <el-table-column fixed prop="nickname" label="昵称"></el-table-column>
                                 <el-table-column prop="live_time" label="直播时长"></el-table-column>
@@ -252,6 +246,87 @@ export default {
                         break
                     case 6:
                             sums[index] = this.total_list.total_divide_money
+                        break
+                    default:
+                            sums[index] = ''
+                        break
+                }
+            });
+            return sums
+        },
+        getSummaryThree(params){
+            const columns = params.columns
+            const data = params.data
+            const sums = [];
+
+            columns.forEach((column, index) => {
+
+                switch(index){
+                    case 0:
+                            sums[index] = '合计' 
+                        break
+                    case 2:
+                            sums[index] = this.total_list.total_add_fans_num
+                        break
+                    case 3:
+                            sums[index] = this.total_list.total_live_counts
+                        break
+                    case 4:
+                            sums[index] = this.total_list.total_see_people_nums
+                        break
+                    case 5:
+                            sums[index] = this.total_list.total_live_time
+                        break
+                    case 6:
+                            sums[index] = this.total_list.total_video_live_time
+                        break
+                    case 7:
+                            sums[index] = this.total_list.total_live_money
+                        break
+                    case 8:
+                            sums[index] = this.total_list.total_guild_money
+                        break
+                    case 9:
+                            sums[index] = this.total_list.total_actor_money
+                        break
+                    default:
+                            sums[index] = ''
+                        break
+                }
+            });
+            return sums
+        },
+        getSummaryFour(params){
+            const columns = params.columns
+            const data = params.data
+            const sums = [];
+
+            columns.forEach((column, index) => {
+
+                switch(index){
+                    case 0:
+                            sums[index] = '合计' 
+                        break
+                    case 2:
+                            sums[index] = this.total_list.total_live_time
+                        break
+                    case 3:
+                            sums[index] = this.total_list.total_youxiao_days
+                        break
+                    case 4:
+                            sums[index] = this.total_list.total_add_people_nums
+                        break
+                    case 5:
+                            sums[index] = this.total_list.total_live_money
+                        break
+                    case 6:
+                            sums[index] = this.total_list.total_live_prop
+                        break
+                    case 7:
+                            sums[index] = this.total_list.total_live_activity
+                        break
+                    case 8:
+                            sums[index] = this.total_list.total_live_total_money
                         break
                     default:
                             sums[index] = ''
