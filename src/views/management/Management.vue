@@ -2,19 +2,19 @@
     <el-card class="box-card">
         <div slot="header" class="clearfix">
             <el-row :gutter="10">
-                <el-col :span="4">
+                <el-col :md="4" :sm="4" :lg="4">
                     <el-input v-model="search.keyword" placeholder="输入关键字搜索"></el-input>
                 </el-col>
-                <el-col :span="4">
+                <el-col :md="4" :sm="4" :lg="4">
                     <el-select v-model="search.level" style="width: 100%;">
                         <el-option label="全部" value=""></el-option>
                         <el-option v-for="(item,key) in addDialog.levels" :key="key" :value="item.id" :label="item.name"></el-option>
                     </el-select>
                 </el-col>
-                <el-col :span="2">
+                <el-col :md="2" :sm="2" :lg="2">
                     <el-button type="primary" @click="getData">搜索</el-button>
                 </el-col>
-                <el-col :span="4" :offset="10">
+                <el-col :md="4" :sm="4" :lg="4">
                     <el-button icon="el-icon-download" @click="exportExcel">导出</el-button>
                     <el-button type="primary" @click="add(0)">新增</el-button>
                 </el-col>
@@ -628,6 +628,12 @@ export default {
             if(id > 0){
                 get(actorApi.edit + "/" + id).then((res) => {
                     var data = res.data.info
+                    if(data.bank == null){
+                        data.bank = {}
+                    }
+                    if(data.actor_plat_sign == null){
+                        data.actor_plat_sign = {}
+                    }
                     data.bank.bank_no = data.bank_no
                     this.addDialog.form.bank = data.bank
                     data.actor.nickname = data.nickname
