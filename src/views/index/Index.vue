@@ -56,7 +56,7 @@
                 <el-badge :hidden="is_read" style="margin-top:-9px;" :value="msg_count"></el-badge>
               </el-menu-item>
               <!-- 数据录入 -->
-              <el-submenu index="/company">
+              <el-submenu index="/data">
                 <template slot="title">
                   <img :src="sys_icon" width="20" style="margin-right:10px" height="20" alt />
                   <span class="e-menu-span router-link">数据查询</span>

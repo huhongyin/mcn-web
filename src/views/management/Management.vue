@@ -729,6 +729,18 @@ export default {
         userDetail(id){
             get(actorApi.detail + '/' + id).then((res) => {
                 this.userDetailDialog.detail = res.data.info
+                if(typof(this.userDetailDialog.detail.operate_user) == 'undefind'){
+                    this.userDetailDialog.detail.operate_user = {
+                        id: '',
+                        rel_name : '',
+                    }
+                }
+                if(typof(this.userDetailDialog.detail.sign_user) == 'undefind'){
+                    this.userDetailDialog.detail.sign_user = {
+                        id: '',
+                        rel_name : '',
+                    }
+                }
                 this.userDetailDialog.show = true
             })
         },

@@ -186,7 +186,7 @@ export default {
   }
 };
 </script>
-<style>
+<style lang="less" scoped>
 .el-input__inner{
     -webkit-appearance: none;
     border: none;
@@ -200,8 +200,6 @@ export default {
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
     width: 100%;
 }
-</style>
-<style lang="less" scoped>
 .main_box {
   display: flex;
   justify-content: center;

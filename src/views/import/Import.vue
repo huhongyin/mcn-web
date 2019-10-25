@@ -92,7 +92,8 @@ export default {
             selectMonth: false,
             selectDate: false,
             centerDialogVisible: false,
-            uploadUrl: 'http://sk.dev.com/' + uploadApi.upload,
+            // uploadUrl: 'http://sk.dev.com/' + uploadApi.upload,
+            uploadUrl: 'http://admin.mcn.huhongyin.com' + uploadApi.upload,
             showPlatImport: true,
             valueFormat: 'yyyy-MM-dd',
             fileList: [],
@@ -117,13 +118,13 @@ export default {
             plats: [],
             money_types: [
                 {
+                    label: '日流水',
+                    value: 2,
+                },
+                {
                     label: '月流水',
                     value: 1,
                 },
-                {
-                    label: '日流水',
-                    value: 2,
-                }
             ],
             companies: [],
         }
@@ -138,12 +139,6 @@ export default {
             this.centerDialogVisible = true
         },
         onSubmit(){
-            // const loading = this.$loading({
-            //     lock: true,
-            //     text: '导入中...',
-            //     spinner: 'el-icon-loading',
-            //     background: 'rgba(0, 0, 0, 0.7)'
-            // });
             if(this.form.data_type == 1){
                 post(actorApi.import, this.form).then((res) => {
                     // loading.close();
@@ -154,13 +149,29 @@ export default {
                     })
                 })
             }else if(this.form.data_type == 2){
+                const loading = this.$loading({
+                    lock: true,
+                    text: '导入中...',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+                this.centerDialogVisible = false
                 post(importApi.add, this.form).then((res) => {
-                    // loading.close();
-                    this.centerDialogVisible = false
+                    console.log(res)
+                    loading.close();
+                    if(res.code != 1){
+                        this.$message({
+                            type: 'danger',
+                            message: res.msg
+                        })
+                        return false
+                    }
                     this.$message({
                         type: 'success',
                         message: res.msg
                     })
+                }).catch((err) => {
+                    loading.close()
                 })
             }else{
                 this.$message({
