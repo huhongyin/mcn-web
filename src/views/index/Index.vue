@@ -39,7 +39,7 @@
               router
             >
             <!-- 签约统计 -->
-            <el-menu-item index="/echarts" class="el-item e-menu-span" style="font-size:13px;"><img :src="sign_icon" width="20" style="margin-right:10px" height="20" alt />
+            <el-menu-item index="/" class="el-item e-menu-span" style="font-size:13px;"><img :src="sign_icon" width="20" style="margin-right:10px" height="20" alt />
                 签约统计
               </el-menu-item>
             <!-- 运营统计 -->
@@ -132,6 +132,11 @@ export default {
     let is_read = localStorage.getItem('is_read')
     if(typeof(is_read) != 'undefined' && is_read == 1){
       this.is_read = true
+    }
+    if(this.userInfo == null){
+      this.$router.push({
+					path: '/login',
+				})
     }
   },
   methods: {

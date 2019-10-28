@@ -641,8 +641,8 @@ export default {
                     data.actor.old_id = data.plat_actor_id
                     data.actor.now_id = data.now_id
                     data.actor.level = (data.level_id == 0) ? '' : data.level_id
-                    data.actor.yunying_user_id = data.operate_user_id
-                    data.actor.sign_user_id = data.sign_user_id
+                    data.actor.yunying_user_id = (data.operate_user_id == 0) ? '' : data.operate_user_id
+                    data.actor.sign_user_id = (data.sign_user_id == 0) ? '' : data.sign_user_id
                     data.actor.company_id = data.company_id
                     this.addDialog.form.actor = data.actor
                     this.addDialog.form.sign.fuchijine = data.actor_plat_sign.support_money

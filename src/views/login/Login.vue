@@ -167,7 +167,7 @@ export default {
                 localStorage.setItem("access_token", access_token)
                 localStorage.setItem("user", JSON.stringify(userInfo))
                 that.$router.push({
-                  path: '/echarts',
+                  path: '/',
                 })
             })
         } else {

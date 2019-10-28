@@ -12,12 +12,6 @@ export default
 [
   // 首页echarts
   {
-    path: '/echarts',
-    name: 'echarts',
-    component: Echarts
-  },
-  // 首页echarts
-  {
     path: '/',
     name: 'echarts',
     component: Echarts

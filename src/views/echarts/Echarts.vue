@@ -18,8 +18,34 @@
 				<el-button type="primary">搜索</el-button>
 			</el-col>
 		</el-row>
+		<el-row :gutter="10" class="sign-info">
+			<el-col :span="6">
+				<div>
+					<img :src="total_money_img" width="64" height="64"/>
+					<label v-text="total.total_money + '万'" @click="showTotalMoney('签约主播流水')"></label>
+				</div>
+			</el-col>
+			<el-col :span="6">
+				<div>
+					<img :src="all_users_img" width="64" height="64"/>
+					<label v-text="total.total_sign_user_count" @click="showSignActor('签约主播数量')"></label>
+				</div>
+			</el-col>
+			<el-col :span="6">
+				<div>
+					<img :src="online_users_img" width="64" height="64"/>
+					<label v-text="0" @click="showEffectiveActor('有效主播数量')"></label>
+				</div>
+			</el-col>
+			<el-col :span="6">
+				<div>
+					<img :src="time_img" width="64" height="64"/>
+					<label v-text="total.time.h + '小时' + total.time.m + '分钟'" @click="showOnLine('在线总时长')"></label>
+				</div>
+			</el-col>
+		</el-row>
 		<el-row :gutter="20" style="height:382px;">
-			<Total :item="total" :company="company_total"></Total>
+			<Total :item="total"></Total>
 		</el-row>
 		<el-row :gutter="20" type="flex">
 			<Plat v-for="(item,key) in plat.list" :key="key" :item="item"></Plat>
@@ -45,11 +71,22 @@ import Plat from '@/componets/echarts/Item.vue'
 import MarkLine from '@/componets/echarts/LineMarke.vue'
 import BarLabel from '@/componets/echarts/TenItem.vue'
 import Total from '@/componets/echarts/Total.vue'
+import echartsApi from '@/api/echarts.js'
+import { get, post } from '@/api/index.js'
 
 export default {
   components:{ Plat, MarkLine, BarLabel, Total },
     data(){
       return {
+				total_money_img: require("../../assets/imgs/index/total_money.png"),
+				all_users_img: require("../../assets/imgs/index/all_users.png"),
+				time_img: require("../../assets/imgs/index/time.png"),
+				online_users_img: require("../../assets/imgs/index/online_users.png"),
+				search: {
+					company: "",
+					department: "",
+					date: [],
+				},
 		plat: {
 			list: [
                 {
@@ -465,29 +502,14 @@ export default {
 			]
 		},
 		total: {
-			name: '您的数据统计',
-			total_money: '20', //总收入
-			total_sign_user_count: '100', //签约主播数量
-			total_validate_user_count: '2000', //全部有效主播数量
+			name: '签约数据统计',
+			total_money: '', //总收入
+			total_sign_user_count: '', //签约主播数量
+			total_validate_user_count: '', //全部有效主播数量
 			time: { //总在线时长
-				h: '2310',
-				m: '56',
+				h: '',
+				m: '',
 			}
-		},
-		company_total: {
-			name: '公司数据统计',
-			total_money: '100', //总收入
-			total_sign_user_count: '1000', //签约主播数量
-			total_validate_user_count: '900', //全部有效主播数量
-			time: { //总在线时长
-				h: '2310',
-				m: '56',
-			}
-		},
-		search: {
-			company: "",
-			department: "",
-			date: "",
 		},
 		companyOptions: [
 			{
@@ -546,17 +568,108 @@ export default {
         },
       }
     },
-    mounted(){
-    },
     methods:{
+			showTotalMoney(title){
+            //查看流水
+            this.$router.push({
+                path: 'signTotalMoney',
+                query: {
+                    title: title
+                }
+            })
+        },
+        showSignActor(title){
+            //签约主播数量
+            this.$router.push({
+                path: 'signActorCount',
+                query: {
+                    title: title
+                }
+            })
+        },
+        showEffectiveActor(title){
+            //有效主播数量
+            this.$router.push({
+                path: 'effectiveActorCount',
+                query: {
+                    title: title
+                }
+            })
+        },
+        showOnLine(title){
+            //在线总时长
+            this.$router.push({
+                path: 'onLineList',
+                query: {
+                    title: title
+                }
+            })
+				},
+				getSignCal(){
+						get(echartsApi.signCal).then((res) => {
+							this.total.total_money = res.data.list.total_money
+							this.total.total_sign_user_count = res.data.list.sign_actor_count
+							this.total.total_validate_user_count = 0
+							this.total.time.h = res.data.list.total_live_time.hours
+							this.total.time.m = res.data.list.total_live_time.minutes
+						})
+				},
+				showTotalMoney(title){
+            //查看流水
+            this.$router.push({
+                path: 'signTotalMoney',
+                query: {
+                    title: title
+                }
+            })
+        },
+        showSignActor(title){
+            //签约主播数量
+            this.$router.push({
+                path: 'signActorCount',
+                query: {
+                    title: title
+                }
+            })
+        },
+        showEffectiveActor(title){
+            //有效主播数量
+            this.$router.push({
+                path: 'effectiveActorCount',
+                query: {
+                    title: title
+                }
+            })
+        },
+        showOnLine(title){
+            //在线总时长
+            this.$router.push({
+                path: 'onLineList',
+                query: {
+                    title: title
+                }
+            })
+        }
     },
     created(){
-		let token = localStorage.getItem('access_token')
-		if(token == null){
-			this.$router.push({
-				path: '/login',
-			})
-		}
+			let token = localStorage.getItem('access_token')
+			if(token == null){
+				this.$router.push({
+					path: '/login',
+				})
+			}
+
+				var date = new Date()
+				var yestoday = date.getTime() - 24*60*60*1000
+				var date2 = new Date()
+				date2.setTime(yestoday)
+				var yesTodayDate = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
+				var thirtyDay = date.getTime() - 24*60*60*1000 * 30
+				date2.setTime(thirtyDay)
+				var thirtyDate = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
+				this.search.date = [thirtyDate, yesTodayDate]
+
+			this.getSignCal()
     }
 }
 </script>
@@ -568,4 +681,19 @@ export default {
 	.el-col-12{
 		margin-bottom: 20px;
 	}
+
+	.sign-info .el-col-6 div{
+		display:flex;
+		width:80%;
+		margin:0 auto;
+	}
+
+	.sign-info .el-col-6 div label{
+		height: 100%;
+		margin:auto 0;
+		font-size:20px;
+		cursor:pointer;
+		margin-left: 1rem;
+	}
+	
 </style>
