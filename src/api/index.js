@@ -3,8 +3,8 @@ import qs from 'qs'
 import { Message } from 'element-ui';
 
 // 环境切换
-// axios.defaults.baseURL = 'http://admin.mcn.huhongyin.com/api/v1/'
-axios.defaults.baseURL = 'http://sk.dev.com/api/v1/'
+axios.defaults.baseURL = 'http://admin.mcn.huhongyin.com/api/v1/'
+// axios.defaults.baseURL = 'http://sk.dev.com/api/v1/'
 // if (process.env.NODE_ENV === 'development') {
 //   axios.defaults.baseURL = 'https://official.cdhengsu.com'
 //   // console.log('开发环境api接口url')
@@ -17,7 +17,7 @@ axios.defaults.baseURL = 'http://sk.dev.com/api/v1/'
 // }
 
 // 请求超时时间
-axios.defaults.timeout = 20000
+axios.defaults.timeout = 40000
 
 // post请求头
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -45,6 +45,7 @@ axios.interceptors.response.use(
                   duration: 1000,
                   type: 'error',
                 });
+                return Promise.reject(response);
               break;
             case 401:
                   Message({
@@ -192,18 +193,13 @@ export function post (url, params) {
               duration: 1000,
               type: 'error'
             });
-            return false;
+            return false
           }
         }
         resolve(res.data)
       })
       .catch(err => {
-        // Message({
-        //   message: '服务器繁忙！请稍后重试',
-        //   duration: 1000,
-        //   type: 'error'
-        // });
-        // reject(err.data)
+        reject(err)
       })
   })
 }

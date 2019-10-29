@@ -1,12 +1,9 @@
 <template>
     <div style="height:100%;">
-        <el-col :span="6"  style="height:100%;">
+        <!-- <el-col :span="12"  style="height:100%;">
             <SignItem echart-id="sign_total" :item="item" :SpanNum="12"></SignItem>
-        </el-col>
-        <el-col :span="6"  style="height:100%;">
-            <SignItem echart-id="company_sign_total" :item="company" :SpanNum="12"></SignItem>
-        </el-col>
-        <TotalMarkLine echart-id="mark-line-total_all_plat" formatter="元" text="过去30日总营收" subtext="" :data="select_date" :series="series" :SpanNum="12"></TotalMarkLine>
+        </el-col> -->
+        <TotalMarkLine echart-id="mark-line-total_all_plat" formatter="元" text="过去30日总营收" subtext="" :data="select_date" :series="series" :SpanNum="24"></TotalMarkLine>
     </div>
 </template>
 <script>
@@ -17,7 +14,6 @@ export default {
     components: {TotalMarkLine, SignItem},
     props: [
         "item",
-        "company"
     ],
     data(){
         return {

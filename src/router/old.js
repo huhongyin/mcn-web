@@ -1,4 +1,5 @@
 import Old from '../views/old/old.vue'
+import OldMonth from '../views/old/oldMonth.vue'
 
 export default
 [
@@ -8,4 +9,9 @@ export default
     name: 'old',
     component: Old
   },
+  {
+    path: '/oldMonth',
+    name: 'oldMonth',
+    component: OldMonth,
+  }
 ]

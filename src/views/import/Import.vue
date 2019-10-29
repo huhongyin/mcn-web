@@ -34,7 +34,8 @@
             </el-form-item>
             <el-form-item label="导入时间" v-show="showPlatImport">
                 <el-col :span="12">
-                    <el-date-picker type="date" :value-format="valueFormat" :format="valueFormat" placeholder="选择日期" v-model="form.date" style="width: 100%;"></el-date-picker>
+                    <el-date-picker v-show="selectDate" type="date" :value-format="valueFormat" :format="valueFormat" placeholder="选择日期" v-model="form.date" style="width: 100%;"></el-date-picker>
+                    <el-date-picker v-show="selectMonth" value-format="yyyy-MM" format="yyyy-MM" v-model="form.date" style="width:100%:" type="month" placeholder="选择日期"></el-date-picker>
                 </el-col>
             </el-form-item>
             <el-form-item label="导入文件">
@@ -88,8 +89,11 @@ import { get,post } from '@/api/index.js'
 export default {
     data(){
         return {
+            selectMonth: false,
+            selectDate: false,
             centerDialogVisible: false,
-            uploadUrl: 'http://sk.dev.com/' + uploadApi.upload,
+            // uploadUrl: 'http://sk.dev.com/' + uploadApi.upload,
+            uploadUrl: 'http://admin.mcn.huhongyin.com' + uploadApi.upload,
             showPlatImport: true,
             valueFormat: 'yyyy-MM-dd',
             fileList: [],
@@ -114,13 +118,13 @@ export default {
             plats: [],
             money_types: [
                 {
+                    label: '日流水',
+                    value: 2,
+                },
+                {
                     label: '月流水',
                     value: 1,
                 },
-                {
-                    label: '日流水',
-                    value: 2,
-                }
             ],
             companies: [],
         }
@@ -135,20 +139,46 @@ export default {
             this.centerDialogVisible = true
         },
         onSubmit(){
-            // const loading = this.$loading({
-            //     lock: true,
-            //     text: '导入中...',
-            //     spinner: 'el-icon-loading',
-            //     background: 'rgba(0, 0, 0, 0.7)'
-            // });
-            post(importApi.add, this.form).then((res) => {
-                // loading.close();
-                this.centerDialogVisible = false
-                this.$message({
-                    type: 'success',
-                    message: res.msg
+            if(this.form.data_type == 1){
+                post(actorApi.import, this.form).then((res) => {
+                    // loading.close();
+                    this.centerDialogVisible = false
+                    this.$message({
+                        type: 'success',
+                        message: res.msg
+                    })
                 })
-            })
+            }else if(this.form.data_type == 2){
+                const loading = this.$loading({
+                    lock: true,
+                    text: '导入中...',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+                this.centerDialogVisible = false
+                post(importApi.add, this.form).then((res) => {
+                    console.log(res)
+                    loading.close();
+                    if(res.code != 1){
+                        this.$message({
+                            type: 'danger',
+                            message: res.msg
+                        })
+                        return false
+                    }
+                    this.$message({
+                        type: 'success',
+                        message: res.msg
+                    })
+                }).catch((err) => {
+                    loading.close()
+                })
+            }else{
+                this.$message({
+                    type: 'danger',
+                    message: '非法操作'
+                })
+            }
         },
         showImport(value){
             this.form.data_type = value
@@ -170,11 +200,13 @@ export default {
                 this.showPlatImport = true
             }
 
-            // if(this.form.money_type == 2){
-                this.valueFormat = 'yyyy-MM-dd'
-            // }else{
-                // this.valueFormat = 'yyyy-MM'
-            // }
+            if(this.form.money_type == 2){
+                this.selectMonth = false
+                this.selectDate = true
+            }else{
+                this.selectMonth = true
+                this.selectDate = false
+            }
         },
         uploadSuccess(response, file, fileList){
             if(response.code != 1){

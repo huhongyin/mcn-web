@@ -1,7 +1,7 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            原数据
+            月原数据
         </div>
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane :data-id="item.id" v-for="(item,key) in plats" :key="key" :label="item.name" :name="'plat_' + item.id">
@@ -14,9 +14,9 @@
                             :disabledDate="disabledDate"
                             style="max-width:100%;"
                             v-model="form.date"
-                            format="yyyy-MM-dd"
-                            value-format="yyyy-MM-dd"
-                            type="date"
+                            format="yyyy-MM"
+                            value-format="yyyy-MM"
+                            type="month"
                             placeholder="选择日期">
                             </el-date-picker>
                         </el-col>
@@ -126,8 +126,8 @@ import oldApi from '@/api/old.js';
 export default {
     created(){
         var day1 = new Date();
-        day1.setTime(day1.getTime()-24*60*60*1000);
-        var s1 = day1.getFullYear()+"-" + (day1.getMonth()+1) + "-" + day1.getDate();
+        day1.setTime(day1.getTime()-24*60*60*1000)
+        var s1 = day1.getFullYear()+"-" + (day1.getMonth())
         this.form.date = s1
         this.getPlats()
         this.getData()
@@ -164,7 +164,7 @@ export default {
         },
         getData(){
             if(this.form.plat_id != ''){
-                get(oldApi.list, this.form).then((res) => {
+                get(oldApi.monthList, this.form).then((res) => {
                     this.tableData = res.data.list.data
                     this.total = res.data.list.total
                     this.form.page = res.data.list.current_page

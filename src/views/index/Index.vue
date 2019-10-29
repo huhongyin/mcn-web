@@ -39,7 +39,7 @@
               router
             >
             <!-- 签约统计 -->
-            <el-menu-item index="/echarts" class="el-item e-menu-span" style="font-size:13px;"><img :src="sign_icon" width="20" style="margin-right:10px" height="20" alt />
+            <el-menu-item index="/" class="el-item e-menu-span" style="font-size:13px;"><img :src="sign_icon" width="20" style="margin-right:10px" height="20" alt />
                 签约统计
               </el-menu-item>
             <!-- 运营统计 -->
@@ -56,13 +56,14 @@
                 <el-badge :hidden="is_read" style="margin-top:-9px;" :value="msg_count"></el-badge>
               </el-menu-item>
               <!-- 数据录入 -->
-              <el-submenu index="/company">
+              <el-submenu index="/data">
                 <template slot="title">
                   <img :src="sys_icon" width="20" style="margin-right:10px" height="20" alt />
                   <span class="e-menu-span router-link">数据查询</span>
                 </template>
                 <el-menu-item-group class="el-item">
                   <el-menu-item index="/old" class="el-item e-menu-span" style="font-size:13px;">日数据查看</el-menu-item>
+                  <el-menu-item index="/oldMonth" class="el-item e-menu-span" style="font-size:13px;">月数据查看</el-menu-item>
                   <el-menu-item index="/import" class="el-item e-menu-span" style="font-size:13px;">数据录入</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
@@ -132,6 +133,11 @@ export default {
     if(typeof(is_read) != 'undefined' && is_read == 1){
       this.is_read = true
     }
+    if(this.userInfo == null){
+      this.$router.push({
+					path: '/login',
+				})
+    }
   },
   methods: {
       handleClose(done) {
@@ -167,6 +173,9 @@ export default {
 };
 </script>
 <style>
+    body{
+      overflow-x: scroll;
+    }
     .el-button--primary{
       background-color: #4285f4;
       border-color:#4285f4;
