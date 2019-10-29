@@ -194,6 +194,8 @@ export default {
             })
         },
          beforeAvatarUpload(file) {
+         	console.log(file)
+         	return true
             const isJPG = file.type === 'text/csv' || file.type === 'application/wps-office.xlsx';
 
             if (!isJPG) {
