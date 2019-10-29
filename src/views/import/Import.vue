@@ -226,7 +226,12 @@ export default {
             })
         },
          beforeAvatarUpload(file) {
+<<<<<<< HEAD
              return true
+=======
+         	console.log(file)
+         	return true
+>>>>>>> 8dc361aac25c734cb62a88eaf5c352634f3818a3
             const isJPG = file.type === 'text/csv' || file.type === 'application/wps-office.xlsx';
 
             if (!isJPG) {
