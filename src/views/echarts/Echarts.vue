@@ -15,14 +15,14 @@
 				<el-date-picker v-model="search.date" style="max-width:100%;" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"></el-date-picker>
 			</el-col>
 			<el-col :lg="12" :md="8" :sm="5">
-				<el-button type="primary">搜索</el-button>
+				<el-button type="primary" @click="searchData">搜索</el-button>
 			</el-col>
 		</el-row>
 		<el-row :gutter="10" class="sign-info">
 			<el-col :span="6">
 				<div>
 					<img :src="total_money_img" width="64" height="64"/>
-					<label v-text="total.total_money + '万'" @click="showTotalMoney('签约主播流水')"></label>
+					<label v-text="total.total_money + '万'" @click="showTotalMoney('主播流水记录')"></label>
 				</div>
 			</el-col>
 			<el-col :span="6">
@@ -72,21 +72,22 @@ import MarkLine from '@/componets/echarts/LineMarke.vue'
 import BarLabel from '@/componets/echarts/TenItem.vue'
 import Total from '@/componets/echarts/Total.vue'
 import echartsApi from '@/api/echarts.js'
+import companyApi from '@/api/company.js'
 import { get, post } from '@/api/index.js'
 
 export default {
   components:{ Plat, MarkLine, BarLabel, Total },
     data(){
       return {
-				total_money_img: require("../../assets/imgs/index/total_money.png"),
-				all_users_img: require("../../assets/imgs/index/all_users.png"),
-				time_img: require("../../assets/imgs/index/time.png"),
-				online_users_img: require("../../assets/imgs/index/online_users.png"),
-				search: {
-					company: "",
-					department: "",
-					date: [],
-				},
+		total_money_img: require("../../assets/imgs/index/total_money.png"),
+		all_users_img: require("../../assets/imgs/index/all_users.png"),
+		time_img: require("../../assets/imgs/index/time.png"),
+		online_users_img: require("../../assets/imgs/index/online_users.png"),
+		search: {
+			company: "",
+			department: "",
+			date: [],
+		},
 		plat: {
 			list: [
                 {
@@ -511,20 +512,7 @@ export default {
 				m: '',
 			}
 		},
-		companyOptions: [
-			{
-				id: "",
-				name: '全部公司'
-			},
-			{
-				id: 1,
-				name: '成都'
-			},
-			{
-				id: 2,
-				name: '北京'
-			},
-		],
+		companyOptions: [],
 		departmentOptions: [
 			{
 				id: "",
@@ -567,110 +555,90 @@ export default {
           }]
         },
       }
+	},
+    created(){
+		this.isLogin() //验证登录
+		this.setDate() //初始化时间
+		this.getCompanies() //获取公司数据
+		this.getSignCal() //获取统计总数 总流水  有效主播数量...
     },
     methods:{
-			showTotalMoney(title){
-            //查看流水
-            this.$router.push({
-                path: 'signTotalMoney',
-                query: {
-                    title: title
-                }
-            })
-        },
-        showSignActor(title){
-            //签约主播数量
-            this.$router.push({
-                path: 'signActorCount',
-                query: {
-                    title: title
-                }
-            })
-        },
-        showEffectiveActor(title){
-            //有效主播数量
-            this.$router.push({
-                path: 'effectiveActorCount',
-                query: {
-                    title: title
-                }
-            })
-        },
-        showOnLine(title){
-            //在线总时长
-            this.$router.push({
-                path: 'onLineList',
-                query: {
-                    title: title
-                }
-            })
-				},
-				getSignCal(){
-						get(echartsApi.signCal).then((res) => {
-							this.total.total_money = res.data.list.total_money
-							this.total.total_sign_user_count = res.data.list.sign_actor_count
-							this.total.total_validate_user_count = 0
-							this.total.time.h = res.data.list.total_live_time.hours
-							this.total.time.m = res.data.list.total_live_time.minutes
-						})
-				},
-				showTotalMoney(title){
-            //查看流水
-            this.$router.push({
-                path: 'signTotalMoney',
-                query: {
-                    title: title
-                }
-            })
-        },
-        showSignActor(title){
-            //签约主播数量
-            this.$router.push({
-                path: 'signActorCount',
-                query: {
-                    title: title
-                }
-            })
-        },
-        showEffectiveActor(title){
-            //有效主播数量
-            this.$router.push({
-                path: 'effectiveActorCount',
-                query: {
-                    title: title
-                }
-            })
-        },
-        showOnLine(title){
-            //在线总时长
-            this.$router.push({
-                path: 'onLineList',
-                query: {
-                    title: title
-                }
-            })
-        }
-    },
-    created(){
+		isLogin(){
 			let token = localStorage.getItem('access_token')
 			if(token == null){
 				this.$router.push({
 					path: '/login',
 				})
 			}
-
-				var date = new Date()
-				var yestoday = date.getTime() - 24*60*60*1000
-				var date2 = new Date()
-				date2.setTime(yestoday)
-				var yesTodayDate = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
-				var thirtyDay = date.getTime() - 24*60*60*1000 * 30
-				date2.setTime(thirtyDay)
-				var thirtyDate = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
-				this.search.date = [thirtyDate, yesTodayDate]
-
+		},
+		setDate(){
+			var date = new Date()
+			var yestoday = date.getTime() - 24*60*60*1000
+			var date2 = new Date()
+			date2.setTime(yestoday)
+			var yesTodayDate = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
+			var thirtyDay = date.getTime() - 24*60*60*1000 * 30
+			date2.setTime(thirtyDay)
+			var thirtyDate = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
+			this.search.date = [thirtyDate, yesTodayDate]
+		},
+		getCompanies(){
+			get(companyApi.list, { type: 'select' }).then((res) => {
+				this.companyOptions = res.data.list
+				this.search.company = res.data.list[0].id
+			})
+		},
+		searchData(){
 			this.getSignCal()
-    }
+		},
+		showTotalMoney(title){
+			//查看流水
+            this.$router.push({
+                path: 'signTotalMoney',
+                query: {
+					title: title,
+					start_date: this.search.date[0],
+					end_date: this.search.date[1],
+                }
+            })
+        },
+        showSignActor(title){
+            //签约主播数量
+            this.$router.push({
+                path: 'signActorCount',
+                query: {
+                    title: title
+                }
+            })
+        },
+        showEffectiveActor(title){
+            //有效主播数量
+            this.$router.push({
+                path: 'effectiveActorCount',
+                query: {
+                    title: title
+                }
+            })
+        },
+        showOnLine(title){
+            //在线总时长
+            this.$router.push({
+                path: 'onLineList',
+                query: {
+                    title: title
+                }
+            })
+		},
+		getSignCal(){
+			get(echartsApi.signCal, this.search).then((res) => {
+				this.total.total_money = res.data.list.total_money
+				this.total.total_sign_user_count = res.data.list.sign_actor_count
+				this.total.total_validate_user_count = 0
+				this.total.time.h = res.data.list.total_live_time.hours
+				this.total.time.m = res.data.list.total_live_time.minutes
+			})
+		},
+    },
 }
 </script>
 

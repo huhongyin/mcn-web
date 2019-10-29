@@ -92,8 +92,8 @@ export default {
             selectMonth: false,
             selectDate: false,
             centerDialogVisible: false,
-            // uploadUrl: 'http://sk.dev.com/' + uploadApi.upload,
-            uploadUrl: 'http://admin.mcn.huhongyin.com' + uploadApi.upload,
+            uploadUrl: 'http://sk.dev.com/' + uploadApi.upload,
+            // uploadUrl: 'http://admin.mcn.huhongyin.com' + uploadApi.upload,
             showPlatImport: true,
             valueFormat: 'yyyy-MM-dd',
             fileList: [],
@@ -226,6 +226,7 @@ export default {
             })
         },
          beforeAvatarUpload(file) {
+             return true
             const isJPG = file.type === 'text/csv' || file.type === 'application/wps-office.xlsx';
 
             if (!isJPG) {

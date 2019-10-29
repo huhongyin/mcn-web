@@ -1,7 +1,8 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            <el-row :gutter="10">
+            部门列表
+            <!-- <el-row :gutter="10">
                 <el-col :span="4">
                     <el-select v-model="search.company_id">
                         <el-option label="全部" value=""></el-option>
@@ -14,10 +15,9 @@
                 <el-col :span="12">
                     <el-button class="right" type="primary" style="float:right;" @click="add(0)">新增</el-button>
                 </el-col>
-            </el-row>
+            </el-row> -->
         </div>
-        <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
-                <!-- <el-table-column type="selection"></el-table-column> -->
+        <!-- <el-table stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
                 <el-table-column label="序号" type="index"></el-table-column>
                 <el-table-column label="部门名" prop="name"></el-table-column>
                 <el-table-column label="负责人" prop="user.rel_name"></el-table-column>
@@ -29,8 +29,38 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :total="total" @current-change="handleCurrentChange"></el-pagination>
-            
+            <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :total="total" @current-change="handleCurrentChange"></el-pagination> -->
+            <el-row :gutter="10">
+                <el-tree :data="data" node-key="id" default-expand-all :expand-on-click-node="false">
+                    <span class="custom-tree-node" slot-scope="{ node, data }">
+                        <el-col :span="6">
+                            <span>{{ node.label }}</span>
+                        </el-col>
+                        <el-col :span="6">
+                            <span>{{ data.company_name }}</span>
+                        </el-col>
+                        <el-col :span="6">
+                            <span>{{ data.user_name }}</span>
+                        </el-col>
+                        <el-col :span="2">
+                            <span>
+                                <el-button
+                                    type="text"
+                                    size="mini"
+                                    @click="() => edit(node, data)">
+                                    编辑
+                                </el-button>
+                                <el-button
+                                    type="text"
+                                    size="mini"
+                                    @click="() => remove(node, data)">
+                                    删除
+                                </el-button>
+                            </span>
+                        </el-col>
+                    </span>
+                </el-tree>
+            </el-row>
             <!-- TODO 文字间距设置 -->
             <el-dialog :title="addDialog.addTitle" :visible.sync="addDialog.addDialogVisible" width="800px" center @close="close">
                 <div class="center break">
@@ -41,9 +71,10 @@
                             <el-input v-model="addDialog.form.name" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="所属公司：" :label-width="addDialog.formLabelWidth">
-                            <el-select style="width:100%;" v-model="addDialog.form.company_id" @change="changeCompany">
+                            <el-cascader style="width:100%;" v-model="addDialog.form.company_id" :options="search.companies" :props="{ expandTrigger: 'hover', checkStrictly: 'true' }" @change="handleChange"></el-cascader>
+                            <!-- <el-select style="width:100%;" v-model="addDialog.form.company_id" @change="changeCompany">
                                 <el-option v-for="(item,key) in search.companies" :key="key" :label="item.name" :value="item.id"></el-option>
-                            </el-select>
+                            </el-select> -->
                         </el-form-item>
                         <el-form-item label="负责人：" :label-width="addDialog.formLabelWidth">
                             <el-select style="width:100%;" v-model="addDialog.form.user_id">
@@ -79,6 +110,7 @@ export default {
     },
     data(){
         return {
+            data: [],
             search:{
                 company_id: "",
                 companies: [],
@@ -105,15 +137,22 @@ export default {
     methods:{
         getData(){
             let params = { current : this.current, company_id: this.search.company_id }
-            let that = this
             get(departmentApi.list, params).then((res) => {
-                that.list = res.data.list.data
-                that.total = res.data.list.total
+                this.list = res.data.list.data
+                this.total = res.data.list.total
+                this.data = res.data.list
             })
+        },
+        edit(node, data) {
+            this.add(data.id)
+        },
+
+        remove(node, data) {
+            this.deleteDepartment(data.id)
         },
         getCompany(){
             let that = this
-            get(companyApi.list, { type: 'select' }).then((res) =>{
+            get(departmentApi.parents).then((res) =>{
                 that.search.companies = res.data.list
             })
         },
@@ -175,7 +214,7 @@ export default {
             this.getData()
         },
         changeCompany(){
-            this.getUsers(this.addDialog.form.company_id)
+            this.getUsers(this.addDialog.form.company_id[0])
         },
         deleteDepartment(id){
             var params = { ids: [id].join(',') }
@@ -192,17 +231,25 @@ export default {
             get(departmentApi.types).then((res) => {
                 this.search.dep_types = res.data.list
             })
+        },
+        handleChange(value) {
+            console.log(value);
         }
     }
 }
 </script>
 
 <style lang='less' scoped>
-// .el-dialog--center .el-dialog__body{
-//     text-align: center;
-// }
 .el-form > .add-user-dialog-label > label{
     color: black;
     font-weight: 400;
 }
+.custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
+  }
 </style>

@@ -6,4 +6,5 @@ export default{
     delete: "/department/delete",
     types: "/dep/types",
     userListByType: "/department/user/list/byType",
+    parents: "/department/parents",
 }
