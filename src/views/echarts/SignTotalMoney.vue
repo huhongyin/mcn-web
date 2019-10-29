@@ -48,9 +48,6 @@ import echartApi from '@/api/echarts.js';
 import platsApi from '@/api/plats.js';
 
 export default {
-    created(){
-        this.getData()
-    },
     data(){
         return {
             title: '',

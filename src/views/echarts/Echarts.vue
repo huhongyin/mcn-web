@@ -28,7 +28,7 @@
 			<el-col :span="6">
 				<div>
 					<img :src="all_users_img" width="64" height="64"/>
-					<label v-text="total.total_sign_user_count" @click="showSignActor('签约主播数量')"></label>
+					<label v-text="total.total_sign_user_count" @click="showSignActor('签约主播')"></label>
 				</div>
 			</el-col>
 			<el-col :span="6">
