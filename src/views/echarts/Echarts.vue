@@ -593,41 +593,43 @@ export default {
 		},
 		showTotalMoney(title){
 			//查看流水
-            this.$router.push({
-                path: 'signTotalMoney',
-                query: {
-					title: title,
-					start_date: this.search.date[0],
-					end_date: this.search.date[1],
-                }
-            })
-        },
-        showSignActor(title){
-            //签约主播数量
-            this.$router.push({
-                path: 'signActorCount',
-                query: {
-                    title: title
-                }
-            })
-        },
-        showEffectiveActor(title){
-            //有效主播数量
-            this.$router.push({
-                path: 'effectiveActorCount',
-                query: {
-                    title: title
-                }
-            })
-        },
-        showOnLine(title){
-            //在线总时长
-            this.$router.push({
-                path: 'onLineList',
-                query: {
-                    title: title
-                }
-            })
+			this.$router.push({
+					path: 'signTotalMoney',
+					query: {
+						title: title,
+						start_date: this.search.date[0],
+						end_date: this.search.date[1],
+					}
+			})
+		},
+		showSignActor(title){
+			//签约主播数量
+			this.$router.push({
+					path: 'signActorCount',
+					query: {
+							title: title
+					}
+			})
+		},
+		showEffectiveActor(title){
+			//有效主播数量
+			this.$router.push({
+					path: 'effectiveActorCount',
+					query: {
+							title: title
+					}
+			})
+		},
+		showOnLine(title){
+			//在线总时长
+			this.$router.push({
+					path: 'onLineList',
+					query: {
+							title: title,
+							start_date: this.search.date[0],
+							end_date: this.search.date[1],
+					}
+			})
 		},
 		getSignCal(){
 			get(echartsApi.signCal, this.search).then((res) => {
