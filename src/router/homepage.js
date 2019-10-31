@@ -10,6 +10,7 @@ import Contact from './contact'
 import Operation from './operation'
 import Msg from './msg'
 import Import from './import'
+import Team from './team'
 
 export default
 [
@@ -30,6 +31,7 @@ export default
       ...Operate,
       ...Msg,
       ...Import,
+      ...Team,
     ]
   },
 ]

@@ -230,6 +230,30 @@
                                     </el-select>
                                 </el-col>
                             </el-form-item>
+                            <el-form-item label="" prop="actor.should_time" :rules="[{ required: true, message: '请输入每月应有时长'},{ type: 'number', message: '每月应有时长为数字'}]">
+                                <el-col :span="4">每月应有时长</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入每月应有时长" v-model.number="addDialog.form.actor.should_time"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="" prop="actor.should_day" :rules="[{ required: true, message: '请输入每月应有天数'},{ type: 'number', message: '每月应有天数为数字'}]">
+                                <el-col :span="4">每月应有天数</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入每月应有天数" v-model.number="addDialog.form.actor.should_day"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <!-- <el-form-item label="">
+                                <el-col :span="4">每月应有时长</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入每月应有时长" v-model="addDialog.form.actor.should_time"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">每月应有天数</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入每月应有天数" v-model="addDialog.form.actor.should_day"></el-input>
+                                </el-col>
+                            </el-form-item> -->
                             <el-form-item label="" prop="actor.wx_code">
                                 <el-col :span="4">微信号</el-col>
                                 <el-col :span="19" :offset="1">
@@ -407,6 +431,8 @@ export default {
                 form: {
                     actor: {
                         id: "",
+                        should_time: 0,
+                        should_day: 0,
                         name: '',
                         nickname: '',
                         plat_id: '',
@@ -644,6 +670,8 @@ export default {
                     data.actor.yunying_user_id = (data.operate_user_id == 0) ? '' : data.operate_user_id
                     data.actor.sign_user_id = (data.sign_user_id == 0) ? '' : data.sign_user_id
                     data.actor.company_id = data.company_id
+                    data.actor.should_time = data.should_time
+                    data.actor.should_day = data.should_day
                     this.addDialog.form.actor = data.actor
                     this.addDialog.form.sign.fuchijine = data.actor_plat_sign.support_money
                     this.addDialog.form.sign.yifuchijine = data.actor_plat_sign.supported_money
