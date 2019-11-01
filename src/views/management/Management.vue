@@ -39,6 +39,7 @@
                         <!-- <el-button @click="signDetail(scope.row.id)" type="text" size="small" style="display:block;">流水信息</el-button> -->
                         <el-button @click="userDetail(scope.row.id)" type="text" size="small" style="display:block;">艺人信息</el-button>
                         <el-button @click="bankDetail(scope.row.id)" type="text" size="small" style="display:block;">银行资料</el-button>
+                        <el-button @click="contractDetail(scope.row.id)" type="text" size="small" style="display:block;">合同信息</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -189,6 +190,22 @@
                     </el-col>
                     <el-col :span="12">
                         <span class="user-detail-text">开户银行：</span><span class="user-detail-value" v-text="bankDetailDialog.detail.bank.name"></span>
+                    </el-col>
+                </el-row>
+                <span slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="bankDetailDialog.show = false">确 定</el-button>
+                </span>
+            </el-dialog>
+            <el-dialog title="合同信息" :visible.sync="contractDetailDialog.show" width="70%" center>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <span class="user-detail-text">合同编号：</span><span class="user-detail-value" v-text="contractDetailDialog.detail.contract"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">合同期限：</span><span class="user-detail-value" v-text="contractDetailDialog.detail.contract_until"></span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="user-detail-text">合同签订日期：</span><span class="user-detail-value" v-text="contractDetailDialog.detail.contract_date"></span>
                     </el-col>
                 </el-row>
                 <span slot="footer" class="dialog-footer">
@@ -381,6 +398,26 @@
                                 </el-col>
                             </el-form-item>
                         </el-tab-pane>
+                        <el-tab-pane label="合同信息" name="contract_field" class="bank-tab">
+                            <el-form-item label="" prop="contract.contract">
+                                <el-col :span="4">合同编号</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入合同编号" v-model="addDialog.form.contract.contract"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="" prop="contract.contract_until">
+                                <el-col :span="4">合同期限</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入银行卡号" v-model="addDialog.form.contract.contract_until"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="" prop="contract.contract_date">
+                                <el-col :span="4">合同签订日期</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-date-picker style="width:100%;" value-format="yyyy-MM-dd" placeholder="请选择扶持截止时间" v-model="addDialog.form.contract.contract_date"></el-date-picker>
+                                </el-col>
+                            </el-form-item>
+                        </el-tab-pane>
                     </el-tabs>
                 </el-form>
 
@@ -561,8 +598,19 @@ export default {
                     id: "",
                     bank_no: "",
                     bank: {
-
+                        id: '',
+                        name: '',
                     }
+                }
+            },
+            contractDetailDialog: {
+                show: false,
+                detail: {
+                    id: '',
+                    actor_plat_id: '',
+                    contract: '',
+                    contract_until: '',
+                    contract_date: '',
                 }
             },
             list: [],
@@ -750,26 +798,46 @@ export default {
         bankDetail(id){
             //银行信息
             get(actorApi.bankInfo + '/' + id).then((res) => {
-                this.bankDetailDialog.detail = res.data.info
+                this.bankDetailDialog.detail.id = (typeof(res.data.info.id) == 'undefined' ? '' : res.data.info.id)
+                this.bankDetailDialog.detail.bank_no = (typeof(res.data.info.bank_no) == 'undefined' ? '' : res.data.info.bank_no)
+                this.bankDetailDialog.detail.bank.id = ((typeof(res.data.info.bank) == 'undefined' || res.data.info.bank == null) ? '' : res.data.info.bank.id)
+                this.bankDetailDialog.detail.bank.name = ((typeof(res.data.info.bank) == 'undefined' || res.data.info.bank == null) ? '' : res.data.info.bank.name)
                 this.bankDetailDialog.show = true
             })
         },
         userDetail(id){
             get(actorApi.detail + '/' + id).then((res) => {
                 this.userDetailDialog.detail = res.data.info
-                if(typof(this.userDetailDialog.detail.operate_user) == 'undefind'){
+                if(typeof(this.userDetailDialog.detail.operate_user) == 'undefind'){
                     this.userDetailDialog.detail.operate_user = {
                         id: '',
                         rel_name : '',
                     }
                 }
-                if(typof(this.userDetailDialog.detail.sign_user) == 'undefind'){
+                if(typeof(this.userDetailDialog.detail.sign_user) == 'undefind'){
                     this.userDetailDialog.detail.sign_user = {
                         id: '',
                         rel_name : '',
                     }
                 }
                 this.userDetailDialog.show = true
+            })
+        },
+        //合同信息
+        contractDetail(id){
+            get(actorApi.contractDetail + '/' + id).then((res) => {
+                if(res.data.info != null){
+                    this.contractDetailDialog.detail = res.data.info
+                }else{
+                    this.contractDetailDialog.detail = {
+                                                            id: '',
+                                                            actor_plat_id: '',
+                                                            contract: '',
+                                                            contract_until: '',
+                                                            contract_date: '',
+                                                        }
+                }
+                this.contractDetailDialog.show = true
             })
         },
     }

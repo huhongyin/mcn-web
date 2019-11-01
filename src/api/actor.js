@@ -5,4 +5,5 @@ export default{
     bankInfo: '/actor/bank',
     edit: '/actor/edit',
     import: '/actor/import',
+    contractDetail: '/actor/contract',
 }

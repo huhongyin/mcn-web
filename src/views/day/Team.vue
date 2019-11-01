@@ -1,9 +1,14 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            团队日榜
+            <el-row :gutter="10">
+                <el-col :span="4">团队日榜</el-col>
+                <el-col :span="4" :offset="16">
+                    <el-button @click="exportExcel" style="float:right;">导出</el-button>
+                </el-col>
+            </el-row>
         </div>
-        <el-table :data="list" border :span-method="objectSpanMethod">
+        <el-table :data="list" border :span-method="objectSpanMethod" id="out-table">
         <!-- <el-table :data="list" border> -->
             <el-table-column label="序号" prop="id" fixed></el-table-column>
             <el-table-column label="负责人" prop="operate_user.rel_name" fixed></el-table-column>
@@ -28,6 +33,8 @@
 </template>
 
 <script>
+import FileSaver from 'file-saver'
+import XLSX from 'xlsx'
 import { get } from '@/api/index.js';
 import teamApi from '@/api/team.js';
 
@@ -84,43 +91,6 @@ export default {
                     colspan: 1,
                 }
             }
-            // if (columnIndex === 0) {
-            //     if(rowIndex === 0){
-            //         return {
-            //             rowspan: (this.list.length - 1),
-            //             colspan: 1,
-            //         }
-            //     } else if(rowIndex == (this.list.length - 1)){
-            //         return {
-            //             rowspan: 1,
-            //             colspan: 12,
-            //         }
-            //     }else{
-            //         return {
-            //             rowspan: 0,
-            //             colspan: 0,
-            //         }
-            //     }
-            // }else if(columnIndex === 1){
-            //     if(rowIndex === 0){
-            //         return {
-            //             rowspan: (this.list.length - 1),
-            //             colspan: 1,
-            //         }
-            //     }else{
-            //         return {
-            //             rowspan: 0,
-            //             colspan: 0,
-            //         }
-            //     }
-            // }else if(columnIndex > 0 && columnIndex < 12){
-            //     if(rowIndex == (this.list.length - 1)){
-            //         return {
-            //             rowspan: 0,
-            //             colspan: 0,
-            //         }
-            //     }
-            // }
         },
         getSummaries(param) {
             const { columns, data } = param;
@@ -151,7 +121,36 @@ export default {
             });
 
             return sums;
-        }
+        },
+        exportExcel () {
+            var id = "#out-table"
+            var title = '团队日榜.xlsx'
+            var fix = document.querySelector('.el-table__fixed');
+            var wb;
+            if (fix) {
+                wb = XLSX.utils.table_to_book(document.querySelector(id).removeChild(fix));
+                document.querySelector(id).appendChild(fix);
+            } else {
+                wb = XLSX.utils.table_to_book(document.querySelector(id));
+            }
+            /* get binary string as output */
+            var wbout = XLSX.write(wb, {
+                bookType: 'xlsx',
+                bookSST: true,
+                type: 'array'
+            });
+            try {
+                FileSaver.saveAs(
+                new Blob([wbout], {
+                    type: 'application/octet-stream'
+                }),
+                title
+                );
+            } catch (e) {
+                if (typeof console !== 'undefined') console.log(e, wbout);
+            }
+            return wbout;
+        },
     }
 }
 </script>
