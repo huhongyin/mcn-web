@@ -36,6 +36,7 @@
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button @click="add(scope.row.id)" type="text" size="small" style="margin-left:10px;display:block;">编辑</el-button>
+                        <el-button @click="addContractDetail(scope.row.id)" type="text" size="small" style="margin-left:10px;display:block;">设置应有时长</el-button>
                         <!-- <el-button @click="signDetail(scope.row.id)" type="text" size="small" style="display:block;">流水信息</el-button> -->
                         <el-button @click="userDetail(scope.row.id)" type="text" size="small" style="display:block;">艺人信息</el-button>
                         <el-button @click="bankDetail(scope.row.id)" type="text" size="small" style="display:block;">银行资料</el-button>
@@ -209,13 +210,35 @@
                     </el-col>
                 </el-row>
                 <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="bankDetailDialog.show = false">确 定</el-button>
+                    <el-button type="primary" @click="contractDetailDialog.show = false">确 定</el-button>
                 </span>
             </el-dialog>
-
+            <el-dialog title="设置应有时长及应有天数" :visible.sync="contractTimeDialog.show">
+                <el-form ref="settingContractTimeForm" :model="contractTimeDialog.form" class="demo-ruleForm" >
+                    <el-tabs>
+                        <el-tab-pane v-for="(time,key) in contractTimeDialog.form.times" :key="key" type="border-card" :label="getTimeTitle(time)">
+                            <el-form-item label="">
+                                <el-col :span="4">应播时长</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入应播时长" v-model="contractTimeDialog.form.times[key].should_time"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-col :span="4">应有天数</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入应有天数" v-model="contractTimeDialog.form.times[key].should_day"></el-input>
+                                </el-col>
+                            </el-form-item>
+                        </el-tab-pane>
+                    </el-tabs>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="contractTimeDialog.show = false">取 消</el-button>
+                    <el-button type="primary" @click="submitContractTimeForm()">确 定</el-button>
+                </span>
+            </el-dialog>
             <!-- 新增弹窗 -->
-            <el-dialog title="新增艺人" :visible.sync="addDialog.dialogVisible">
-                
+            <el-dialog title="新增艺人" :visible.sync="addDialog.dialogVisible">      
                 <el-form :rules="addDialog.rules" ref="addUserForm" class="demo-ruleForm" :model="addDialog.form">
                     <el-tabs v-model="addDialog.activeName" type="border-card">
                         <el-tab-pane label="艺人信息" name="actor_field" class="actor-tab">
@@ -247,30 +270,6 @@
                                     </el-select>
                                 </el-col>
                             </el-form-item>
-                            <el-form-item label="" prop="actor.should_time" :rules="[{ required: true, message: '请输入每月应有时长'},{ type: 'number', message: '每月应有时长为数字'}]">
-                                <el-col :span="4">每月应有时长</el-col>
-                                <el-col :span="19" :offset="1">
-                                    <el-input placeholder="请输入每月应有时长" v-model.number="addDialog.form.actor.should_time"></el-input>
-                                </el-col>
-                            </el-form-item>
-                            <el-form-item label="" prop="actor.should_day" :rules="[{ required: true, message: '请输入每月应有天数'},{ type: 'number', message: '每月应有天数为数字'}]">
-                                <el-col :span="4">每月应有天数</el-col>
-                                <el-col :span="19" :offset="1">
-                                    <el-input placeholder="请输入每月应有天数" v-model.number="addDialog.form.actor.should_day"></el-input>
-                                </el-col>
-                            </el-form-item>
-                            <!-- <el-form-item label="">
-                                <el-col :span="4">每月应有时长</el-col>
-                                <el-col :span="19" :offset="1">
-                                    <el-input placeholder="请输入每月应有时长" v-model="addDialog.form.actor.should_time"></el-input>
-                                </el-col>
-                            </el-form-item>
-                            <el-form-item label="">
-                                <el-col :span="4">每月应有天数</el-col>
-                                <el-col :span="19" :offset="1">
-                                    <el-input placeholder="请输入每月应有天数" v-model="addDialog.form.actor.should_day"></el-input>
-                                </el-col>
-                            </el-form-item> -->
                             <el-form-item label="" prop="actor.wx_code">
                                 <el-col :span="4">微信号</el-col>
                                 <el-col :span="19" :offset="1">
@@ -414,7 +413,7 @@
                             <el-form-item label="" prop="contract.contract_date">
                                 <el-col :span="4">合同签订日期</el-col>
                                 <el-col :span="19" :offset="1">
-                                    <el-date-picker style="width:100%;" value-format="yyyy-MM-dd" placeholder="请选择扶持截止时间" v-model="addDialog.form.contract.contract_date"></el-date-picker>
+                                    <el-date-picker style="width:100%;" format="yyyy.MM.dd" value-format="yyyy.MM.dd" placeholder="请选择扶持截止时间" v-model="addDialog.form.contract.contract_date"></el-date-picker>
                                 </el-col>
                             </el-form-item>
                         </el-tab-pane>
@@ -439,6 +438,7 @@ import platApi from '@/api/plats.js';
 import departmentApi from '@/api/department.js';
 import FileSaver from 'file-saver';
 import XLSX from 'xlsx';
+import { string } from 'prop-types';
 export default {
     created(){
         this.getBankOptions()
@@ -466,6 +466,11 @@ export default {
                 sign_users: [],
                 plats: [],
                 form: {
+                    contract: {
+                        contract: '',
+                        contract_until: '',
+                        contract_date: '',
+                    },
                     actor: {
                         id: "",
                         should_time: 0,
@@ -613,6 +618,20 @@ export default {
                     contract_date: '',
                 }
             },
+            contractTimeDialog: {
+                show: false,
+                form: {
+                    times: [
+                        {
+                            id: '',
+                            start: '',
+                            end: '',
+                            should_time: '',
+                            should_day: '',
+                        },
+                    ]
+                }
+            },
             list: [],
             export_list: [],
             showExportTable: false,
@@ -728,6 +747,15 @@ export default {
                     this.addDialog.form.sign.yitourushuabi = data.actor_plat_sign.yitourushuabi
                     this.addDialog.form.sign.fuchijiezhishijian = data.actor_plat_sign.support_endtime
                     this.addDialog.form.sign.yichongzhizhubozhanghu = data.actor_plat_sign.recharge
+                    if(data.contract == null){
+                        this.addDialog.form.contract.contract = ''
+                        this.addDialog.form.contract.contract_until = ''
+                        this.addDialog.form.contract.contract_date = ''
+                    }else{
+                        this.addDialog.form.contract.contract = ((typeof(data.contract.contract) == 'undefined' || data.contract.contract == null || data.contract == null) ? '' : data.contract.contract)
+                        this.addDialog.form.contract.contract_until = ((typeof(data.contract.contract_until) == 'undefined' || data.contract.contract_until == null || data.contract == null) ? '' : data.contract.contract_until)
+                        this.addDialog.form.contract.contract_date = ((typeof(data.contract.contract_date) == 'undefined' || data.contract.contract_date == null || data.contract == null) ? '' : data.contract.contract_date)
+                    }
                 })
             }
 
@@ -838,6 +866,35 @@ export default {
                                                         }
                 }
                 this.contractDetailDialog.show = true
+            })
+        },
+        addContractDetail(id){
+            //设置根据合同生成应有天数和应播时长
+            get(actorApi.contractTime + '/' + id).then((res) => {
+                this.contractTimeDialog.form.times = res.data.times
+                this.contractTimeDialog.show = true
+            })
+        },
+        getTimeTitle(item){
+            var start = item.start
+            var end = item.end
+            var startDate = new Date()
+            startDate.setTime(start * 1000)
+            var startDateStr = startDate.getFullYear() + '-' + (((startDate.getMonth() + 1) < 10) ? ('0' + (startDate.getMonth() + 1)) : startDate.getMonth() + 1) + '-' + ((startDate.getDate() < 10) ? ('0' + startDate.getDate()) : startDate.getDate())
+            var endDate = new Date()
+            endDate.setTime(end * 1000)
+            var endDateStr = endDate.getFullYear() + '-' + (((endDate.getMonth() + 1) < 10) ? ('0' + (endDate.getMonth() + 1)) : endDate.getMonth() + 1) + '-' + ((endDate.getDate()) < 10 ? ('0' + endDate.getDate()) : endDate.getDate())
+
+            return startDateStr + '至' + endDateStr
+        },
+        submitContractTimeForm(){
+            post(actorApi.addContractTime + '/0', this.contractTimeDialog.form).then((res) => {
+                this.$message({
+                    type: 'success', 
+                    message: res.msg
+                })
+
+                this.contractTimeDialog.show = false
             })
         },
     }

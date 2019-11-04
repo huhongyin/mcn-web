@@ -6,4 +6,6 @@ export default{
     edit: '/actor/edit',
     import: '/actor/import',
     contractDetail: '/actor/contract',
+    contractTime: '/actor/contractTime',
+    addContractTime: '/actor/contractTime/add',
 }
