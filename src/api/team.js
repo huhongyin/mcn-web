@@ -1,3 +1,4 @@
 export default{
-    dayList: "/signCal/day/team"
+    dayList: "/signCal/day/team",
+    companyList: "/signCal/day/company",
 }
