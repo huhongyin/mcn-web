@@ -1,5 +1,6 @@
 import DayTeam from '../views/day/Team.vue'
 import DayCompany from '../views/day/Company.vue'
+import DaySign from '../views/day/Sign.vue'
 
 
 export default
@@ -16,4 +17,10 @@ export default
         name: '/company',
         component: DayCompany,
     },
+    //签约数据排名
+    {
+        path: '/day/sign',
+        name: '/daysign',
+        component: DaySign,
+    }
 ]

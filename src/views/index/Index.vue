@@ -62,6 +62,7 @@
                   <span class="e-menu-span router-link">数据查询</span>
                 </template>
                 <el-menu-item-group class="el-item">
+                  <el-menu-item index="/day/sign" class="el-item e-menu-span" style="font-size:13px;">签约数据排名</el-menu-item>
                   <el-menu-item index="/day/team" class="el-item e-menu-span" style="font-size:13px;">团队日榜</el-menu-item>
                   <el-menu-item index="/day/company" class="el-item e-menu-span" style="font-size:13px;">公司榜</el-menu-item>
                   <el-menu-item index="/old" class="el-item e-menu-span" style="font-size:13px;">日数据查看</el-menu-item>
