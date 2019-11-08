@@ -25,7 +25,7 @@
                     </el-select>
                 </el-col>
             </el-form-item>
-            <el-form-item label="流水类型" v-show="showPlatImport">
+            <el-form-item label="流水类型" v-show="showMoneyType">
                 <el-col :span="12">
                     <el-select v-model="form.money_type" placeholder="请选择流水类型" style="width:100%;" @change="changeImportMoneyType">
                         <el-option v-for="(item,key) in money_types" :key="key" :label="item.label" :value="item.value"></el-option>
@@ -83,6 +83,7 @@ import uploadApi from '@/api/upload.js'
 import platApi from '@/api/plats.js'
 import importApi from '@/api/import.js'
 import actorApi from '@/api/actor.js'
+import teamApi from '@/api/team.js'
 import companyApi from '@/api/company.js';
 import { get,post } from '@/api/index.js'
 
@@ -95,6 +96,7 @@ export default {
             uploadUrl: 'http://sk.dev.com/' + uploadApi.upload,
             // uploadUrl: 'http://admin.mcn.huhongyin.com' + uploadApi.upload,
             showPlatImport: true,
+            showMoneyType: false,
             valueFormat: 'yyyy-MM-dd',
             fileList: [],
             form: {
@@ -113,7 +115,11 @@ export default {
                 {
                     label: '平台流水',
                     value: 2,
-                }
+                },
+                {
+                    label: '结算单',
+                    value: 3,
+                },
             ],
             plats: [],
             money_types: [
@@ -157,7 +163,31 @@ export default {
                 });
                 this.centerDialogVisible = false
                 post(importApi.add, this.form).then((res) => {
-                    console.log(res)
+                    loading.close();
+                    if(res.code != 1){
+                        this.$message({
+                            type: 'danger',
+                            message: res.msg
+                        })
+                        return false
+                    }
+                    this.$message({
+                        type: 'success',
+                        message: res.msg
+                    })
+                }).catch((err) => {
+                    loading.close()
+                })
+            }else if(this.form.data_type === 3){
+                //结算单导入
+                const loading = this.$loading({
+                    lock: true,
+                    text: '导入中...',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+                this.centerDialogVisible = false
+                post(teamApi.importEndFile, this.form).then((res) => {
                     loading.close();
                     if(res.code != 1){
                         this.$message({
@@ -174,8 +204,9 @@ export default {
                     loading.close()
                 })
             }else{
+                this.centerDialogVisible = false
                 this.$message({
-                    type: 'danger',
+                    type: 'warning',
                     message: '非法操作'
                 })
             }
@@ -196,8 +227,16 @@ export default {
         isShow(){
             if(this.form.data_type == 1){
                 this.showPlatImport = false
+                this.showMoneyType = false
+            }else if(this.form.data_type == 3){
+                this.showPlatImport = true
+                this.showMoneyType = false
+                this.selectDate = false
+                this.selectMonth = true
+                return ;
             }else{
                 this.showPlatImport = true
+                this.showMoneyType = true
             }
 
             if(this.form.money_type == 2){
