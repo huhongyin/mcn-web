@@ -43,12 +43,34 @@
                     <pl-table-column label="公司" prop="company_name" width="120px;"></pl-table-column>
                 </pl-table>
                 <pl-table v-if="this.search.plat_id == 3" :datas="list" :height-change="true" :pagination-show="false" border id="out-table" v-loading="loading" ref="plTable" header-drag-style use-virtual :row-height="50">
-                    <pl-table-column label="签约人3" prop="user_name"></pl-table-column>
-                    <pl-table-column label="前台总流水" prop="total_money"></pl-table-column>
-                    <pl-table-column label="直播总有效时长" prop="total_time"></pl-table-column>
-                    <pl-table-column label="签约数量" prop="sign_count"></pl-table-column>
-                    <pl-table-column label="未播主播数量" prop="not_live" width="100px;"></pl-table-column>
-                    <pl-table-column label="公司" prop="company_name" width="120px;"></pl-table-column>
+                    <pl-table-column label="播主昵称" prop="actor_plat.nickname"></pl-table-column>
+                    <pl-table-column label="播主姓名" prop="actor_plat.actor.name"></pl-table-column>
+                    <pl-table-column label="陌陌号" prop="actor_plat.plat_actor_id"></pl-table-column>
+                    <pl-table-column label="性别">
+                        <template slot-scope="row">
+                            <span v-if="row.row.actor_plat.sex == 1">男</span>
+                            <span v-else-if="row.row.actor_plat.sex == 2">女</span>
+                            <span v-else>未知</span>
+                        </template>
+                    </pl-table-column>
+                    <pl-table-column label="播住等级" prop="actor_plat.plat_level"></pl-table-column>
+                    <pl-table-column label="所属经纪人" prop="actor_plat.agent_user_name"></pl-table-column>
+                    <pl-table-column label="经纪人陌陌号" prop="actor_plat.plat_gent_user_id"></pl-table-column>
+                    <pl-table-column label="连麦陌币" prop="lianmai_money"></pl-table-column>
+                    <pl-table-column label="非连麦陌币" prop="feilianmai_money"></pl-table-column>
+                    <pl-table-column label="总陌币" prop="total_money"></pl-table-column>
+                    <pl-table-column label="结算方式" prop="settlement.name"></pl-table-column>
+                    <pl-table-column label="播主分成金额(元)" prop="actor_money"></pl-table-column>
+                    <pl-table-column label="公会分成金额(元)" prop="guild_money"></pl-table-column>
+                    <pl-table-column label="播主奖励(元)" prop="actor_more_money"></pl-table-column>
+                    <pl-table-column label="其他奖励(元)" prop="other_more_money"></pl-table-column>
+                    <pl-table-column label="当月入会前收益(元)" prop="current_money_before_money"></pl-table-column>
+                    <pl-table-column label="个税(元)" prop="personal_income_tax"></pl-table-column>
+                    <pl-table-column label="提现金额(元)" prop="draw_money"></pl-table-column>
+                    <pl-table-column label="风控扣款(元)" prop="fengkong_money"></pl-table-column>
+                    <pl-table-column label="结算金额(元)" prop="jiesuan_money"></pl-table-column>
+                    <pl-table-column label="实际收入(元)" prop="act_money"></pl-table-column>
+                    <pl-table-column label="所属公司" prop="company.name"></pl-table-column>
                 </pl-table>
                 <pl-table v-if="this.search.plat_id == 4" :datas="list" :height-change="true" :pagination-show="false" border id="out-table" v-loading="loading" ref="plTable" header-drag-style use-virtual :row-height="50">
                     <pl-table-column label="火山号" prop="huoshan_id"></pl-table-column>
@@ -126,6 +148,10 @@ export default {
                 case 1:
                         this.tHeader = ['抖音号', '昵称', '有效天数', '有效时长（h）', '直播流水（音浪）', '活动流水（音浪）', '主播收入（元）', '公会收入（元）', '公会分成', '主播分成', '未成年退款（元）', '所属公司']
                         this.filterVal = ["douyin_id", "nickname", "youxiao_days", "youxiao_time", "live_money", "activity_money", "actor_money", "guild_money", "guild_fencheng", "actor_fencheng", "young_money", "company_name"]
+                    break;
+                case 3:
+                        this.tHeader = ['播主昵称', '播住姓名', '陌陌号', '性别', '播主等级', '所属经纪人', '经纪人陌陌号', '连麦陌币', '非连麦陌币', '总陌币', '结算方式', '播主分成金额(元)', '公会分成金额(元)', '播主奖励(元)', '其他奖励(元)', '当月入会前收益(元)', '个税(元)', '提现金额(元)', '风控扣款(元)', '结算金额(元)', '实际收入(元)', '所属公司']
+                        this.filterVal = ["row.actor_plat.nickname","actor_plat.actor.name","actor_plat.plat_actor_id","actor_plat.sex","actor_plat.plat_level","actor_plat.agent_user_name","actor_plat.plat_gent_user_id","lianmai_money","feilianmai_money","total_money","settlement.name","actor_money","guild_money","actor_more_money","other_more_money","current_money_before_money","personal_income_tax","draw_money","fengkong_money","jiesuan_money","act_money","company.name"]
                     break;
                 case 4:
                         this.tHeader = ['抖音号', '昵称', '有效天数', '有效时长（h）', '直播流水（音浪）', '活动流水（音浪）', '主播收入（元）', '公会收入（元）', '公会分成', '主播分成', '未成年退款（元）', '所属公司']
