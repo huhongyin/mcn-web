@@ -95,15 +95,18 @@
                      <el-row>
                         <el-col :span="24">
                             <el-table show-summary :summary-method="getSummaryFour" :data="tableData" stripe style="width: 100%">
-                                <el-table-column fixed prop="date" label="日期"> </el-table-column>
+                                <el-table-column fixed prop="plat_actor_id" label="火山号"> </el-table-column>
                                 <el-table-column fixed prop="nickname" label="昵称"></el-table-column>
-                                <el-table-column prop="live_time" label="直播时长"></el-table-column>
-                                <el-table-column prop="youxiao_days" label="有效天数"></el-table-column>
+                                <el-table-column prop="live_time" label="直播时长(小时)"></el-table-column>
+                                <el-table-column prop="youxiao_days" label="有效天数(天)"></el-table-column>
                                 <el-table-column prop="add_people_nums" label="涨粉"></el-table-column>
-                                <el-table-column prop="live_money" label="直播流水(元)"></el-table-column>
-                                <el-table-column prop="live_prop" label="道具流水(元)"></el-table-column>
-                                <el-table-column prop="live_activity" label="活动流水(元)"></el-table-column>
-                                <el-table-column prop="live_total_money" label="总流水(元)"></el-table-column>
+                                <el-table-column prop="live_money" label="火力-直播"></el-table-column>
+                                <el-table-column prop="live_prop" label="火力-道具"></el-table-column>
+                                <el-table-column prop="live_activity" label="火力-活动"></el-table-column>
+                                <el-table-column prop="live_total_money" label="火力-总计"></el-table-column>
+                                <el-table-column prop="fenchengbi" label="分成比"></el-table-column>
+                                <el-table-column prop="agent_user_name" label="经纪人"></el-table-column>
+                                <el-table-column prop="remark" label="备注"></el-table-column>
                             </el-table>
                         </el-col>
                     </el-row>
