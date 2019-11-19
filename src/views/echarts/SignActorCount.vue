@@ -16,14 +16,14 @@
 				<el-button type="primary" @click="searchData">搜索</el-button>
 			</el-col>
 		</el-row>
-        <el-table show-summary :summary-method="getSummaries" id="managementTable" stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
+        <el-table :show-summary="false" :summary-method="getSummaries" id="managementTable" stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
                 <el-table-column fixed label="主播实名" prop="actor.name"></el-table-column>
                 <el-table-column fixed label="主播昵称" prop="nickname"></el-table-column>
                 <el-table-column fixed label="公司" prop="company.name"></el-table-column>
                 <el-table-column fixed label="电话" prop="actor.phone"></el-table-column>
                 <el-table-column label="平台" prop="plat.name"></el-table-column>
-                <el-table-column label="签约人" prop="sign_user.name"></el-table-column>
-                <el-table-column label="运营人" prop="operate_user.name"></el-table-column>
+                <el-table-column label="签约人" prop="sign_user.rel_name"></el-table-column>
+                <el-table-column label="运营人" prop="operate_user.rel_name"></el-table-column>
                 <el-table-column label="平台ID" prop="plat_actor_id"></el-table-column>
             </el-table>
             <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :page-count="totalPage" @current-change="handleCurrentChange"></el-pagination>

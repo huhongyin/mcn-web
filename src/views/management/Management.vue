@@ -407,13 +407,13 @@
                             <el-form-item label="" prop="contract.contract_until">
                                 <el-col :span="4">合同期限</el-col>
                                 <el-col :span="19" :offset="1">
-                                    <el-input placeholder="请输入银行卡号" v-model="addDialog.form.contract.contract_until"></el-input>
+                                    <el-input placeholder="请输入合同期限" v-model="addDialog.form.contract.contract_until"></el-input>
                                 </el-col>
                             </el-form-item>
                             <el-form-item label="" prop="contract.contract_date">
                                 <el-col :span="4">合同签订日期</el-col>
                                 <el-col :span="19" :offset="1">
-                                    <el-date-picker style="width:100%;" format="yyyy.MM.dd" value-format="yyyy.MM.dd" placeholder="请选择扶持截止时间" v-model="addDialog.form.contract.contract_date"></el-date-picker>
+                                    <el-date-picker style="width:100%;" format="yyyy.MM.dd" value-format="yyyy.MM.dd" placeholder="请选择合同签订日期" v-model="addDialog.form.contract.contract_date"></el-date-picker>
                                 </el-col>
                             </el-form-item>
                         </el-tab-pane>

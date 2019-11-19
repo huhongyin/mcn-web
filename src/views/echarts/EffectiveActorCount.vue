@@ -2,79 +2,60 @@
     <el-card class="box-card">
         <div slot="header" class="clearfix">
             <span v-text="title"></span>
-            <!-- <span style="color:red;">(共{{ total }}人)</span> -->
         </div>
+        <el-row :gutter="20">
+            <el-col :lg="7" :md="10" :sm="10">
+                <el-date-picker v-model="search.date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="max-width:100%;" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+            </el-col>
+            <el-col :lg="12" :md="8" :sm="5">
+                <el-button type="primary" @click="searchData">搜索</el-button>
+            </el-col>
+        </el-row>
         <el-table stripe :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
-            <el-table-column fixed label="主播实名" prop="name"></el-table-column>
             <el-table-column fixed label="主播昵称" prop="nickname"></el-table-column>
             <el-table-column label="平台" prop="plat.name"></el-table-column>
+            <el-table-column label="所属公司" prop="company.name"></el-table-column>
         </el-table>
-        <el-pagination class="right offset-top-31 offset-bottom-46" background :total="total" layout="total, prev, pager, next" @current-change="handleCurrentChange"></el-pagination>
+        <el-pagination class="right offset-top-31 offset-bottom-46" background :page-count="totalPage" layout="total, prev, pager, next" @current-change="handleCurrentChange"></el-pagination>
     </el-card>
 </template>
 
 <script>
-import { fPost, get} from '@/api/index.js';
-import userApi from '@/api/user.js';
-import FileSaver from 'file-saver';
-import XLSX from 'xlsx';
+import { get } from '@/api/index.js';
+import echartApi from '@/api/echarts.js';
 export default {
-    created(){
-        this.getData()
-    },
     data(){
         return {
-            total: 4,
+            search: {
+                date: ''
+            },
+            total: 0,
             title: '',
-            totalPage: 1,
-            list: [
-                {
-                    name: '张三',   //真实姓名
-                    nickname: '小花儿',
-                    plat: {
-                        name: '抖音', //所属平台
-                    }
-                },
-                {
-                    name: '李四',   //真实姓名
-                    nickname: '小鱼儿',
-                    plat: {
-                        name: '火山', //所属平台
-                    }
-                },
-                {
-                    name: '王二',   //真实姓名
-                    nickname: '小花儿',
-                    plat: {
-                        name: '抖音', //所属平台
-                    }
-                },
-                {
-                    name: '王可',   //真实姓名
-                    nickname: '小鸟儿',
-                    plat: {
-                        name: '抖音', //所属平台
-                    }
-                },
-            ],
+            totalPage: 0,
+            list: [],
         }
     },
     created(){
         this.title = this.$route.query.title
+        this.search.date = [this.$route.query.start_date, this.$route.query.end_date]
+        this.getData()
     }, 
     methods:{
-        
         getData(){
-            // var params = { page: this.current}
-            // var that = this
-            // get(userApi.list, params)
-            //     .then(function(res){
-            //         that.list = res.data.list.data
-            //         that.total = res.data.list.total
-            //         that.current = res.data.list.current_page
-            //         // that.totalPage = res.data.totalPage
-            //     })
+            var params = { page: this.current, start_date: this.search.date[0], end_date: this.search.date[1], plat_id: this.search.plat_id}
+            get(echartApi.effectiveList, params).then((res) => {
+                this.totalPage = res.data.list.last_page
+                this.list = res.data.list.data
+                this.total = res.data.total
+            })
         },
+        searchData(){
+            this.getData()
+        },
+        handleCurrentChange(val){
+            this.page = val
+            this.getData()
+        }
     }
 }
 </script>

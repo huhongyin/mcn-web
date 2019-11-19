@@ -1,96 +1,101 @@
 <template>
-    <el-col class="" :span="6">
+    <el-col class="" :span="6" v-if="platData">
         <el-card class="plat">
             <div class="plat-row">
-                <span class="name" v-text="item.name"></span>
+                <span class="name" v-text="platData.name"></span>
             </div>
-            <div class="plat-row">
+            <!-- <div class="plat-row" v-if="typeof(platData.yestoday.value) != 'undefined'">
                 <span class="plat-row-title">昨日流水</span>
                 <div class="inline">
-                    <a class="plat-row-a" @click="yestodayMoney(item)" href="javascript:void(0)"><span v-text="item.yestoday.value" class="plat-row-detail"></span></a>
+                    <a class="plat-row-a" @click="yestodayMoney(platData)" href="javascript:void(0)"><span v-text="platData.yestoday.value" class="plat-row-detail"></span></a>
                     <span class="plat-row-unit">万</span>
                     <span class="plat-row-title right">环比
-                        <el-tooltip v-if="item.yestoday.precent.type==0" effect="dark" :content="item.yestoday.precent.content" placement="top">
-                            <i class="el-icon-caret-bottom color-red">{{ item.yestoday.precent.value }}</i>
+                        <el-tooltip v-if="platData.yestoday.precent.type==0" effect="dark" :content="platData.yestoday.precent.content" placement="top">
+                            <i class="el-icon-caret-bottom color-red">{{ platData.yestoday.precent.value }}</i>
                         </el-tooltip>
                         
-                        <el-tooltip v-else-if="item.yestoday.precent.type==1" effect="dark" :content="item.yestoday.precent.content" placement="top">
-                            <i class="el-icon-caret-top color-green">{{ item.yestoday.precent.value }}</i>
+                        <el-tooltip v-else-if="platData.yestoday.precent.type==1" effect="dark" :content="platData.yestoday.precent.content" placement="top">
+                            <i class="el-icon-caret-top color-green">{{ platData.yestoday.precent.value }}</i>
                         </el-tooltip>
                     </span>
                 </div>
-            </div>
-            <div class="plat-row">
+            </div> -->
+            <!-- <div class="plat-row">
                 <span class="plat-row-title">昨日有效主播数量</span>
                 <div class="inline">
-                    <a class="plat-row-a" @click="yestodayEffectiveActor(item)" href="javascript:void(0)"><span v-text="item.yestoday_validate_user_count.value" class="plat-row-detail"></span></a>
+                    <a class="plat-row-a" @click="yestodayEffectiveActor(platData)" href="javascript:void(0)"><span v-text="platData.yestoday_validate_user_count.value" class="plat-row-detail"></span></a>
                     <span class="plat-row-unit">人</span>
                     <span class="plat-row-title right">环比
-                        <el-tooltip v-if="item.yestoday_validate_user_count.precent.type==0" effect="dark" :content="item.yestoday_validate_user_count.precent.content" placement="top">
-                            <i class="el-icon-caret-bottom color-red">{{ item.yestoday_validate_user_count.precent.value }}</i>
+                        <el-tooltip v-if="platData.yestoday_validate_user_count.precent.type==0" effect="dark" :content="platData.yestoday_validate_user_count.precent.content" placement="top">
+                            <i class="el-icon-caret-bottom color-red">{{ platData.yestoday_validate_user_count.precent.value }}</i>
                         </el-tooltip>
                         
-                        <el-tooltip v-else-if="item.yestoday_validate_user_count.precent.type==1" effect="dark" :content="item.yestoday_validate_user_count.precent.content" placement="top">
-                            <i class="el-icon-caret-top color-green">{{ item.yestoday_validate_user_count.precent.value }}</i>
+                        <el-tooltip v-else-if="platData.yestoday_validate_user_count.precent.type==1" effect="dark" :content="platData.yestoday_validate_user_count.precent.content" placement="top">
+                            <i class="el-icon-caret-top color-green">{{ platData.yestoday_validate_user_count.precent.value }}</i>
                         </el-tooltip>
                     </span>
                 </div>
-            </div>
-            <div class="plat-row">
+            </div> -->
+            <!-- <div class="plat-row">
                 <span class="plat-row-title">昨日新晋主播数量</span>
                 <div class="inline">
-                    <a class="plat-row-a" @click="yestodayNewActor(item)" href="javascript:void(0)"><span v-text="item.yestoday_new_user_count.value" class="plat-row-detail"></span></a>
+                    <a class="plat-row-a" @click="yestodayNewActor(platData)" href="javascript:void(0)"><span v-text="platData.yestoday_new_user_count.value" class="plat-row-detail"></span></a>
                     <span class="plat-row-unit">人</span>
                     <span class="plat-row-title right">环比
-                        <el-tooltip v-if="item.yestoday_new_user_count.precent.type==0" effect="dark" :content="item.yestoday_new_user_count.precent.content" placement="top">
-                            <i class="el-icon-caret-bottom color-red">{{ item.yestoday_new_user_count.precent.value }}</i>
+                        <el-tooltip v-if="platData.yestoday_new_user_count.precent.type==0" effect="dark" :content="platData.yestoday_new_user_count.precent.content" placement="top">
+                            <i class="el-icon-caret-bottom color-red">{{ platData.yestoday_new_user_count.precent.value }}</i>
                         </el-tooltip>
                         
-                        <el-tooltip v-else-if="item.yestoday_new_user_count.precent.type==1" effect="dark" :content="item.yestoday_new_user_count.precent.content" placement="top">
-                            <i class="el-icon-caret-top color-green">{{ item.yestoday_new_user_count.precent.value }}</i>
+                        <el-tooltip v-else-if="platData.yestoday_new_user_count.precent.type==1" effect="dark" :content="platData.yestoday_new_user_count.precent.content" placement="top">
+                            <i class="el-icon-caret-top color-green">{{ platData.yestoday_new_user_count.precent.value }}</i>
                         </el-tooltip>
                     </span>
                 </div>
-            </div>
-            <div class="plat-row">
+            </div> -->
+            <!-- <div class="plat-row">
                 <span class="plat-row-title">昨日总时长</span>
                 <div class="inline">
-                    <a class="plat-row-a" @click="yestodayOnLineActor(item)" href="javascript:void(0)"><span v-text="item.time.h" class="plat-row-detail"></span></a>
+                    <a class="plat-row-a" @click="yestodayOnLineActor(platData)" href="javascript:void(0)"><span v-text="platData.time.h" class="plat-row-detail"></span></a>
                     <span class="plat-row-unit">时</span>
-                    <a class="plat-row-a" @click="yestodayOnLineActor(item)" href="javascript:void(0)"><span v-text="item.time.m" class="plat-row-detail"></span></a>
+                    <a class="plat-row-a" @click="yestodayOnLineActor(platData)" href="javascript:void(0)"><span v-text="platData.time.m" class="plat-row-detail"></span></a>
                     <span class="plat-row-unit">分</span>
                     <span class="plat-row-title right">环比
-                        <el-tooltip v-if="item.time.precent.type==0" effect="dark" :content="item.time.precent.content" placement="top">
-                            <i class="el-icon-caret-bottom color-red">{{ item.time.precent.value }}</i>
+                        <el-tooltip v-if="platData.time.precent.type==0" effect="dark" :content="platData.time.precent.content" placement="top">
+                            <i class="el-icon-caret-bottom color-red">{{ platData.time.precent.value }}</i>
                         </el-tooltip>
                         
-                        <el-tooltip v-else-if="item.time.precent.type==1" effect="dark" :content="item.time.precent.content" placement="top">
-                            <i class="el-icon-caret-top color-green">{{ item.time.precent.value }}</i>
+                        <el-tooltip v-else-if="platData.time.precent.type==1" effect="dark" :content="platData.time.precent.content" placement="top">
+                            <i class="el-icon-caret-top color-green">{{ platData.time.precent.value }}</i>
                         </el-tooltip>
                     </span>
                 </div>
-            </div>
-            <!-- <div class="plat-row"> -->
-                
-                <!-- <div class="inline">
-                    
-                </div> -->
-            <!-- </div> -->
+            </div> -->
         </el-card>
     </el-col>
 </template>
 <script>
 //分渠道
+import platsApi from '@/api/plats.js'
+import { get } from '@/api/index.js'
 export default {
     props: [
         "item"
     ],
     data(){
         return {
-            
+            platData: {}
         }
     },
+    created(){
+        this.getPlatDetail()
+    },
     methods: {
+        getPlatDetail(){
+            get(platsApi.platYestoday + this.item.id).then((res) => {
+                this.platData = res.data.list
+                console.log(this.platData.yestoday)
+            })
+        },
         yestodayMoney(item){
             //昨日流水记录
             let day1 = new Date();

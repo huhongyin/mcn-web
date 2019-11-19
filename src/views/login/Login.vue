@@ -206,7 +206,7 @@ export default {
   align-items: center;
   width: 100%;
   height: 100%;
-  background-image: url("../../assets/imgs/robot.png");
+  background-image: url("../../assets/imgs/robot-2.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   .contenter_box {
