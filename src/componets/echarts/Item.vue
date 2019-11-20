@@ -1,10 +1,10 @@
 <template>
-    <el-col class="" :span="6" v-if="platData">
+    <el-col class="" :span="6" v-show="showPlat">
         <el-card class="plat">
             <div class="plat-row">
                 <span class="name" v-text="platData.name"></span>
             </div>
-            <!-- <div class="plat-row" v-if="typeof(platData.yestoday.value) != 'undefined'">
+            <div class="plat-row" v-if="platData.yestoday">
                 <span class="plat-row-title">昨日流水</span>
                 <div class="inline">
                     <a class="plat-row-a" @click="yestodayMoney(platData)" href="javascript:void(0)"><span v-text="platData.yestoday.value" class="plat-row-detail"></span></a>
@@ -19,8 +19,8 @@
                         </el-tooltip>
                     </span>
                 </div>
-            </div> -->
-            <!-- <div class="plat-row">
+            </div>
+            <div class="plat-row">
                 <span class="plat-row-title">昨日有效主播数量</span>
                 <div class="inline">
                     <a class="plat-row-a" @click="yestodayEffectiveActor(platData)" href="javascript:void(0)"><span v-text="platData.yestoday_validate_user_count.value" class="plat-row-detail"></span></a>
@@ -35,8 +35,8 @@
                         </el-tooltip>
                     </span>
                 </div>
-            </div> -->
-            <!-- <div class="plat-row">
+            </div>
+            <div class="plat-row">
                 <span class="plat-row-title">昨日新晋主播数量</span>
                 <div class="inline">
                     <a class="plat-row-a" @click="yestodayNewActor(platData)" href="javascript:void(0)"><span v-text="platData.yestoday_new_user_count.value" class="plat-row-detail"></span></a>
@@ -51,8 +51,8 @@
                         </el-tooltip>
                     </span>
                 </div>
-            </div> -->
-            <!-- <div class="plat-row">
+            </div>
+            <div class="plat-row">
                 <span class="plat-row-title">昨日总时长</span>
                 <div class="inline">
                     <a class="plat-row-a" @click="yestodayOnLineActor(platData)" href="javascript:void(0)"><span v-text="platData.time.h" class="plat-row-detail"></span></a>
@@ -69,7 +69,7 @@
                         </el-tooltip>
                     </span>
                 </div>
-            </div> -->
+            </div>
         </el-card>
     </el-col>
 </template>
@@ -83,17 +83,33 @@ export default {
     ],
     data(){
         return {
-            platData: {}
+            showPlat: false,
+            platData: {},
+            search: {
+                company: "",
+            }
         }
+    },
+    mounted: function () {
+        this.$nextTick(function () {
+            this.$on('childMethod', function () {
+                console.log('监听成功')
+            })
+        })
+
     },
     created(){
         this.getPlatDetail()
     },
     methods: {
+        callMethod(company) {
+            this.company = company
+            this.getPlatDetail()
+        },
         getPlatDetail(){
-            get(platsApi.platYestoday + this.item.id).then((res) => {
+            get(platsApi.platYestoday + this.item.id + '/2019-11-01', this.search).then((res) => {
                 this.platData = res.data.list
-                console.log(this.platData.yestoday)
+                this.showPlat = true
             })
         },
         yestodayMoney(item){

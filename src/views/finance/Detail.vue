@@ -1,19 +1,27 @@
 <template>
-    <div>
-			<el-row :gutter="10">
-				<Total :ref="'p_' + item.type" v-for="(item,key) in list" :types="types" :key="key" :item="item" @removeAllItemClass="removeAllItemClass" @showTable="showTable"></Total>
-				<!-- <Total :item="total"></Total>
-				<Total :item="fuchi"></Total>
-				<Total :item="yifuchijine"></Total>
-				<Total :item="month_should_pay"></Total> -->
-			</el-row>
-			<el-row>
-				<MaoLiRun ref="total_div" style="display:none;" :start_date="list.total.start_date" :end_date="list.total.end_date" :name="list.total.name"></MaoLiRun>
-				<FuChiJine ref="fuchijine_div" style="display:none;" :start_date="list.fuchijine.start_date" :end_date="list.fuchijine.end_date" :name="list.fuchijine.name"></FuChiJine>
-				<YiFuChiJine ref="yifuchijine_div" style="display:none;" :start_date="list.yifuchijine.start_date" :end_date="list.yifuchijine.end_date" :name="list.yifuchijine.name"></YiFuChiJine>
-				<ShouldPay ref="shouldPay_div" style="display:none;" :start_date="list.shouldPay.start_date" :end_date="list.shouldPay.end_date" :name="list.shouldPay.name"></ShouldPay>
-			</el-row>
-    </div>
+			<el-card>
+				 <div slot="header" class="clearfix">
+					<span></span>
+					<el-row :gutter="10">
+						<el-col :span="6">
+							<el-date-picker style="max-width:100%;" v-model="search.date" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+						</el-col>
+						<el-col :span="2">
+							<el-button type="primary">搜索</el-button>
+						</el-col>
+					</el-row>
+				</div>
+				<el-row :gutter="10" style="margin-top:1rem;">
+					<Total :search="search" :ref="'p_' + item" v-for="(item,key) in types" :key="key" :item="item" @removeAllItemClass="removeAllItemClass" @showTable="showTable"></Total>
+					<!-- <Total :search="search" :ref="'p_' + item.type" v-for="(item,key) in list" :types="types" :key="key" :item="item" @removeAllItemClass="removeAllItemClass" @showTable="showTable"></Total> -->
+				</el-row>
+				<el-row>
+					<MaoLiRun ref="total_div" style="display:none;" :start_date="list.total.start_date" :end_date="list.total.end_date" :name="list.total.name"></MaoLiRun>
+					<FuChiJine ref="fuchijine_div" style="display:none;" :start_date="list.fuchijine.start_date" :end_date="list.fuchijine.end_date" :name="list.fuchijine.name"></FuChiJine>
+					<YiFuChiJine ref="yifuchijine_div" style="display:none;" :start_date="list.yifuchijine.start_date" :end_date="list.yifuchijine.end_date" :name="list.yifuchijine.name"></YiFuChiJine>
+					<ShouldPay ref="shouldPay_div" style="display:none;" :start_date="list.shouldPay.start_date" :end_date="list.shouldPay.end_date" :name="list.shouldPay.name"></ShouldPay>
+				</el-row>
+			</el-card>
 </template>
 
 <script>
@@ -39,6 +47,9 @@ export default {
 					'yifuchijine',
 					'shouldPay',
 				],
+				search:{
+					date: [],
+				},
 				list: {
 					total: {
 						name: '毛利润',
@@ -96,6 +107,7 @@ export default {
       }
     },
     mounted(){
+			this.getDate()
     },
     methods:{
 				handleClose(){
@@ -116,7 +128,18 @@ export default {
 						let obj = that.$refs[key].$el.style.display = 'none'
 					})
 					let obj = that.$refs[params.type + "_div"].$el.style.display = 'block'
-				}
+				},
+				getDate(){
+					var date = new Date()
+					var yestoday = date.getTime() - 24*60*60*1000
+					var date2 = new Date()
+					date2.setTime(yestoday)
+					var yesTodayDate = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
+					var thirtyDay = date.getTime() - 24*60*60*1000 * 30
+					date2.setTime(thirtyDay)
+					var thirtyDate = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
+					this.search.date = [thirtyDate, yesTodayDate]
+				},
     },
     created(){
 			

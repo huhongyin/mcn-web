@@ -1,7 +1,7 @@
 <template>
     <el-col :span="6"  style="height:100%;margin-bottom:10px;">
         <!-- 以组为单位 -->
-        <Item :id="item.type" :ref="item.type" @click.native="showList(item)" echart-id="sign_total" :item="item" :SpanNum="12"></Item>
+        <Item :id="item" :search="search" :ref="item" @click.native="showList(item)" echart-id="sign_total" :item="item" :SpanNum="12"></Item>
     </el-col>
 </template>
 <script>
@@ -11,7 +11,7 @@ export default {
     components: {Item},
     props: [
         "item",
-        "types",
+        "search",
     ],
     data(){
         return {}
