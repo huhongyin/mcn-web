@@ -4,10 +4,10 @@
 					<span></span>
 					<el-row :gutter="10">
 						<el-col :span="6">
-							<el-date-picker style="max-width:100%;" v-model="search.date" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+							<el-date-picker style="max-width:100%;" value-format="yyyy-MM" format="yyyy-MM" v-model="search.date" type="month" range-separator="至" placeholder="选择月份"></el-date-picker>
 						</el-col>
 						<el-col :span="2">
-							<el-button type="primary">搜索</el-button>
+							<el-button type="primary" @click="searchData">搜索</el-button>
 						</el-col>
 					</el-row>
 				</div>
@@ -48,7 +48,7 @@ export default {
 					'shouldPay',
 				],
 				search:{
-					date: [],
+					date: '',
 				},
 				list: {
 					total: {
@@ -127,18 +127,26 @@ export default {
 						let key = item + "_div"
 						let obj = that.$refs[key].$el.style.display = 'none'
 					})
-					let obj = that.$refs[params.type + "_div"].$el.style.display = 'block'
+					let obj = this.$refs[params.type + "_div"].$el.style.display = 'block'
 				},
 				getDate(){
 					var date = new Date()
 					var yestoday = date.getTime() - 24*60*60*1000
 					var date2 = new Date()
 					date2.setTime(yestoday)
-					var yesTodayDate = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
-					var thirtyDay = date.getTime() - 24*60*60*1000 * 30
-					date2.setTime(thirtyDay)
-					var thirtyDate = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
-					this.search.date = [thirtyDate, yesTodayDate]
+					// var yesTodayDate = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
+					// var thirtyDay = date.getTime() - 24*60*60*1000 * 30
+					// date2.setTime(thirtyDay)
+					// var thirtyDate = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
+					// this.search.date = [thirtyDate, yesTodayDate]
+					this.search.date = date2.getFullYear() + '-' + (date2.getMonth() + 1)
+				},
+				searchData(){
+					this.types.forEach((element) => {
+						let ref = 'p_' + element
+						let obj = this.$refs[ref][0]
+						obj.searchData(element, this.search)
+					})
 				},
     },
     created(){

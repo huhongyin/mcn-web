@@ -19,16 +19,20 @@ export default {
     methods:{
         showList(item){
             this.removeAllItemClass()
-            let obj = this.$refs[item.type].$el
+            let obj = this.$refs[item].$el
             if(obj.className.indexOf("plat-active") > -1){
                 obj.classList.remove('plat-active')
             }else{
                 obj.classList.add('plat-active')
-                this.$emit('showTable', {type: item.type})
+                this.$emit('showTable', {type: item})
             }
         },
         removeAllItemClass(){
             this.$emit('removeAllItemClass')
+        },
+        searchData(ref, search){
+            this.search = search;
+            this.$refs[ref].searchData(this.search)
         }
     }
 }

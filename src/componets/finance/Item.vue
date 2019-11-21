@@ -53,6 +53,9 @@ export default {
     ],
     data(){
         return {
+            searchs: {
+                date: '',
+            },
             data: {
                 name: '毛利润',
                 total_money: '20', //总收入
@@ -69,6 +72,8 @@ export default {
         }
     },
     created(){
+        console.log(this.search)
+        this.searchs = this.search
         this.getData()
     },
     methods:{
@@ -84,11 +89,17 @@ export default {
         },
         getData(){
             let url = financeApi.list + this.item
-            get(url, this.search).then((res) => {
-                console.log(res)
-                this.data = res.data.info
+            get(url, this.searchs).then((res) => {
+                console.log(typeof res.data)
+                if(typeof res.data != 'undefined'){
+                    this.data = res.data.info
+                }
             })
         },
+        searchData(search){
+            this.searchs = search;
+            this.getData()
+        }
     },
 }
 </script>
