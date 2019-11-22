@@ -20,7 +20,8 @@
         <div class="plat-row">
             <span class="plat-row-title"></span>
             <div class="inline">
-                <a class="plat-row-a" @click="goTo(data)" href="javascript:void(0)"><span style="font-size:40px;color:#475669;" v-text="data.total_money" class="plat-row-detail"></span></a>
+                <span style="font-size:40px;color:#475669;" v-text="data.total_money" class="plat-row-detail"></span>
+                <!-- <a class="plat-row-a" @click="goTo(data)" href="javascript:void(0)"><span style="font-size:40px;color:#475669;" v-text="data.total_money" class="plat-row-detail"></span></a> -->
                 <span class="plat-row-unit" v-text="data.util"></span>
             </div>
         </div>
@@ -72,7 +73,6 @@ export default {
         }
     },
     created(){
-        console.log(this.search)
         this.searchs = this.search
         this.getData()
     },
@@ -89,8 +89,8 @@ export default {
         },
         getData(){
             let url = financeApi.list + this.item
+            console.log(this.searchs)
             get(url, this.searchs).then((res) => {
-                console.log(typeof res.data)
                 if(typeof res.data != 'undefined'){
                     this.data = res.data.info
                 }

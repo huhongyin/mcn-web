@@ -28,8 +28,8 @@
                 <el-table-column label="平台" prop="plat.name"></el-table-column>
                 <el-table-column label="身份证号" prop="actor.id_card_no"></el-table-column>
                 <el-table-column label="联系电话" prop="actor.phone"></el-table-column>
-                <el-table-column label="分成比例" prop="fencheng_bili"></el-table-column>
-                <el-table-column label="保底工资" prop="baodi_salary"></el-table-column>
+                <el-table-column label="分成比例" prop="fenchengbi"></el-table-column>
+                <el-table-column label="保底工资" prop="salary"></el-table-column>
                 <el-table-column label="开播时间" prop="start_time"></el-table-column>
                 <el-table-column label="签约人" prop="sign_user.rel_name"></el-table-column>
                 <el-table-column label="运营人" prop="operate_user.rel_name"></el-table-column>
@@ -52,8 +52,8 @@
                 <el-table-column label="平台" prop="plat.name"></el-table-column>
                 <el-table-column label="身份证号" prop="actor.id_card_no"></el-table-column>
                 <el-table-column label="联系电话" prop="actor.phone"></el-table-column>
-                <el-table-column label="分成比例" prop="fencheng_bili"></el-table-column>
-                <el-table-column label="保底工资" prop="baodi_salary"></el-table-column>
+                <el-table-column label="分成比例" prop="fenchengbi"></el-table-column>
+                <el-table-column label="保底工资" prop="salary"></el-table-column>
                 <el-table-column label="开播时间" prop="start_time"></el-table-column>
                 <el-table-column label="签约人" prop="sign_user.rel_name"></el-table-column>
                 <el-table-column label="运营人" prop="operate_user.rel_name"></el-table-column>
@@ -262,6 +262,18 @@
                                     <el-input placeholder="请输入艺名" v-model="addDialog.form.actor.nickname"></el-input>
                                 </el-col>
                             </el-form-item>
+                            <el-form-item label="" prop="fenchengbi">
+                                <el-col :span="4">分成比</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入分成比" v-model="addDialog.form.fenchengbi"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="" prop="salary">
+                                <el-col :span="4">保底工资</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-input placeholder="请输入保底工资" v-model="addDialog.form.salary"></el-input>
+                                </el-col>
+                            </el-form-item>
                             <el-form-item label="" prop="actor.plat_id">
                                 <el-col :span="4">平台</el-col>
                                 <el-col :span="19" :offset="1">
@@ -332,7 +344,7 @@
                                 <el-col :span="4">签约人</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-select v-model="addDialog.form.actor.sign_user_id" style="width: 100%;" placeholder="请选择签约人">
-                                        <el-option v-for="(item,key) in addDialog.sign_users" :key="key" :label="item.name" :value="item.id"></el-option>
+                                        <el-option v-for="(item,key) in addDialog.sign_users" :key="key" :label="item.rel_name" :value="item.id"></el-option>
                                     </el-select>
                                 </el-col>
                             </el-form-item>
@@ -739,6 +751,8 @@ export default {
                     data.actor.company_id = data.company_id
                     data.actor.should_time = data.should_time
                     data.actor.should_day = data.should_day
+                    this.addDialog.form.salary = data.salary
+                    this.addDialog.form.fenchengbi = data.fenchengbi
                     this.addDialog.form.actor = data.actor
                     this.addDialog.form.sign.fuchijine = data.actor_plat_sign.support_money
                     this.addDialog.form.sign.yifuchijine = data.actor_plat_sign.supported_money
