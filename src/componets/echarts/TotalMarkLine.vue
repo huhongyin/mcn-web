@@ -1,11 +1,6 @@
 <template>
     <el-col :span="SpanNum">
         <el-card>
-            <el-button-group v-show="Type != 'operate'">
-                <el-button>天</el-button>
-                <el-button>周</el-button>
-                <el-button>月</el-button>
-            </el-button-group>
             <div class="marl-line-div" :id="EchartId"></div>
         </el-card>
     </el-col>
@@ -25,6 +20,9 @@ export default {
     created(){
         if(this.Formatter == null || typeof(this.Formatter) == 'undefined'){
             this.Formatter = '元'
+        }
+        if(this.Data.length > 0){
+            this.initMarkLine()
         }
     },
     data(){
@@ -74,13 +72,10 @@ export default {
 
         }
     },
-    mounted(){
-      this.initMarkLine()
-    },
     methods:{
         initMarkLine(){
-          let myChart = this.$echarts.init(document.getElementById(this.EchartId), 'macarons');
-          myChart.setOption(this.lineOptions);
+            let myChart = this.$echarts.init(document.getElementById(this.EchartId), 'macarons');
+            myChart.setOption(this.lineOptions);
         }
     }
 }

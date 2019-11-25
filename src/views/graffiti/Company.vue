@@ -15,6 +15,12 @@
                         <span v-else>子公司</span>
                     </template>
                 </el-table-column>
+                <el-table-column label="挂靠公会">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.is_anchored==1">是</span>
+                        <span v-else>否</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.type == 1 || scope.row.type == 0" @click="add(scope.row)" type="text" size="small">编辑</el-button>
@@ -39,6 +45,12 @@
                                 :label="item.label"
                                 :value="item.value">
                                 </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="挂靠公会:" :label-width="addDialog.formLabelWidth">
+                            <el-select v-model="addDialog.form.is_anchored" placeholder="公会类型" style="width:100%">
+                                <el-option value="0" label="否"></el-option>
+                                <el-option value="1" label="是"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-form>
@@ -81,6 +93,7 @@ export default {
                     id: 0,
                     name: '',
                     type: '',
+                    is_anchored: '否',
                 },
                 formLabelWidth: '130px',
             },
@@ -126,6 +139,11 @@ export default {
             this.addDialog.form.id = row.id
             this.addDialog.form.name = row.name
             this.addDialog.form.type = row.type
+            if(row.is_anchored == 1){
+                this.addDialog.form.is_anchored = '是'
+            }else{
+                this.addDialog.form.is_anchored = '否'
+            }
             this.addDialog.addDialogVisible = true
         },
         doSave(){

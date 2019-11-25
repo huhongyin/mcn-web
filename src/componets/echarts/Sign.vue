@@ -1,7 +1,7 @@
 <template>
-    <el-card class="plat">
+    <el-card class="plat" v-if="item">
         <div class="plat-row">
-            <span class="name" v-text="item.name"></span>
+            <span class="name" v-text="item.title"></span>
         </div>
         <div class="plat-row">
             <span class="plat-row-title">总流水</span>
@@ -18,13 +18,6 @@
             </div>
         </div>
         <div class="plat-row">
-            <span class="plat-row-title">有效主播数量</span>
-            <div class="inline">
-                <a class="plat-row-a" href="javascript:void(0)" @click="showEffectiveActor('有效主播数量')"><span v-text="item.total_validate_user_count" class="plat-row-detail"></span></a>
-                <span class="plat-row-unit">人</span>
-            </div>
-        </div>
-        <div class="plat-row">
             <span class="plat-row-title">在线总时长</span>
             <div class="inline">
                 <a class="plat-row-a" href="javascript:void(0)" @click="showOnLine('在线总时长')"><span v-text="item.time.h" class="plat-row-detail"></span></a>
@@ -37,15 +30,32 @@
 </template>
 <script>
 //分渠道
+import { get } from '@/api/index.js'
+import operateApi from '@/api/operate.js'
 export default {
     components: {},
-    props: [
-        "item"
-    ],
     data(){
-        return {}
+        return {
+            item: {
+                title: "",
+                total_money: 0,
+                total_sign_user_count: 0,
+                time: {
+                    h: 0,
+                    m: 0,
+                }
+            },
+        }
+    },
+    created(){
+        this.getData()
     },
     methods:{
+        getData(){
+            get(operateApi.groupCal).then((res) => {
+                this.item = res.data.list
+            })
+        },
         showTotalMoney(title){
             //查看流水
             this.$router.push({

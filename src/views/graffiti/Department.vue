@@ -1,7 +1,8 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            部门列表
+            <span>部门列表</span>
+            <el-button class="right" type="text" @click="add(0)">新增</el-button>
             <!-- <el-row :gutter="10">
                 <el-col :span="4">
                     <el-select v-model="search.company_id">

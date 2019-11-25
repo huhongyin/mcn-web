@@ -11,15 +11,15 @@
 						<el-option v-for="item in departmentOptions" :key="item.name" :label="item.name" :value="item.id"></el-option>
 					</el-select>
 				</el-col>
-				<el-col  :lg="4" :md="8" :sm="6">
+				<el-col  :lg="6" :md="8" :sm="6">
 					<el-date-picker style="max-width:100%;" v-model="search.date" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"></el-date-picker>
 				</el-col>
-				<el-col :md="16" :sm="2">
+				<el-col :lg="14" :md="8" :sm="2">
 					<el-button type="primary">搜索</el-button>
 				</el-col>
 			</el-row>
 			<el-row :gutter="10" style="height:fit-content;">
-				<OperateTotal :item="total" :company="company_total" :department="department"></OperateTotal>
+				<OperateTotal :company="company_total" :department="department"></OperateTotal>
 			</el-row>
 			<el-row :gutter="10">
 				<ActorDayMoney :money="operate.money" :time="operate.time"></ActorDayMoney>
@@ -46,8 +46,36 @@ export default {
 				search: {
 					company: "",
 					department: "",
-					date: "",
+					date: [],
 				},
+
+				pickerOptions2: {
+							shortcuts: [{
+								text: '最近一周',
+								onClick(picker) {
+									const end = new Date();
+									const start = new Date();
+									start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+									picker.$emit('pick', [start, end]);
+								}
+							}, {
+								text: '最近一个月',
+								onClick(picker) {
+									const end = new Date();
+									const start = new Date();
+									start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+									picker.$emit('pick', [start, end]);
+								}
+							}, {
+								text: '最近三个月',
+								onClick(picker) {
+									const end = new Date();
+									const start = new Date();
+									start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+									picker.$emit('pick', [start, end]);
+								}
+							}]
+						},
 				companyOptions: [
 					{
 						id: "",
@@ -76,16 +104,6 @@ export default {
 						name: '签约部二'
 					},
 				],
-				total: {
-					name: '运营组一主播日常数据',
-					total_money: '20', //总收入
-					total_sign_user_count: '100', //签约主播数量
-					total_validate_user_count: '2000', //全部有效主播数量
-					time: { //总在线时长
-						h: '2310',
-						m: '56',
-					}
-				},
 				company_total: {
 					name: '北京主播日常数据',
 					total_money: '100', //总收入
@@ -117,7 +135,7 @@ export default {
 								name:'近30日主播日均收入',
 								type:'line',
 								smooth: true,
-								data:[108, 109, 110, 111, 112,113, 114, 115, 116, 117, 118, 119, 112,113, 114, 115, 116, 117, 118, 119, 111, 112, 113, 114, 115, 116, 117,118,119],
+								data:[108, 109, 10, 110, 111, 112,113, 114, 115, 116, 117, 118, 119, 112,113, 114, 115, 116, 117, 118, 119, 111, 112, 113, 114, 115, 116, 117,118,119],
 								itemStyle : {
 										normal: 
 										{
@@ -311,14 +329,29 @@ export default {
 				]
       }
     },
+    created(){
+			this.setDate()
+			this.operate.money.select_date = this.getDateByDays(-30, 'M-D')
+			this.operate.time.select_date = this.getDateByDays(-30, 'M-D')
+    },
     mounted(){
-		this.initMarkLine()
+			this.initMarkLine()
     },
     methods:{
+			setDate(){
+				var date = new Date()
+				var yestoday = date.getTime() - 24*60*60*1000
+				var date2 = new Date()
+				date2.setTime(yestoday)
+				var yesTodayDate = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
+				var thirtyDay = date.getTime() - 24*60*60*1000 * 30
+				date2.setTime(thirtyDay)
+				var thirtyDate = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
+				this.search.date = [thirtyDate, yesTodayDate]
+			},
 			initMarkLine(){
 				let that = this
 				this.department_echarts.forEach(function(item){
-					console.log(item)
 					let myChart = that.$echarts.init(document.getElementById(item.id), 'macarons');
 					myChart.setOption(item.options);
 				})
@@ -373,10 +406,6 @@ export default {
 					return time2
 			}
     },
-    created(){
-			this.operate.money.select_date = this.getDateByDays(-30, 'M-D')
-			this.operate.time.select_date = this.getDateByDays(-30, 'M-D')
-    }
 }
 </script>
 <style>

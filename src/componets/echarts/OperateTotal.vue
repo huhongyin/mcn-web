@@ -1,14 +1,10 @@
 <template>
     <div style="height:100%;">
-        <el-col :span="8"  style="height:100%;">
+        <el-col :span="12"  style="height:100%;">
             <!-- 以组为单位 -->
-            <SignItem echart-id="sign_total" :item="item" :SpanNum="12"></SignItem>
+            <SignItem echart-id="sign_total" :SpanNum="12"></SignItem>
         </el-col>
-        <el-col :span="8"  style="height:100%;">
-            <!-- 以所属公司为单位 -->
-            <SignItem echart-id="company_sign_total" :item="company" :SpanNum="12"></SignItem>
-        </el-col>
-        <el-col :span="8"  style="height:100%;">
+        <el-col :span="12"  style="height:100%;">
             <!-- 以组为单位的部门 -->
             <SignItem echart-id="department_sign_total" :item="department" :SpanNum="12"></SignItem>
         </el-col>
@@ -20,7 +16,6 @@ import SignItem from '@/componets/echarts/Sign.vue'
 export default {
     components: {SignItem},
     props: [
-        "item",
         "company",
         "department"
     ],
