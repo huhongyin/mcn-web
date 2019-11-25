@@ -1,18 +1,28 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            <span v-text="title"></span>
+            <span v-text="title"></span><span v-text="'共' + total + '人'"></span>
         </div>
-        <el-row :gutter="20">
-			<el-col :lg="3" :md="4" :sm="4">
-				<el-select placeholder="平台" v-model="search.plat_id">
+        <el-row :gutter="10">
+			<el-col :span="3">
+				<el-select style="max-width:100%;" placeholder="平台" v-model="search.plat_id">
 					<el-option v-for="item in plats" :key="item.id" :label="item.name" :value="item.id"></el-option>
 				</el-select>
 			</el-col>
-			<el-col :lg="7" :md="10" :sm="10">
-				<el-date-picker v-model="search.date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="max-width:100%;" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"></el-date-picker>
-			</el-col>
-			<el-col :lg="12" :md="8" :sm="5">
+            <el-col :span="6">
+                <el-select v-model="search.sign_user_id" filterable placeholder="筛选签约人">
+                    <el-option
+                    v-for="item in sign_users"
+                    :key="item.id"
+                    :label="item.rel_name"
+                    :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="6">
+                <el-date-picker v-model="search.date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="max-width:100%;" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"></el-date-picker>
+            </el-col>
+			<el-col :span="3">
 				<el-button type="primary" @click="searchData">搜索</el-button>
 			</el-col>
 		</el-row>
@@ -34,6 +44,7 @@
 import { get} from '@/api/index.js';
 import echartApi from '@/api/echarts.js';
 import platsApi from '@/api/plats.js';
+import departmentApi from '@/api/department.js';
 
 export default {
     data(){
@@ -46,8 +57,10 @@ export default {
             total: {},
             search: {
                 date: [],
+                sign_user_id: '',
                 plat_id: '',
             },
+            sign_users: [],
             pickerOptions2: {
             shortcuts: [{
                 text: '最近一周',
@@ -80,6 +93,7 @@ export default {
     created(){
         this.title = this.$route.query.title
         this.search.date = [this.$route.query.start_date, this.$route.query.end_date]
+        this.getSignUsers()
         this.getPlats()
         this.getData()
     }, 
@@ -89,12 +103,17 @@ export default {
                 this.plats = res.data.list
             })
         },
+        getSignUsers(){
+            get(departmentApi.userListByType + '/2').then((res) => {
+                this.sign_users = res.data.list
+            })
+        },
         getData(){
-            var params = { page: this.current, start_date: this.search.date[0], end_date: this.search.date[1], plat_id: this.search.plat_id}
+            var params = { page: this.current, start_date: this.search.date[0], end_date: this.search.date[1], plat_id: this.search.plat_id, sign_user_id: this.search.sign_user_id}
             get(echartApi.signActorList, params).then((res) => {
                 this.totalPage = res.data.list.last_page
                 this.list = res.data.list.data
-                this.total = res.data.total
+                this.total = res.data.list.total
             })
         },
         getSummaries(param) {

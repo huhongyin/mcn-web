@@ -107,7 +107,7 @@ export default {
             this.getPlatDetail()
         },
         getPlatDetail(){
-            get(platsApi.platYestoday + this.item.id + '/2019-11-01', this.search).then((res) => {
+            get(platsApi.platYestoday + this.item.id, this.search).then((res) => {
                 this.platData = res.data.list
                 this.showPlat = true
             })
@@ -122,6 +122,7 @@ export default {
                 query: {
                     title: item.name + '流水记录',
                     date: yestodayDate,
+                    plat_id: this.item.id,
                 }
             })
         },
@@ -135,24 +136,25 @@ export default {
                 query: {
                     title: item.name + '有效主播记录',
                     date: yestodayDate,
+                    plat_id: this.item.id,
                 }
             })
         },
         yestodayNewActor(item){
             //昨日新晋主播
-            let day1 = new Date();
-            day1.setTime(day1.getTime()-24*60*60*1000);
-            let yestodayDate = day1.getFullYear()+"-" + (day1.getMonth()+1) + "-" + day1.getDate();
-            this.$router.push({
-                path: '/yestodayNewActor',
-                query: {
-                    title: item.name + '新晋主播记录',
-                    date: yestodayDate,
-                }
-            })
+            // let day1 = new Date();
+            // day1.setTime(day1.getTime()-24*60*60*1000);
+            // let yestodayDate = day1.getFullYear()+"-" + (day1.getMonth()+1) + "-" + day1.getDate();
+            // this.$router.push({
+            //     path: '/yestodayNewActor',
+            //     query: {
+            //         title: item.name + '新晋主播记录',
+            //         date: yestodayDate,
+            //     }
+            // })
         },
         yestodayOnLineActor(item){
-            //昨日新晋主播
+            //昨日在线时长
             let day1 = new Date();
             day1.setTime(day1.getTime()-24*60*60*1000);
             let yestodayDate = day1.getFullYear()+"-" + (day1.getMonth()+1) + "-" + day1.getDate();
@@ -161,6 +163,7 @@ export default {
                 query: {
                     title: item.name + '在线时长',
                     date: yestodayDate,
+                    plat_id: this.item.id,
                 }
             })
         },

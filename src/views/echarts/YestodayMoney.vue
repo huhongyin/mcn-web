@@ -4,24 +4,25 @@
             <span v-text="title"></span>
         </div>
         <el-row :gutter="10">
-            <el-col :span="5">
-                <el-date-picker v-model="search.date" style="float: left;" align="left" type="date" placeholder="日期" :picker-options="pickerOptions"></el-date-picker>
+            <el-col :span="6">
+                <el-date-picker v-model="search.date" style="float: left;max-width:100%;" align="left" type="date" placeholder="日期" :picker-options="pickerOptions" value-format="yyyy-MM-dd" format="yyyy-MM-dd"></el-date-picker>
+            </el-col>
+            <el-col :span="3">
+                <el-button type="primary" @click="searchData">搜索</el-button>
             </el-col>
         </el-row>
         <el-table show-summary :summary-method="getSummaries" id="managementTable" stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
-                <el-table-column fixed label="主播实名" prop="name"></el-table-column>
-                <el-table-column fixed label="主播昵称" prop="nickname"></el-table-column>
-                <el-table-column label="总流水(元)" prop="total_money"></el-table-column>
+                <el-table-column fixed label="主播昵称" prop="actor_plat.nickname"></el-table-column>
+                <el-table-column fixed label="签约人" prop="actor_plat.sign_user.rel_name"></el-table-column>
+                <el-table-column label="总流水(元)" :prop="money_field"></el-table-column>
             </el-table>
             <el-pagination class="right offset-top-31 offset-bottom-46" background layout="prev, pager, next" :page-count="totalPage" @current-change="handleCurrentChange"></el-pagination>
     </el-card>
 </template>
 
 <script>
-import { fPost, get} from '@/api/index.js';
-import userApi from '@/api/user.js';
-import FileSaver from 'file-saver';
-import XLSX from 'xlsx';
+import { get } from '@/api/index.js';
+import platApi from '@/api/plats.js';
 export default {
     created(){
         this.getData()
@@ -29,10 +30,13 @@ export default {
     data(){
         return {
             title: '',
+            plat_id: '',
             search: {
                 date: '',
+                page: 1,
             },
-            totalPage: 2,
+            money_field: '',
+            totalPage: 1,
             pickerOptions: {
                 disabledDate(time) {
                     return time.getTime() > Date.now();
@@ -58,41 +62,30 @@ export default {
                     }
                 }]
             },
-            list: [
-                {
-                    name: '张三',   //真实姓名
-                    nickname: '小花儿',
-                    total_money: '20000', //总流水
-                },
-                {
-                    name: '李四',   //真实姓名
-                    nickname: '小鱼儿',
-                    total_money: '15694', //总流水
-                },
-                {
-                    name: '王二',   //真实姓名
-                    nickname: '小花儿',
-                    total_money: '20000', //总流水
-                },
-            ],
+            list: [],
         }
     },
     created(){
         this.title = this.$route.query.title
+        this.plat_id = this.$route.query.plat_id
         this.search.date = this.$route.query.date
+        this.getData()
     }, 
     methods:{
-        
+        handleCurrentChange(val){
+            this.search.page = val
+            this.getData()
+        },
+        searchData(){
+            this.search.page = 1
+            this.getData()
+        },
         getData(){
-            // var params = { page: this.current}
-            // var that = this
-            // get(userApi.list, params)
-            //     .then(function(res){
-            //         that.list = res.data.list.data
-            //         that.total = res.data.list.total
-            //         that.current = res.data.list.current_page
-            //         // that.totalPage = res.data.totalPage
-            //     })
+            get(platApi.platYestodayMoneyList + this.plat_id + '/' + this.search.date).then((res) => {
+                this.list = res.data.list.data
+                this.totalPage = res.data.list.last_page
+                this.money_field = res.data.money_field
+            })
         },
         getSummaries(param) {
             const { columns, data } = param;

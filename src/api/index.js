@@ -3,7 +3,7 @@ import qs from 'qs'
 import { Message } from 'element-ui';
 
 // 环境切换
-axios.defaults.baseURL = 'http://admin.mcn.huhongyin.com/api/v1/'
+axios.defaults.baseURL = 'http://admin.mcn.dev.com/api/v1/'
 // axios.defaults.baseURL = 'http://sk.dev.com/api/v1/'
 // if (process.env.NODE_ENV === 'development') {
 //   axios.defaults.baseURL = 'https://official.cdhengsu.com'

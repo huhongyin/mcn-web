@@ -7,11 +7,11 @@
 						<el-option v-for="item in companyOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
 					</el-select>
 				</el-col>
-				<el-col :lg="2" :md="3" :sm="3">
+				<!--<el-col :lg="2" :md="3" :sm="3">
 					<el-select placeholder="筛选部门" v-model="search.department">
 						<el-option v-for="item in departmentOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
 					</el-select>
-				</el-col>
+				</el-col>-->
 				<el-col :lg="7" :md="10" :sm="10">
 					<el-date-picker v-model="search.date" style="max-width:100%;" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"></el-date-picker>
 				</el-col>
@@ -97,154 +97,6 @@ export default {
 			date: [],
 		},
 		plats: [],
-		plat: {
-			list: [
-                {
-                    name: '映客',
-										yestoday: {
-											value: '1000.9',
-											precent: {
-												value: '43.2%',
-												type: 0, //增加
-												content: '环比 8-16 下降43.2%',
-											},
-										}, //昨日流水
-										yestoday_validate_user_count: {
-											value: '200',
-											precent: {
-												value: '43.2%',
-												type: 1, //增加
-												content: '环比 8-16 上升43.2%',
-											},
-										}, //昨日有效主播数量
-										yestoday_new_user_count: {
-											'value': 300,
-											precent: {
-												value: '43.2%',
-												type: 1, //增加
-												content: '环比 8-16 上升43.2%',
-											},
-										}, //昨日新晋主播数量
-										time: {
-											h: '200', //时
-											m: '32', //分
-											precent: {
-												value: '43.2%',
-												type: 1, //增加
-												content: '环比 8-16 上升43.2%',
-											},
-										},
-													},
-										{
-												name: '抖音',
-										yestoday: {
-											value: '1000.9',
-											precent: {
-												value: '43.2%',
-												type: 1, //增加
-												content: '环比 8-16 上升43.2%',
-											},
-										}, //昨日流水
-										yestoday_validate_user_count: {
-											value: '200',
-											precent: {
-												value: '43.2%',
-												type: 1, //增加
-												content: '环比 8-16 上升43.2%',
-											},
-										}, //昨日有效主播数量
-										yestoday_new_user_count: {
-											'value': 300,
-											precent: {
-												value: '43.2%',
-												type: 1, //增加
-												content: '环比 8-16 上升43.2%',
-											},
-										}, //昨日新晋主播数量
-										time: {
-											h: '200', //时
-											m: '32', //分
-											precent: {
-												value: '43.2%',
-												type: 1, //增加
-												content: '环比 8-16 上升43.2%',
-											},
-										},
-								},
-                {
-                    name: '火山小视频',
-										yestoday: {
-											value: '1000.9',
-											precent: {
-												value: '43.2%',
-												type: 1, //增加
-												content: '环比 8-16 上升43.2%',
-											},
-										}, //昨日流水
-										yestoday_validate_user_count: {
-											value: '200',
-											precent: {
-												value: '43.2%',
-												type: 1, //增加
-												content: '环比 8-16 上升43.2%',
-											},
-										}, //昨日有效主播数量
-										yestoday_new_user_count: {
-											'value': 300,
-											precent: {
-												value: '43.2%',
-												type: 1, //增加
-												content: '环比 8-16 上升43.2%',
-											},
-										}, //昨日新晋主播数量
-										time: {
-											h: '200', //时
-											m: '32', //分
-											precent: {
-												value: '43.2%',
-												type: 1, //增加
-												content: '环比 8-16 上升43.2%',
-											},
-										},
-                },
-                {
-                    name: '陌陌',
-										yestoday: {
-											value: '1000.9',
-											precent: {
-												value: '43.2%',
-												type: 1, //增加
-												content: '环比 8-16 上升43.2%',
-											},
-										}, //昨日流水
-										yestoday_validate_user_count: {
-											value: '200',
-											precent: {
-												value: '43.2%',
-												type: 1, //增加
-												content: '环比 8-16 上升43.2%',
-											},
-										}, //昨日有效主播数量
-										yestoday_new_user_count: {
-											'value': 300,
-											precent: {
-												value: '43.2%',
-												type: 1, //增加
-												content: '环比 8-16 上升43.2%',
-											},
-										}, //昨日新晋主播数量
-										time: {
-											h: '200', //时
-											m: '32', //分
-											precent: {
-												value: '43.2%',
-												type: 1, //增加
-												content: '环比 8-16 上升43.2%',
-											},
-										},
-                },
-            ]
-		},
 		total: {
 			name: '签约数据统计',
 			total_money: '', //总收入
@@ -413,7 +265,9 @@ export default {
 				this.$router.push({
 						path: 'signActorCount',
 						query: {
-								title: title
+								title: title,
+								start_date: this.search.date[0],
+								end_date: this.search.date[1],
 						}
 				})
 			},
