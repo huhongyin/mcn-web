@@ -1,27 +1,25 @@
 <template>
     <div style="height:100%;">
         <!-- 近三十日主播日均收入 -->
-        <!-- <TotalMarkLine v-if="money_dates.length > 0" echart-id="mark-line-money" formatter="元" type="operate" :text="money.title" subtext="" :data="money_dates" :series="money_series" :SpanNum="12"></TotalMarkLine> -->
-        <el-col :span="SpanNum">
+        <el-col :span="24">
             <el-card>
-                <div class="marl-line-div" :id="EchartId"></div>
+                <div class="marl-line-div" id="mark-line-money"></div>
             </el-card>
         </el-col>
-        <!-- 近三十日主播日均时长 -->
-        <TotalMarkLine echart-id="mark-line-time" formatter="分" type="operate" :text="time.title" subtext="" :data="time.select_date" :series="money.series" :SpanNum="12"></TotalMarkLine>
+        <!-- 直播日均时长 -->
+        <el-col :span="24" style="margin-top:1rem;">
+            <el-card>
+                <div class="marl-line-div" id="mark-line-time"></div>
+            </el-card>
+        </el-col>
     </div>
 </template>
 <script>
 //分渠道
-import TotalMarkLine from '@/componets/echarts/TotalMarkLine.vue'
 import { get } from '@/api/index.js'
 import operateApi from '@/api/operate.js'
 export default {
-    components: {TotalMarkLine},
-    props: [
-        "money",
-        "time"
-    ],
+    components: {},
     created(){
         this.getData()
     },
@@ -67,7 +65,83 @@ export default {
                         formatter: '{value} ' + '元'
                     }
                 },
-                series: []
+                series: [
+                    {
+                        name:'主播日均收益',
+                        type:'line',
+                        smooth: true,
+                        data:[],
+                        itemStyle : {
+                            normal: 
+                            {
+                                    color:'rgb(58,160,255)',
+                                    borderWidth: 4,
+                                    lineStyle:{
+                                            color: "rgb(58,160,255)"
+                                    },
+                            }
+                            }
+                    }
+                ]
+            },
+            lineTimeOptions: {
+                title: {
+                    text: "主播日均时长",
+                    subtext: '',
+                    textStyle: {
+                        color: 'rgb(46, 56, 74)'
+                    },
+                },
+                textStyle: {
+                    color: 'rgb(46, 56, 74)'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data:['总营收']
+                },
+                toolbox: {
+                    show: false,
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        dataView: {readOnly: false},
+                        magicType: {type: ['line', 'bar']},
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                xAxis:  {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: []
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        formatter: '{value} ' + '分钟'
+                    }
+                },
+                series: [
+                    {
+                        name:'主播日均时长',
+                        type:'line',
+                        smooth: true,
+                        data:[],
+                        itemStyle : {
+                            normal: 
+                            {
+                                    color:'rgb(58,160,255)',
+                                    borderWidth: 4,
+                                    lineStyle:{
+                                            color: "rgb(58,160,255)"
+                                    },
+                            }
+                            }
+                    }
+                ]
             },
         }
     },
@@ -75,11 +149,13 @@ export default {
         getData(){
             get(operateApi.day).then((res) => {
                 this.lineOptions.xAxis.data = res.data.dates
-                this.lineOptions.series = res.data.money
-                console.log(this.lineOptions)
-                console.log(document.getElementById("mark-line-money"))
+                this.lineTimeOptions.xAxis.data = res.data.dates
+                this.lineOptions.series[0].data = res.data.money
+                this.lineTimeOptions.series[0].data = res.data.time
                 let myChart = this.$echarts.init(document.getElementById("mark-line-money"), 'macarons');
                 myChart.setOption(this.lineOptions);
+                let myChart2 = this.$echarts.init(document.getElementById("mark-line-time"), 'macarons');
+                myChart2.setOption(this.lineTimeOptions);
             })
         }
     }

@@ -21,9 +21,8 @@ export default {
         if(this.Formatter == null || typeof(this.Formatter) == 'undefined'){
             this.Formatter = '元'
         }
-        if(this.Data.length > 0){
-            this.initMarkLine()
-        }
+        console.log(this.Series)
+        this.initMarkLine()
     },
     data(){
         return {

@@ -22,7 +22,7 @@
 				<OperateTotal :company="company_total" :department="department"></OperateTotal>
 			</el-row>
 			<el-row :gutter="10">
-				<ActorDayMoney :money="operate.money" :time="operate.time"></ActorDayMoney>
+				<ActorDayMoney></ActorDayMoney>
 			</el-row>
 			<el-row :gutter="10" style="height:300px;">
 				<el-col :span="12" v-for="item in department_echarts" :key="item.id" style="height:100%;">
@@ -122,54 +122,6 @@ export default {
 					time: { //总在线时长
 						h: '2310',
 						m: '56',
-					}
-				},
-
-				//运营主播近三十日收入及时长
-				operate: {
-					money: {
-						title: '近30日主播日均收入',
-						select_date: [],
-						series: [
-							{
-								name:'近30日主播日均收入',
-								type:'line',
-								smooth: true,
-								data:[108, 109, 10, 110, 111, 112,113, 114, 115, 116, 117, 118, 119, 112,113, 114, 115, 116, 117, 118, 119, 111, 112, 113, 114, 115, 116, 117,118,119],
-								itemStyle : {
-										normal: 
-										{
-												color:'rgb(58,160,255)',
-												borderWidth: 4,
-												lineStyle:{
-														color: "rgb(58,160,255)"
-												},
-										}
-								}
-							},
-						],
-					},
-					time: {
-						title: '近30日主播日均时长',
-						select_date: [],
-						series: [
-							{
-								name:'近30日主播日均时长',
-								type:'line',
-								smooth: true,
-								data:[108, 109, 110, 111, 112,113, 114, 115, 116, 117, 118, 119, 112,113, 114, 115, 116, 117, 118, 119, 111, 112, 113, 114, 115, 116, 117,118,119],
-								itemStyle : {
-									normal: 
-									{
-											color:'rgb(58,160,255)',
-											borderWidth: 4,
-											lineStyle:{
-													color: "rgb(58,160,255)"
-											},
-									}
-									}
-							},
-						],
 					}
 				},
 
@@ -331,8 +283,6 @@ export default {
     },
     created(){
 			this.setDate()
-			this.operate.money.select_date = this.getDateByDays(-30, 'M-D')
-			this.operate.time.select_date = this.getDateByDays(-30, 'M-D')
     },
     mounted(){
 			this.initMarkLine()
