@@ -8,6 +8,11 @@ import YestodayEffectiveActor from '../views/echarts/YestodayEffectiveActor.vue'
 import YestodayNewActor from '../views/echarts/YestodayNewActor.vue'
 import YestodayOnLineList from '../views/echarts/YestodayOnLineList.vue'
 
+import OperateSignTotalMoney from '../views/operate/list/SignTotalMoney.vue'
+import OperateSignActorCount from '../views/operate/list/SignActorCount.vue'
+import OperateEffectiveActorCount from '../views/operate/list/EffectiveActorCount.vue'
+import OperateOnLineList from '../views/operate/list/OnLineList.vue'
+
 export default
 [
   // 首页echarts
@@ -40,6 +45,32 @@ export default
     name: 'onLineList',
     component: OnLineList,
   },
+
+  //运营总流水记录列表
+  {
+    path: '/operatesignTotalMoney',
+    name: 'operatesignTotalMoney',
+    component: OperateSignTotalMoney,
+  },
+  //运营签约主播数量
+  {
+    path: '/operatesignActorCount',
+    name: 'operatesignActorCount',
+    component: OperateSignActorCount,
+  },
+  //运营新增开播数
+  {
+    path: '/operateeffectiveActorCount',
+    name: 'operateeffectiveActorCount',
+    component: OperateEffectiveActorCount,
+  },
+  //运营在线总时长列表
+  {
+    path: '/operateonLineList',
+    name: 'operateonLineList',
+    component: OperateOnLineList,
+  },
+
   //昨日流水
   {
     path: '/yestodayMoney',

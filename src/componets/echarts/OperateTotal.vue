@@ -2,11 +2,11 @@
     <div style="height:100%;">
         <el-col :span="12"  style="height:100%;">
             <!-- 以组为单位 -->
-            <SignItem echart-id="sign_total" :SpanNum="12"></SignItem>
+            <SignItem ref="group_sign" echart-id="sign_total" :SpanNum="12"></SignItem>
         </el-col>
         <el-col :span="12"  style="height:100%;">
             <!-- 以组为单位的部门 -->
-            <SignItem echart-id="department_sign_total" :item="department" :SpanNum="12"></SignItem>
+            <SignItem ref="group_department" echart-id="department_sign_total" :item="department" :SpanNum="12"></SignItem>
         </el-col>
     </div>
 </template>
@@ -21,6 +21,12 @@ export default {
     ],
     data(){
         return {}
+    },
+    methods: {
+        searchData(searchData){
+            this.$refs['group_sign'].searchData(searchData)
+            this.$refs['group_department'].searchData(searchData)
+        }
     }
 }
 </script>

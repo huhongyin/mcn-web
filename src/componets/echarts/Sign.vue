@@ -11,9 +11,16 @@
             </div>
         </div>
         <div class="plat-row">
-            <span class="plat-row-title">签约主播数量</span>
+            <span class="plat-row-title">运营主播数量</span>
             <div class="inline">
-                <a class="plat-row-a" href="javascript:void(0)" @click="showSignActor('签约主播数量')"><span v-text="item.total_sign_user_count" class="plat-row-detail"></span></a>
+                <a class="plat-row-a" href="javascript:void(0)" @click="showSignActor('运营主播')"><span v-text="item.total_sign_user_count" class="plat-row-detail"></span></a>
+                <span class="plat-row-unit">人</span>
+            </div>
+        </div>
+        <div class="plat-row">
+            <span class="plat-row-title">新增开播数量</span>
+            <div class="inline">
+                <a class="plat-row-a" href="javascript:void(0)" @click="showEffectiveActor('新增开播主播')"><span v-text="item.start_count" class="plat-row-detail"></span></a>
                 <span class="plat-row-unit">人</span>
             </div>
         </div>
@@ -45,51 +52,60 @@ export default {
                     m: 0,
                 }
             },
+            search: {}
         }
     },
     created(){
-        this.getData()
+
     },
     methods:{
+        searchData(searchData){
+            this.search = searchData
+            this.getData()
+        },
         getData(){
-            get(operateApi.groupCal).then((res) => {
+            get(operateApi.groupCal, this.search).then((res) => {
                 this.item = res.data.list
             })
         },
         showTotalMoney(title){
             //查看流水
+            this.search.title = title
+            this.search.start_date = this.search.date[0]
+            this.search.end_date = this.search.date[1]
             this.$router.push({
-                path: 'signTotalMoney',
-                query: {
-                    title: title
-                }
+                path: '/operatesignTotalMoney',
+                query: this.search
             })
         },
         showSignActor(title){
             //签约主播数量
+            this.search.title = title
+            this.search.start_date = this.search.date[0]
+            this.search.end_date = this.search.date[1]
             this.$router.push({
-                path: 'signActorCount',
-                query: {
-                    title: title
-                }
+                path: '/operatesignActorCount',
+                query: this.search
             })
         },
         showEffectiveActor(title){
             //有效主播数量
+            this.search.title = title
+            this.search.start_date = this.search.date[0]
+            this.search.end_date = this.search.date[1]
             this.$router.push({
-                path: 'effectiveActorCount',
-                query: {
-                    title: title
-                }
+                path: '/operateeffectiveActorCount',
+                query: this.search
             })
         },
         showOnLine(title){
             //在线总时长
+            this.search.title = title
+            this.search.start_date = this.search.date[0]
+            this.search.end_date = this.search.date[1]
             this.$router.push({
-                path: 'onLineList',
-                query: {
-                    title: title
-                }
+                path: '/operateonLineList',
+                query: this.search
             })
         }
     }

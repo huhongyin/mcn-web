@@ -21,10 +21,11 @@ import operateApi from '@/api/operate.js'
 export default {
     components: {},
     created(){
-        this.getData()
+        // this.getData()
     },
     data(){
         return {
+            search:{},
             lineOptions: {
                 title: {
                     text: "主播日均收益",
@@ -147,7 +148,7 @@ export default {
     },
     methods: {
         getData(){
-            get(operateApi.day).then((res) => {
+            get(operateApi.day, this.search).then((res) => {
                 this.lineOptions.xAxis.data = res.data.dates
                 this.lineTimeOptions.xAxis.data = res.data.dates
                 this.lineOptions.series[0].data = res.data.money
@@ -157,6 +158,10 @@ export default {
                 let myChart2 = this.$echarts.init(document.getElementById("mark-line-time"), 'macarons');
                 myChart2.setOption(this.lineTimeOptions);
             })
+        },
+        searchData(searchData){
+            this.search = searchData
+            this.getData()
         }
     }
 }

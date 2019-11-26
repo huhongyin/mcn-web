@@ -2,32 +2,32 @@
     <div>
 			<el-row :gutter="10">
 				<el-col :lg="2" :md="3" :sm="3">
-					<el-select placeholder="筛选公司" v-model="search.company">
+					<el-select placeholder="筛选公司" v-model="search.company" @change="getDepartment">
 						<el-option v-for="item in companyOptions" :key="item.name" :label="item.name" :value="item.id"></el-option>
 					</el-select>
 				</el-col>
-				<el-col :lg="2" :md="3" :sm="3">
+				<el-col v-if="showDepartment" :lg="2" :md="3" :sm="3">
 					<el-select placeholder="筛选部门" v-model="search.department">
 						<el-option v-for="item in departmentOptions" :key="item.name" :label="item.name" :value="item.id"></el-option>
 					</el-select>
 				</el-col>
 				<el-col  :lg="6" :md="8" :sm="6">
-					<el-date-picker style="max-width:100%;" v-model="search.date" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"></el-date-picker>
+					<el-date-picker value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="max-width:100%;" v-model="search.date" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"></el-date-picker>
 				</el-col>
 				<el-col :lg="14" :md="8" :sm="2">
-					<el-button type="primary">搜索</el-button>
+					<el-button type="primary" @click="searchData">搜索</el-button>
 				</el-col>
 			</el-row>
 			<el-row :gutter="10" style="height:fit-content;">
-				<OperateTotal :company="company_total" :department="department"></OperateTotal>
+				<OperateTotal ref="operate_total" :company="company_total" :department="department"></OperateTotal>
 			</el-row>
 			<el-row :gutter="10">
-				<ActorDayMoney></ActorDayMoney>
+				<ActorDayMoney ref="actor_day_money"></ActorDayMoney>
 			</el-row>
 			<el-row :gutter="10" style="height:300px;">
 				<el-col :span="12" v-for="item in department_echarts" :key="item.id" style="height:100%;">
 					<el-card style="height:300px;">
-						<div class="marl-line-div" :id="item.id" style="height:100%;"></div>
+						<div class="marl-line-div" :ref="item.id" :id="item.id" style="height:100%;"></div>
 					</el-card>
 				</el-col>
 			</el-row>
@@ -35,9 +35,12 @@
 </template>
 
 <script>
+import companyApi from '@/api/company.js'
+import departmentApi from '@/api/department.js'
+import operateApi from '@/api/operate.js'
 import OperateTotal from '@/componets/echarts/OperateTotal.vue'
 import ActorDayMoney from '@/componets/echarts/ActorDayMoney.vue'
-import { fork } from 'child_process'
+import { get } from '@/api/index.js'
 
 export default {
   components:{ OperateTotal, ActorDayMoney },
@@ -48,62 +51,36 @@ export default {
 					department: "",
 					date: [],
 				},
-
+				showDepartment: false,
 				pickerOptions2: {
-							shortcuts: [{
-								text: '最近一周',
-								onClick(picker) {
-									const end = new Date();
-									const start = new Date();
-									start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-									picker.$emit('pick', [start, end]);
-								}
-							}, {
-								text: '最近一个月',
-								onClick(picker) {
-									const end = new Date();
-									const start = new Date();
-									start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-									picker.$emit('pick', [start, end]);
-								}
-							}, {
-								text: '最近三个月',
-								onClick(picker) {
-									const end = new Date();
-									const start = new Date();
-									start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-									picker.$emit('pick', [start, end]);
-								}
-							}]
-						},
-				companyOptions: [
-					{
-						id: "",
-						name: '全部公司'
-					},
-					{
-						id: 1,
-						name: '成都'
-					},
-					{
-						id: 2,
-						name: '北京'
-					},
-				],
-				departmentOptions: [
-					{
-						id: "",
-						name: '全部部门'
-					},
-					{
-						id: 1,
-						name: '签约部一'
-					},
-					{
-						id: 1,
-						name: '签约部二'
-					},
-				],
+					shortcuts: [{
+						text: '最近一周',
+						onClick(picker) {
+							const end = new Date();
+							const start = new Date();
+							start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+							picker.$emit('pick', [start, end]);
+						}
+					}, {
+						text: '最近一个月',
+						onClick(picker) {
+							const end = new Date();
+							const start = new Date();
+							start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+							picker.$emit('pick', [start, end]);
+						}
+					}, {
+						text: '最近三个月',
+						onClick(picker) {
+							const end = new Date();
+							const start = new Date();
+							start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+							picker.$emit('pick', [start, end]);
+						}
+					}]
+				},
+				companyOptions: [],
+				departmentOptions: [],
 				company_total: {
 					name: '北京主播日常数据',
 					total_money: '100', //总收入
@@ -124,170 +101,49 @@ export default {
 						m: '56',
 					}
 				},
-
-				search: {
-					company: "",
-					department: "",
-					date: "",
-				},
-				companyOptions: [
-					{
-						id: "",
-						name: '全部'
-					},
-					{
-						id: 1,
-						name: '子公司一'
-					},
-					{
-						id: 2,
-						name: '子公司二'
-					},
-				],
-				departmentOptions: [
-					{
-						id: "",
-						name: '全部'
-					},
-					{
-						id: 1,
-						name: '运营部一'
-					},
-					{
-						id: 1,
-						name: '运营部二'
-					},
-				],
-				department_echarts:[
-					//以部门为单位的统计图
-					{
-						id: 'yungyingbu_1',
-						options: {
-							title: {
-							text: '运营部一统计',
-							textStyle: {
-									color: 'rgb(46, 56, 74)'
-							},
-						},
-						textStyle: {
-								color: 'rgb(46, 56, 74)'
-						},
-						tooltip: {
-							trigger: 'axis'
-						},
-						legend: {
-							data:['时长','收入','主播数量']
-						},
-						grid: {
-							// left: '3%',
-							// right: '4%',
-							// bottom: '3%',
-							// containLabel: true
-						},
-						toolbox: {
-							feature: {
-								saveAsImage: {}
-							}
-						},
-						xAxis: {
-							type: 'category',
-							boundaryGap: false,
-							data: ['09-25','09-26','09-27','09-28']
-						},
-						yAxis: {
-							type: 'value'
-						},
-						series: [
-							{
-								name:'时长',
-								type:'line',
-								stack: '总量',
-								data:[50, 100, 150, 200]
-							},
-							{
-								name:'收入',
-								type:'line',
-								stack: '总量',
-								data:[50, 100, 150, 200]
-							},
-							{
-								name:'主播数量',
-								type:'line',
-								stack: '总量',
-								data:[50, 100, 150, 200]
-							}
-						]
-						}
-					},
-					{
-						id: 'yungyingbu_2',
-						textStyle: {
-								color: 'rgb(46, 56, 74)'
-						},
-						options: {
-							title: {
-								text: '运营部二统计',
-								textStyle: {
-										color: 'rgb(46, 56, 74)'
-								},
-							},
-						tooltip: {
-							trigger: 'axis'
-						},
-						legend: {
-							data:['时长','收入','主播数量']
-						},
-						grid: {
-							// left: '3%',
-							// right: '4%',
-							// bottom: '3%',
-							// containLabel: true
-						},
-						toolbox: {
-							feature: {
-								saveAsImage: {}
-							}
-						},
-						xAxis: {
-							type: 'category',
-							boundaryGap: false,
-							data: ['09-25','09-26','09-27','09-28']
-						},
-						yAxis: {
-							type: 'value'
-						},
-						series: [
-							{
-								name:'时长',
-								type:'line',
-								stack: '总量',
-								data:[10, 20, 0, 30]
-							},
-							{
-								name:'收入',
-								type:'line',
-								stack: '总量',
-								data:[1, 2, 4, 6]
-							},
-							{
-								name:'主播数量',
-								type:'line',
-								stack: '总量',
-								data:[0, 1, 2, 3]
-							}
-						]
-						}
-					}
-				]
+				department_echarts: [],
       }
     },
     created(){
 			this.setDate()
-    },
-    mounted(){
+			this.getCompanies()
+		},
+		updated(){
 			this.initMarkLine()
+		},
+    mounted(){
     },
     methods:{
+			searchData(){
+				this.$refs['operate_total'].searchData(this.search)
+				this.$refs['actor_day_money'].searchData(this.search)
+				this.getDepartmentCal()
+			},
+			getCompanies(){
+				get(companyApi.list, {type: 'select'}).then((res) => {
+					this.search.company = res.data.list[0].id
+					this.companyOptions = res.data.list
+					this.getDepartment()
+				})
+			},
+			getDepartment(){
+				get(departmentApi.list, {type: 'select', company_id: this.search.company, department_type: 1, check: 'operate'}).then((res) => {
+					if(res.data.list.length <= 0){
+						this.showDepartment = false
+						this.departmentOptions = []
+						this.search.department = ""
+					}else{
+						this.showDepartment = true
+						this.departmentOptions = res.data.list
+						// var all = {id: "", name: "全部"};
+						// this.departmentOptions.unshift(all)
+						this.search.department = res.data.list[0].id
+					}
+					this.$refs['operate_total'].searchData(this.search)
+					this.$refs['actor_day_money'].searchData(this.search)
+					this.getDepartmentCal()
+				})
+			},
 			setDate(){
 				var date = new Date()
 				var yestoday = date.getTime() - 24*60*60*1000
@@ -300,10 +156,57 @@ export default {
 				this.search.date = [thirtyDate, yesTodayDate]
 			},
 			initMarkLine(){
-				let that = this
-				this.department_echarts.forEach(function(item){
-					let myChart = that.$echarts.init(document.getElementById(item.id), 'macarons');
+				this.department_echarts.map((item) => {
+					let myChart = this.$echarts.init(document.getElementById(item.id), 'macarons');
 					myChart.setOption(item.options);
+				})
+			},
+			getDepartmentCal(){
+				get(operateApi.department, this.search).then((res) => {
+					this.department_echarts = []
+					res.data.map((element) => {
+						var lineOption = {
+									id: '',
+									options: {
+										title: {
+											text: '',
+											textStyle: {
+													color: 'rgb(46, 56, 74)'
+											},
+										},
+										textStyle: {
+												color: 'rgb(46, 56, 74)'
+										},
+										tooltip: {
+											trigger: 'axis'
+										},
+										legend: {
+											data:['时长','收入','主播数量']
+										},
+										grid: {
+										},
+										toolbox: {
+											feature: {
+												saveAsImage: {}
+											}
+										},
+										xAxis: {
+											type: 'category',
+											boundaryGap: false,
+											data: []
+										},
+										yAxis: {
+											type: 'value'
+										},
+										series: []
+									}
+								}
+							lineOption.options.xAxis.data = element.dates
+							lineOption.id = element.id
+							lineOption.options.title.text = element.title
+							lineOption.options.series = element.series
+							this.department_echarts.push(lineOption)
+					})
 				})
 			},
 			getDateByDays(days, format){
