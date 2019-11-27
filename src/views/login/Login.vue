@@ -162,7 +162,6 @@ export default {
                 let token_type = res.data.login_res.token_type
                 let access_token = res.data.login_res.access_token
                 let userInfo = res.data.user
-
                 localStorage.setItem("token_type", token_type)
                 localStorage.setItem("access_token", access_token)
                 localStorage.setItem("user", JSON.stringify(userInfo))

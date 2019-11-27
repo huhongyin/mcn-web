@@ -265,13 +265,19 @@
                             <el-form-item label="" prop="fenchengbi">
                                 <el-col :span="4">分成比</el-col>
                                 <el-col :span="19" :offset="1">
-                                    <el-input placeholder="请输入分成比" v-model="addDialog.form.fenchengbi"></el-input>
+                                    <el-input placeholder="请输入分成比" v-model="addDialog.form.actor.fenchengbi"></el-input>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="" prop="salary">
+                                <el-col :span="4">开播时间</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-date-picker type="date" style="width:100%;" v-model="addDialog.form.actor.start_time" placeholder="请选择开播时间" value-format="yyyy-MM-dd" format="yyyy-MM-dd"></el-date-picker>
                                 </el-col>
                             </el-form-item>
                             <el-form-item label="" prop="salary">
                                 <el-col :span="4">保底工资</el-col>
                                 <el-col :span="19" :offset="1">
-                                    <el-input placeholder="请输入保底工资" v-model="addDialog.form.salary"></el-input>
+                                    <el-input placeholder="请输入保底工资" v-model="addDialog.form.actor.salary"></el-input>
                                 </el-col>
                             </el-form-item>
                             <el-form-item label="" prop="actor.plat_id">
@@ -501,6 +507,9 @@ export default {
                         id_card_no: '',
                         birthday: '',
                         address: '',
+                        fenchengbi:"",
+                        start_time: "",
+                        salary: 0,
                     },
                     bank: {
                         id: "",
@@ -751,8 +760,9 @@ export default {
                     data.actor.company_id = data.company_id
                     data.actor.should_time = data.should_time
                     data.actor.should_day = data.should_day
-                    this.addDialog.form.salary = data.salary
-                    this.addDialog.form.fenchengbi = data.fenchengbi
+                    data.actor.salary = data.salary
+                    data.actor.start_time = data.start_time
+                    data.actor.fenchengbi = data.fenchengbi
                     this.addDialog.form.actor = data.actor
                     this.addDialog.form.sign.fuchijine = data.actor_plat_sign.support_money
                     this.addDialog.form.sign.yifuchijine = data.actor_plat_sign.supported_money

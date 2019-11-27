@@ -13,7 +13,7 @@
 					</el-select>
 				</el-col>-->
 				<el-col :lg="7" :md="10" :sm="10">
-					<el-date-picker v-model="search.date" style="max-width:100%;" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"></el-date-picker>
+					<el-date-picker v-model="search.date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="max-width:100%;" type="daterange" align="right" unlink-panels range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2"></el-date-picker>
 				</el-col>
 				<el-col :lg="12" :md="8" :sm="5">
 					<el-button type="primary" @click="searchData">搜索</el-button>
@@ -213,7 +213,7 @@ export default {
 			this.setDate() //初始化时间
 			this.getPlats() //获取平台
 			this.getCompanies() //获取公司数据
-			this.getSignCal() //获取统计总数 总流水  有效主播数量...
+			// this.getSignCal() //获取统计总数 总流水  有效主播数量...
     },
     methods:{
 			isLogin(){
@@ -244,6 +244,7 @@ export default {
 				get(companyApi.list, { type: 'select' }).then((res) => {
 					this.companyOptions = res.data.list
 					this.search.company = res.data.list[0].id
+					this.getSignCal() //获取统计总数 总流水  有效主播数量...
 				})
 			},
 			searchData(){

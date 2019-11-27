@@ -30,7 +30,7 @@
         </el-row>
       </el-header>
       <el-container class="container_box">
-        <div style="width:16%;background:#f5f5f5;">
+        <div style="width:10%;background:#f5f5f5;">
           <el-aside width="100%" class="nav_list">
             <el-menu
               :default-active="this.$route.path"
@@ -39,15 +39,15 @@
               router
             >
             <!-- 签约统计 -->
-            <el-menu-item index="/" class="el-item e-menu-span" style="font-size:13px;"><img :src="sign_icon" width="20" style="margin-right:10px" height="20" alt />
+            <el-menu-item v-show="userInfo.department != null && (userInfo.department.type == 1 || userInfo.department.type == 4)" index="/" class="el-item e-menu-span" style="font-size:13px;"><img :src="sign_icon" width="20" style="margin-right:10px" height="20" alt />
                 签约统计
               </el-menu-item>
             <!-- 运营统计 -->
-            <el-menu-item index="/operate" class="el-item e-menu-span" style="font-size:13px;"><img :src="yunying_icon" width="20" style="margin-right:10px" height="20" alt />
+            <el-menu-item v-show="userInfo.department != null && (userInfo.department.type == 2 || userInfo.department.type == 4)" index="/operate" class="el-item e-menu-span" style="font-size:13px;"><img :src="yunying_icon" width="20" style="margin-right:10px" height="20" alt />
                 运营统计
               </el-menu-item>
               <!-- 财务结算 -->
-            <el-menu-item index="/financeDetail" class="el-item e-menu-span" style="font-size:13px;"><img :src="finanace_icon" width="20" style="margin-right:10px" height="20" alt />
+            <el-menu-item v-show="userInfo.department != null && (userInfo.department.type == 3 || userInfo.department.type == 4)" index="/financeDetail" class="el-item e-menu-span" style="font-size:13px;"><img :src="finanace_icon" width="20" style="margin-right:10px" height="20" alt />
                 财务结算
               </el-menu-item>
               <!-- 未读消息 -->
@@ -56,7 +56,7 @@
                 <el-badge :hidden="is_read" style="margin-top:-9px;" :value="msg_count"></el-badge>
               </el-menu-item>
               <!-- 数据录入 -->
-              <el-submenu index="/data">
+              <el-submenu index="/data" v-show="userInfo.department != null && (userInfo.department.type == 5 || userInfo.department.type == 4)">
                 <template slot="title">
                   <img :src="sys_icon" width="20" style="margin-right:10px" height="20" alt />
                   <span class="e-menu-span router-link">数据查询</span>
@@ -69,6 +69,7 @@
                   <el-menu-item index="/old" class="el-item e-menu-span" style="font-size:13px;">日数据查看</el-menu-item>
                   <el-menu-item index="/oldMonth" class="el-item e-menu-span" style="font-size:13px;">月数据查看</el-menu-item>
                   <el-menu-item index="/import" class="el-item e-menu-span" style="font-size:13px;">数据录入</el-menu-item>
+                  <el-menu-item index="/company_data" class="el-item e-menu-span" style="font-size:13px;">公司数据</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
               <!-- <el-menu-item index="/import" class="el-item e-menu-span" style="font-size:13px;"><img :src="import_icon" width="20" style="margin-right:10px" height="20" alt />
@@ -85,7 +86,7 @@
                 </el-menu-item-group>
               </el-submenu>
               <!-- 分组与平台 -->
-              <el-submenu index="/company">
+              <el-submenu index="/company" v-show="userInfo.department != null && userInfo.department.type == 4">
                 <template slot="title">
                   <img :src="sys_icon" width="20" style="margin-right:10px" height="20" alt />
                   <span class="e-menu-span router-link">分组与平台</span>
@@ -133,6 +134,11 @@ export default {
     };
   },
   created(){
+    if(this.userInfo.department == null){
+      this.$router.push({
+        path: "/management",
+      })
+    }
     let is_read = localStorage.getItem('is_read')
     if(typeof(is_read) != 'undefined' && is_read == 1){
       this.is_read = true

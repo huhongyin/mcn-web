@@ -6,7 +6,7 @@ import Operate from './operate'
 import Graffiti from './graffiti'
 import Old from './old'
 import Finance from './finance'
-import Contact from './contact'
+import CompanyData from './company'
 import Operation from './operation'
 import Msg from './msg'
 import Import from './import'
@@ -26,7 +26,7 @@ export default
       ...Graffiti,
       ...Old,
       ...Finance,
-      ...Contact,
+      ...CompanyData,
       ...Operation,
       ...Operate,
       ...Msg,
