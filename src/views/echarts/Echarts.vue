@@ -159,7 +159,7 @@ export default {
 			yAxis: {
 					type: 'value',
 					axisLabel: {
-							formatter: '{value} 元' 
+							formatter: '{value} 万' 
 					}
 			},
 			series: {
