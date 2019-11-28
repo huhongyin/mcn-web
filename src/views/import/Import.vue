@@ -4,13 +4,13 @@
             数据导入
         </div>
         <el-form label-width="80px">
-            <el-form-item label="公司">
+            <!-- <el-form-item label="公司">
                 <el-col :span="12">
                     <el-select v-model="form.company_id" style="width:100%;">
                         <el-option v-for="(item,key) in companies" :key="key" :label="item.name" :value="item.id"></el-option>
                     </el-select>
                 </el-col>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="数据类型">
                 <el-col :span="12">
                     <el-select v-model="form.data_type" placeholder="请选择数据类型" style="width:100%;" @change="showImport">
@@ -79,13 +79,14 @@
 </template>
 
 <script>
-import uploadApi from '@/api/upload.js'
-import platApi from '@/api/plats.js'
-import importApi from '@/api/import.js'
-import actorApi from '@/api/actor.js'
-import teamApi from '@/api/team.js'
+import uploadApi from '@/api/upload.js';
+import platApi from '@/api/plats.js';
+import importApi from '@/api/import.js';
+import actorApi from '@/api/actor.js';
+import teamApi from '@/api/team.js';
 import companyApi from '@/api/company.js';
-import { get,post } from '@/api/index.js'
+import { get,post } from '@/api/index.js';
+import { Loading } from 'element-ui';
 
 export default {
     data(){
@@ -93,8 +94,8 @@ export default {
             selectMonth: false,
             selectDate: false,
             centerDialogVisible: false,
-            uploadUrl: 'http://admin.mcn.huhongyin.com/' + uploadApi.upload,
-            // uploadUrl: 'http://sk.dev.com' + uploadApi.upload,
+            // uploadUrl: 'http://admin.mcn.huhongyin.com/' + uploadApi.upload,
+            uploadUrl: 'http://sk.dev.com' + uploadApi.upload,
             showPlatImport: true,
             showMoneyType: false,
             valueFormat: 'yyyy-MM-dd',
@@ -145,14 +146,23 @@ export default {
             this.centerDialogVisible = true
         },
         onSubmit(){
+            this.centerDialogVisible = false
             if(this.form.data_type == 1){
+                const loading = this.$loading({
+                    lock: true,
+                    text: '导入中...',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
                 post(actorApi.import, this.form).then((res) => {
                     // loading.close();
-                    this.centerDialogVisible = false
+                    loading.close()
                     this.$message({
                         type: 'success',
                         message: res.msg
                     })
+                }).catch((err) => {
+                    loading.close()
                 })
             }else if(this.form.data_type == 2){
                 const loading = this.$loading({

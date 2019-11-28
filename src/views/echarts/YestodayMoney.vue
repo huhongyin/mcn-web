@@ -5,7 +5,7 @@
         </div>
         <el-row :gutter="10">
             <el-col :span="6">
-                <el-date-picker v-model="search.date" style="float: left;max-width:100%;" align="left" type="date" placeholder="日期" :picker-options="pickerOptions" value-format="yyyy-MM-dd" format="yyyy-MM-dd"></el-date-picker>
+                <el-date-picker v-model="search.date" style="float: left;max-width:100%;" align="left" type="daterange" placeholder="日期" :picker-options="pickerOptions" value-format="yyyy-MM-dd" format="yyyy-MM-dd"></el-date-picker>
             </el-col>
             <el-col :span="3">
                 <el-button type="primary" @click="searchData">搜索</el-button>
@@ -32,7 +32,7 @@ export default {
             title: '',
             plat_id: '',
             search: {
-                date: '',
+                date: [],
                 page: 1,
             },
             money_field: '',
@@ -68,7 +68,7 @@ export default {
     created(){
         this.title = this.$route.query.title
         this.plat_id = this.$route.query.plat_id
-        this.search.date = this.$route.query.date
+        this.search.date = [this.$route.query.date, this.$route.query.date]
         this.getData()
     }, 
     methods:{
@@ -81,7 +81,7 @@ export default {
             this.getData()
         },
         getData(){
-            get(platApi.platYestodayMoneyList + this.plat_id + '/' + this.search.date).then((res) => {
+            get(platApi.platYestodayMoneyList + this.plat_id, this.search).then((res) => {
                 this.list = res.data.list.data
                 this.totalPage = res.data.list.last_page
                 this.money_field = res.data.money_field

@@ -62,13 +62,22 @@
                   <span class="e-menu-span router-link">数据查询</span>
                 </template>
                 <el-menu-item-group class="el-item">
-                  <el-menu-item index="/day/end" class="el-item e-menu-span" style="font-size:13px;">结算单</el-menu-item>
-                  <el-menu-item index="/day/sign" class="el-item e-menu-span" style="font-size:13px;">签约数据排名</el-menu-item>
-                  <el-menu-item index="/day/team" class="el-item e-menu-span" style="font-size:13px;">团队日榜</el-menu-item>
-                  <el-menu-item index="/day/company" class="el-item e-menu-span" style="font-size:13px;">公司榜</el-menu-item>
+                  <el-menu-item index="/day/end" class="el-item e-menu-span" style="font-size:13px;">结算单查看</el-menu-item>
                   <el-menu-item index="/old" class="el-item e-menu-span" style="font-size:13px;">日数据查看</el-menu-item>
                   <el-menu-item index="/oldMonth" class="el-item e-menu-span" style="font-size:13px;">月数据查看</el-menu-item>
                   <el-menu-item index="/import" class="el-item e-menu-span" style="font-size:13px;">数据录入</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+              <!-- 榜单查看 -->
+              <el-submenu index="/bangdan" v-show="userInfo.department != null && (userInfo.department.type == 5 || userInfo.department.type == 4)">
+                <template slot="title">
+                  <img :src="bangdan_icon" width="20" style="margin-right:10px" height="20" alt />
+                  <span class="e-menu-span router-link">榜单查看</span>
+                </template>
+                <el-menu-item-group class="el-item">
+                  <el-menu-item index="/day/sign" class="el-item e-menu-span" style="font-size:13px;">签约数据排名</el-menu-item>
+                  <el-menu-item index="/day/team" class="el-item e-menu-span" style="font-size:13px;" v-if="userInfo.is_operate_admin">团队日榜</el-menu-item>
+                  <el-menu-item index="/day/company" class="el-item e-menu-span" style="font-size:13px;">公司榜</el-menu-item>
                   <el-menu-item index="/company_data" class="el-item e-menu-span" style="font-size:13px;">公司数据</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
@@ -111,6 +120,7 @@
 export default {
   data() {
     return {
+      bangdan_icon: require("../../assets/imgs/bangdan.png"),
       plat_icon: require("../../assets/imgs/plat_icon.png"),
       sign_icon: require("../../assets/imgs/sign_data.png"),
       yunying_icon: require("../../assets/imgs/yunying_data.png"),
