@@ -1,27 +1,30 @@
 <template>
     <el-card class="box-card" :style="'height:'+ cardHeight +';'">
         <div slot="header" class="clearfix">
-            <el-row :gutter="10">
-                <el-col :span="2" style="line-height:40px;">
                     公司榜
-                </el-col>
-                <el-col :span="4" style="line-height:40px;">
-                    <el-select v-model="search.plat_id">
-                        <el-option v-for="(plat,key) in plats" :key="key" :label="plat.name" :value="plat.id"></el-option>
-                    </el-select>
-                </el-col>
-                <el-col :span="4">
-                    <el-date-picker type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="search.date" placeholder="选择查询截止日期" style="max-width:100%;"></el-date-picker>
-                </el-col>
-                <el-col :span="3">
-                    <el-button type="primary" @click="getData">搜索</el-button>
-                </el-col>
-                <el-col :span="2" :offset="9">
-                    <el-button @click="exportExcel" style="float:right;">导出</el-button>
-                </el-col>
-            </el-row>
         </div>
-        <div style="width:100%;height:90%;">
+        <el-row :gutter="10">
+            <el-col :span="2" style="line-height:40px;">
+                <el-select v-model="search.company_id">
+                    <el-option v-for="(company,key) in companies" :key="key" :label="company.name" :value="company.id"></el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="2" style="line-height:40px;">
+                <el-select v-model="search.plat_id">
+                    <el-option v-for="(plat,key) in plats" :key="key" :label="plat.name" :value="plat.id"></el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="6">
+                <el-date-picker type="daterange" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="search.date" start-placeholder="开始日期" end-placeholde="结束日期" style="max-width:100%;"></el-date-picker>
+            </el-col>
+            <el-col :span="3">
+                <el-button type="primary" @click="getData">搜索</el-button>
+            </el-col>
+            <el-col :span="2" :offset="9">
+                <el-button @click="exportExcel" style="float:right;">导出</el-button>
+            </el-col>
+        </el-row>
+        <div style="width:100%;height:90%;margin-top:1rem;">
             <div :style="'height:' + tableHeight + ';width: 100%'">
                 <pl-table :datas="list" :height-change="true" :span-method="objectSpanMethod" :pagination-show="false" border id="out-table" v-loading="loading" ref="plTable" header-drag-style use-virtual :row-height="50">
                     <pl-table-column label="序号" prop="id"></pl-table-column>
@@ -50,6 +53,7 @@ import { exportJsonToExcel, formatJson } from 'pl-export-excel'
 import { get } from '@/api/index.js';
 import teamApi from '@/api/team.js';
 import platApi from '@/api/plats.js';
+import companyApi from '@/api/company.js';
 
 export default {
     data(){
@@ -61,18 +65,21 @@ export default {
             day_title: '',
             list: [],
             plats: [],
+            companies: [],
             count: 0,
             search: {
-                date: '',
+                date: [],
                 plat_id: '',
+                company_id: "",
                 page: 1,
             },
             loading: false,
         }
     },
     created(){
+        this.getCompanies()
         this.getPlat()
-        this.search.date = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
+        this.search.date = [new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01', new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()]
     },
     methods:{
         getData(){
@@ -95,8 +102,15 @@ export default {
         getPlat(){
             get(platApi.list).then((res) => {
                 this.plats = res.data.list
+                this.plats.unshift({id: "", name: "全平台"})
                 this.search.plat_id = this.plats[0].id
                 this.getData()
+            })
+        },
+        getCompanies(){
+            get(companyApi.list, { type: 'select' }).then((res) => {
+                this.companies = res.data.list
+                this.companies.unshift({id: '', name: "全部"})
             })
         },
         handleCurrentChange(page){

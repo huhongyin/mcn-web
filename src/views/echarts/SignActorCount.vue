@@ -101,6 +101,7 @@ export default {
         getPlats(){
             get(platsApi.list).then((res) => {
                 this.plats = res.data.list
+                this.plats.unshift({id: "", name: "全平台"})
             })
         },
         getSignUsers(){
@@ -109,7 +110,9 @@ export default {
             })
         },
         getData(){
-            var params = { page: this.current, start_date: this.search.date[0], end_date: this.search.date[1], plat_id: this.search.plat_id, sign_user_id: this.search.sign_user_id}
+            var strartDate = this.search.date == null ? '' : this.search.date[0]
+            var endDate = this.search.date == null ? '' : this.search.date[1]
+            var params = { page: this.current, start_date: strartDate, end_date: endDate, plat_id: this.search.plat_id, sign_user_id: this.search.sign_user_id}
             get(echartApi.signActorList, params).then((res) => {
                 this.totalPage = res.data.list.last_page
                 this.list = res.data.list.data
