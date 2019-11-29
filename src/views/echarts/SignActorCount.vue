@@ -9,8 +9,8 @@
 					<el-option v-for="item in plats" :key="item.id" :label="item.name" :value="item.id"></el-option>
 				</el-select>
 			</el-col>
-            <el-col :span="6">
-                <el-select v-model="search.sign_user_id" filterable placeholder="筛选签约人">
+            <el-col :span="3">
+                <el-select style="width:100%;" v-model="search.sign_user_id" filterable placeholder="筛选签约人">
                     <el-option
                     v-for="item in sign_users"
                     :key="item.id"

@@ -92,7 +92,7 @@ export default {
                 this.all_money_title = res.data.all_money_title
                 if(this.list.length > 0){
                     this.tableHeight = '100%'
-                    this.cardHeight = '100%'
+                    this.cardHeight = '120%'
                 }else{
                     this.cardHeight = 'unset'
                     this.tableHeight = '200px'
@@ -102,7 +102,7 @@ export default {
         getPlat(){
             get(platApi.list).then((res) => {
                 this.plats = res.data.list
-                this.plats.unshift({id: "", name: "全平台"})
+                // this.plats.unshift({id: "", name: "全平台"})
                 this.search.plat_id = this.plats[0].id
                 this.getData()
             })
