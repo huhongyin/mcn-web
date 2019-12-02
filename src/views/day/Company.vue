@@ -91,7 +91,7 @@ export default {
                 this.day_title = res.data.day_title
                 this.all_money_title = res.data.all_money_title
                 if(this.list.length > 0){
-                    this.tableHeight = '100%'
+                    this.tableHeight = '80%'
                     this.cardHeight = '120%'
                 }else{
                     this.cardHeight = 'unset'
