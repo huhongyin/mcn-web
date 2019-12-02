@@ -192,7 +192,7 @@ export default {
         },
         exportExcel () {
             const tHeader = ['序号', '主播昵称', '原始ID', '开播日期', '主播级别', '主播平台', this.day_title, '上月同期收益', '时长', this.month_title, '日均收益', this.all_money_title, '所属公司']
-            const filterVal = ["id", "nickname", "plat_actor_id", "start_time", "level", "plat.name", "day_money", "last_month_money", "time", "total_money", "day_avg", "all_money", "company.name"]
+            const filterVal = ["id", "nickname", "plat_actor_id", "start_time", "level", "plat_name", "day_money", "last_month_money", "time", "total_money", "day_avg", "all_money", "company_name"]
             const list = this.list
             const data = formatJson(filterVal, list)
             exportJsonToExcel({

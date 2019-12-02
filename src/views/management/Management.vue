@@ -2,11 +2,11 @@
     <el-card class="box-card">
         <div slot="header" class="clearfix">
             <el-row :gutter="10">
-                <el-col :md="4" :sm="4" :lg="4">
+                <el-col :md="4" :sm="3" :lg="3">
                     <el-input v-model="search.keyword" placeholder="输入关键字搜索"></el-input>
                 </el-col>
                 <el-col :md="3" :sm="3" :lg="3">
-                    <el-select style="width:100%;" v-model="search.company_id" filterable placeholder="筛选公司">
+                    <el-select style="width:100%;" v-model="search.company_id" filterable placeholder="筛选公司" @change="changeSearchCompany">
                         <el-option value="" label="全部"></el-option>
                         <el-option v-for="item in addDialog.companies" :key="item.id" :label="item.name" :value="item.id"></el-option>
                     </el-select>
@@ -36,7 +36,7 @@
                 <el-col :md="2" :sm="2" :lg="2">
                     <el-button type="primary" @click="getData">搜索</el-button>
                 </el-col>
-                <el-col :md="3" :sm="3" :lg="3">
+                <el-col :md="3" :sm="4" :lg="4">
                     <el-button icon="el-icon-download" @click="exportExcel">导出</el-button>
                     <el-button type="primary" @click="add(0)">新增</el-button>
                 </el-col>
@@ -297,6 +297,12 @@
                                 </el-col>
                             </el-form-item>
                             <el-form-item label="" prop="salary">
+                                <el-col :span="4">入会时间</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-date-picker type="date" style="width:100%;" v-model="addDialog.form.actor.join_date" placeholder="请选择入会时间" value-format="yyyy-MM-dd" format="yyyy-MM-dd"></el-date-picker>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="" prop="salary">
                                 <el-col :span="4">保底工资</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-input placeholder="请输入保底工资" v-model="addDialog.form.actor.salary"></el-input>
@@ -361,9 +367,9 @@
                                 </el-col>
                             </el-form-item>
                             <el-form-item label="" prop="actor.yunying_user_id">
-                                <el-col :span="4">运营</el-col>
+                                <el-col :span="4">运营人</el-col>
                                 <el-col :span="19" :offset="1">
-                                    <el-select v-model="addDialog.form.actor.yunying_user_id" style="width: 100%;" placeholder="请选择运营负责人">
+                                    <el-select filterable v-model="addDialog.form.actor.yunying_user_id" style="width: 100%;" placeholder="请选择运营负责人">
                                         <el-option v-for="(item,key) in addDialog.yunyings" :key="key" :label="item.name" :value="item.id"></el-option>
                                     </el-select>
                                 </el-col>
@@ -371,7 +377,7 @@
                             <el-form-item label="" prop="actor.sign_user_id">
                                 <el-col :span="4">签约人</el-col>
                                 <el-col :span="19" :offset="1">
-                                    <el-select v-model="addDialog.form.actor.sign_user_id" style="width: 100%;" placeholder="请选择签约人">
+                                    <el-select filterable v-model="addDialog.form.actor.sign_user_id" style="width: 100%;" placeholder="请选择签约人">
                                         <el-option v-for="(item,key) in addDialog.sign_users" :key="key" :label="item.rel_name" :value="item.id"></el-option>
                                     </el-select>
                                 </el-col>
@@ -539,6 +545,7 @@ export default {
                         address: '',
                         fenchengbi:"",
                         start_time: "",
+                        join_date: "",
                         salary: 0,
                     },
                     bank: {
@@ -719,17 +726,17 @@ export default {
     },
     methods:{
         getSignUsers(){
-            get(departmentApi.userListByType + '/2').then((res) => {
+            get(departmentApi.userListByType + '/2', this.search).then((res) => {
                 this.sign_users = res.data.list
                 this.sign_users.unshift({id: "", rel_name: "全部"})
-                this.search.sign_user_id = this.sign_users[0].rel_name
+                this.search.sign_user_id = this.sign_users[0].id
             })
         },
         getOPerateUsers(){
-            get(departmentApi.userListByType + '/1').then((res) => {
+            get(departmentApi.userListByType + '/1', this.search).then((res) => {
                 this.operate_users = res.data.list
                 this.operate_users.unshift({id: "", rel_name: "全部"})
-                this.search.operate_user_id = this.operate_users[0].rel_name
+                this.search.operate_user_id = this.operate_users[0].id
             })
         },
         toggleSelection(rows) {
@@ -814,6 +821,7 @@ export default {
                     data.actor.should_day = data.should_day
                     data.actor.salary = data.salary
                     data.actor.start_time = data.start_time
+                    data.actor.join_date = data.join_date
                     data.actor.fenchengbi = data.fenchengbi
                     this.addDialog.form.actor = data.actor
                     this.addDialog.form.sign.fuchijine = data.actor_plat_sign.support_money
@@ -832,10 +840,16 @@ export default {
                         this.addDialog.form.contract.contract_until = ((typeof(data.contract.contract_until) == 'undefined' || data.contract.contract_until == null || data.contract == null) ? '' : data.contract.contract_until)
                         this.addDialog.form.contract.contract_date = ((typeof(data.contract.contract_date) == 'undefined' || data.contract.contract_date == null || data.contract == null) ? '' : data.contract.contract_date)
                     }
-                })
-            }
 
-            this.addDialog.dialogVisible = true
+                    this.$nextTick(function(){
+                        this.getOperate()
+                        this.getSigns()
+                        this.addDialog.dialogVisible = true
+                    })
+                })
+            }else{
+                this.addDialog.dialogVisible = true
+            }
         },
         submitForm(formName){
             this.$refs[formName].validate((valid) => {
@@ -854,6 +868,10 @@ export default {
                 }
             });
         },
+        changeSearchCompany(){
+            this.getSignUsers()
+            this.getOPerateUsers()
+        },
         changeCompany(){
             this.addDialog.form.actor.yunying_user_id = ""
             this.addDialog.form.actor.sign_user_id = ""
@@ -870,6 +888,13 @@ export default {
         getCompany(){
             get(companyApi.list, { type: 'select' }).then((res) =>{
                 this.addDialog.companies = res.data.list
+                if(res.data.list.length == 1){
+                    this.changeCompany()
+                    this.search.company_id = res.data.list[0].id
+                    this.addDialog.form.company_id = res.data.list[0].id
+                    this.getSignUsers()
+                    this.getOPerateUsers()
+                }
             })
         },
         getLevel(){
@@ -890,14 +915,18 @@ export default {
             }
         },
         getOperate(){
-            get(departmentApi.userListByType + '/' + 1, { company_id: this.addDialog.form.actor.company_id }).then((res) => {
-                this.addDialog.yunyings = res.data.list
-            })
+            if(typeof this.addDialog.form.actor.company_id != "undefined"){
+                get(departmentApi.userListByType + '/' + 1, { company_id: this.addDialog.form.actor.company_id }).then((res) => {
+                    this.addDialog.yunyings = res.data.list
+                })
+            }
         },
         getSigns(){
-            get(departmentApi.userListByType + '/' + 2, { company_id: this.addDialog.form.actor.company_id }).then((res) => {
-                this.addDialog.sign_users = res.data.list
-            })
+            if(typeof this.addDialog.form.actor.company_id != "undefined"){
+                get(departmentApi.userListByType + '/' + 2, { company_id: this.addDialog.form.actor.company_id, type: "select", check: "sign" }).then((res) => {
+                    this.addDialog.sign_users = res.data.list
+                })
+            }
         },
         bankDetail(id){
             //银行信息

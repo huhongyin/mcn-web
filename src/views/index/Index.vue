@@ -39,11 +39,11 @@
               router
             >
             <!-- 签约统计 -->
-            <el-menu-item v-show="userInfo.department != null && (userInfo.department.type == 1 || userInfo.department.type == 4)" index="/" class="el-item e-menu-span" style="font-size:13px;"><img :src="sign_icon" width="20" style="margin-right:10px" height="20" alt />
+            <el-menu-item v-show="userInfo.department != null && (userInfo.department.type == 2 || userInfo.department.type == 4)" index="/" class="el-item e-menu-span" style="font-size:13px;"><img :src="sign_icon" width="20" style="margin-right:10px" height="20" alt />
                 签约统计
               </el-menu-item>
             <!-- 运营统计 -->
-            <el-menu-item v-show="userInfo.department != null && (userInfo.department.type == 2 || userInfo.department.type == 4)" index="/operate" class="el-item e-menu-span" style="font-size:13px;"><img :src="yunying_icon" width="20" style="margin-right:10px" height="20" alt />
+            <el-menu-item v-show="userInfo.department != null && (userInfo.department.type == 1 || userInfo.department.type == 4)" index="/operate" class="el-item e-menu-span" style="font-size:13px;"><img :src="yunying_icon" width="20" style="margin-right:10px" height="20" alt />
                 运营统计
               </el-menu-item>
               <!-- 财务结算 -->

@@ -19,9 +19,9 @@
         <div style="width:100%;height:90%;">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane :label="item" :name="'tab-' + item" v-for="(item,key) in tabs" :key="key" class="doubleThTable">
-                    <el-table :data="list" :header-cell-class-name="headerRowClass" :header-cell-style="setHeaderRowStyle" :header-row-style="headerRowStype">
+                    <el-table :data="list[item]['list']" :header-cell-class-name="headerRowClass" :header-cell-style="setHeaderRowStyle" :header-row-style="headerRowStype">
                         <el-table-column :label="item + '各公司数据'">
-                            <el-table-column>
+                            <el-table-column prop="title">
                                 <template slot="header">
                                     <span style="
                                         position: absolute;
@@ -45,14 +45,14 @@
                                 </template>
                             </el-table-column>
                             <el-table-column v-for="(plat,key) in plats" :key="key" :label="plat.name">
-                                <el-table-column label="昨日前台流水"></el-table-column>
-                                <el-table-column label="前台流水"></el-table-column>
-                                <el-table-column label="11月总流水"></el-table-column>
+                                <el-table-column label="昨日前台流水" :prop="'yestoday_money_' + plat.id"></el-table-column>
+                                <el-table-column label="前台流水" :prop="'total_money_' + plat.id"></el-table-column>
+                                <el-table-column :label="list[item]['day'] + '月总流水'" :prop="'month_money_' + plat.id"></el-table-column>
                             </el-table-column>
-                            <el-table-column label="当日前台流水"></el-table-column>
-                            <el-table-column label="昨日前台流水"></el-table-column>
-                            <el-table-column label="当月前台流水"></el-table-column>
-                            <el-table-column label="上月同期收益"></el-table-column>
+                            <el-table-column label="当日前台流水" prop="current_date_money"></el-table-column>
+                            <el-table-column label="昨日前台流水" prop="yestoday_date_total"></el-table-column>
+                            <el-table-column label="当月前台流水" prop="current_month_money"></el-table-column>
+                            <el-table-column label="上月同期收益" prop="last_date_month_money"></el-table-column>
                         </el-table-column>
                     </el-table>
                 </el-tab-pane>
@@ -65,6 +65,7 @@
 import { exportJsonToExcel, formatJson } from 'pl-export-excel'
 import { get } from '@/api/index.js';
 import platApi from '@/api/plats.js';
+import companyDataApi from '@/api/company_data.js';
 
 export default {
     data(){
@@ -72,6 +73,7 @@ export default {
             tableHeight: '200px',
             cardHeight: 'unset',
             activeName: "",
+            day: "",
             tabs: [],
             plats: [],
             list: [],
@@ -83,7 +85,7 @@ export default {
     created(){
         this.getPlat()
         this.search.date = [new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(), new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()];
-        this.initTabs()
+        // this.initTabs()
     },
     methods:{
         getPlat(){
@@ -103,10 +105,15 @@ export default {
             this.activeName = 'tab-' + this.tabs[0]
         },
         changeDate(){
-            this.initTabs()
+            this.tabs = []
+            this.getData()
         },
         getData(){
-
+            get(companyDataApi.companyDataList, this.search).then((res) => {
+                this.list = res.data.list
+                this.tabs = res.data.dates
+                this.activeName = 'tab-' + this.tabs[0]
+            })
         },
         exportExcel () {
             const tHeader = ['序号', '主播昵称', '原始ID', '开播日期', '主播级别', '主播平台', this.day_title, '上月同期收益', '时长', this.month_title, '日均收益', this.all_money_title, '所属公司']
