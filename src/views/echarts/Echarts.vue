@@ -54,8 +54,8 @@
 			</el-row>
 		</el-card>
 		
-		<el-row v-if="this.plats.length > 0" :gutter="20" type="flex" style="margin-top: 1rem;">
-			<Plat :ref="'child' + key" v-for="(item,key) in plats" :key="key" :item="item"></Plat>
+		<el-row v-if="this.plats.length > 0 && typeof this.search != 'undefined'" :gutter="20" type="flex" style="margin-top: 1rem;">
+			<Plat :ref="'child' + key" v-for="(item,key) in plats" :key="key" :item="item" :searchs="search"></Plat>
 		</el-row>
 		<!-- <el-row :gutter="20" type="flex">
 			<MarkLine echart-id="mark-line-total" text="过去30日总营收" subtext="" :data="select_date" :series="series" :SpanNum="24"></MarkLine>
@@ -297,7 +297,8 @@ export default {
 				getSignCal(){
 					this.plats.forEach((element, index) => {
 						let k = 'child' + index
-						this.$refs[k][0].callMethod(this.search.company) 
+						console.log(k)
+						this.$refs[k][0].callMethod(this.search.company, this.search) 
 					});
 					get(echartsApi.signCal, this.search).then((res) => {
 						this.total.total_money = res.data.list.total_money

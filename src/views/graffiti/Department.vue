@@ -72,13 +72,13 @@
                             <el-input v-model="addDialog.form.name" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="所属公司：" :label-width="addDialog.formLabelWidth">
-                            <el-cascader style="width:100%;" v-model="addDialog.form.company_id" :options="search.companies" :props="{ expandTrigger: 'hover', checkStrictly: 'true' }" @change="handleChange"></el-cascader>
+                            <el-cascader :collapse-tags="true" filterable style="width:100%;" v-model="addDialog.form.company_id" :options="search.companies" :props="{ expandTrigger: 'hover', checkStrictly: 'true' }" @change="handleChange"></el-cascader>
                             <!-- <el-select style="width:100%;" v-model="addDialog.form.company_id" @change="changeCompany">
                                 <el-option v-for="(item,key) in search.companies" :key="key" :label="item.name" :value="item.id"></el-option>
                             </el-select> -->
                         </el-form-item>
                         <el-form-item label="负责人：" :label-width="addDialog.formLabelWidth">
-                            <el-select style="width:100%;" v-model="addDialog.form.user_id">
+                            <el-select filterable style="width:100%;" v-model="addDialog.form.user_id">
                                 <el-option v-for="(item,key) in search.users" :key="key" :label="item.rel_name" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
@@ -234,7 +234,8 @@ export default {
             })
         },
         handleChange(value) {
-            console.log(value);
+            var companyId = value[0];
+            this.getUsers(companyId);
         }
     }
 }
@@ -253,4 +254,9 @@ export default {
     font-size: 14px;
     padding-right: 8px;
   }
+</style>
+<style>
+    .el-cascader-panel{
+        height: 520px;
+    }
 </style>

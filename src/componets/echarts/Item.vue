@@ -1,11 +1,11 @@
 <template>
-    <el-col class="" :span="6" v-show="showPlat">
+    <el-col class="" :span="6" v-show="showPlat" v-if="typeof platData.yestoday != 'undefined'">
         <el-card class="plat">
             <div class="plat-row">
                 <span class="name" v-text="platData.name"></span>
             </div>
             <div class="plat-row" v-if="platData.yestoday">
-                <span class="plat-row-title">昨日流水</span>
+                <span class="plat-row-title">流水</span>
                 <div class="inline">
                     <a class="plat-row-a" @click="yestodayMoney(platData)" href="javascript:void(0)"><span v-text="platData.yestoday.value" class="plat-row-detail"></span></a>
                     <span class="plat-row-unit">万</span>
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="plat-row">
-                <span class="plat-row-title">昨日有效主播数量</span>
+                <span class="plat-row-title">有效主播数量</span>
                 <div class="inline">
                     <a class="plat-row-a" @click="yestodayEffectiveActor(platData)" href="javascript:void(0)"><span v-text="platData.yestoday_validate_user_count.value" class="plat-row-detail"></span></a>
                     <span class="plat-row-unit">人</span>
@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="plat-row">
-                <span class="plat-row-title">昨日新晋主播数量</span>
+                <span class="plat-row-title">新晋主播数量</span>
                 <div class="inline">
                     <a class="plat-row-a" @click="yestodayNewActor(platData)" href="javascript:void(0)"><span v-text="platData.yestoday_new_user_count.value" class="plat-row-detail"></span></a>
                     <span class="plat-row-unit">人</span>
@@ -53,7 +53,7 @@
                 </div>
             </div>
             <div class="plat-row">
-                <span class="plat-row-title">昨日总时长</span>
+                <span class="plat-row-title">总时长</span>
                 <div class="inline">
                     <a class="plat-row-a" @click="yestodayOnLineActor(platData)" href="javascript:void(0)"><span v-text="platData.time.h" class="plat-row-detail"></span></a>
                     <span class="plat-row-unit">时</span>
@@ -79,7 +79,8 @@ import platsApi from '@/api/plats.js'
 import { get } from '@/api/index.js'
 export default {
     props: [
-        "item"
+        "item",
+        "searchs",
     ],
     data(){
         return {
@@ -99,11 +100,14 @@ export default {
 
     },
     created(){
+        if(typeof this.searchs != 'undefined'){
+            this.search = this.searchs
+        }
         this.getPlatDetail()
     },
     methods: {
-        callMethod(company) {
-            this.company = company
+        callMethod(company, searchData) {
+            this.search = searchData
             this.getPlatDetail()
         },
         getPlatDetail(){
@@ -114,6 +118,8 @@ export default {
         },
         yestodayMoney(item){
             //昨日流水记录
+            let startDate = this.search.date[0]
+            let endDate = this.search.date[1]
             let day1 = new Date();
             day1.setTime(day1.getTime()-24*60*60*1000);
             let yestodayDate = day1.getFullYear()+"-" + (day1.getMonth()+1) + "-" + day1.getDate();
@@ -122,6 +128,8 @@ export default {
                 query: {
                     title: item.name + '流水记录',
                     date: yestodayDate,
+                    startDate: startDate,
+                    endDate: endDate,
                     plat_id: this.item.id,
                 }
             })
@@ -129,6 +137,8 @@ export default {
         yestodayEffectiveActor(item){
             //昨日有效主播
             let day1 = new Date();
+            let startDate = this.search.date[0]
+            let endDate = this.search.date[1]
             day1.setTime(day1.getTime()-24*60*60*1000);
             let yestodayDate = day1.getFullYear()+"-" + (day1.getMonth()+1) + "-" + day1.getDate();
             this.$router.push({
@@ -136,6 +146,8 @@ export default {
                 query: {
                     title: item.name + '有效主播记录',
                     date: yestodayDate,
+                    startDate: startDate,
+                    endDate: endDate,
                     plat_id: this.item.id,
                 }
             })
@@ -143,6 +155,8 @@ export default {
         yestodayNewActor(item){
             //昨日新晋主播
             let day1 = new Date();
+            let startDate = this.search.date[0]
+            let endDate = this.search.date[1]
             day1.setTime(day1.getTime()-24*60*60*1000);
             let yestodayDate = day1.getFullYear()+"-" + (day1.getMonth()+1) + "-" + day1.getDate();
             this.$router.push({
@@ -150,6 +164,8 @@ export default {
                 query: {
                     title: item.name + '新晋主播记录',
                     date: yestodayDate,
+                    startDate: startDate,
+                    endDate: endDate,
                     plat_id: this.item.id,
                 }
             })
@@ -157,6 +173,8 @@ export default {
         yestodayOnLineActor(item){
             //昨日在线时长
             let day1 = new Date();
+            let startDate = this.search.date[0]
+            let endDate = this.search.date[1]
             day1.setTime(day1.getTime()-24*60*60*1000);
             let yestodayDate = day1.getFullYear()+"-" + (day1.getMonth()+1) + "-" + day1.getDate();
             this.$router.push({

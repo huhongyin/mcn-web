@@ -68,7 +68,7 @@ export default {
     created(){
         this.title = this.$route.query.title
         this.plat_id = this.$route.query.plat_id
-        this.search.date = [this.$route.query.date, this.$route.query.date]
+        this.search.date = [this.$route.query.startDate, this.$route.query.endDate]
         this.getData()
     }, 
     methods:{
