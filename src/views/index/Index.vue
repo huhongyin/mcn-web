@@ -106,6 +106,16 @@
                   <el-menu-item index="/users" class="el-item e-menu-span" style="font-size:13px;">用户管理</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
+              <!-- 个人设置 -->
+              <el-submenu index="/setting">
+                <template slot="title">
+                  <img :src="sys_icon" width="20" style="margin-right:10px" height="20" alt />
+                  <span class="e-menu-span router-link">设置</span>
+                </template>
+                <el-menu-item-group class="el-item">
+                  <el-menu-item index="/personalSetting" class="el-item e-menu-span" style="font-size:13px;">个人设置</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
             </el-menu>
           </el-aside>
         </div>

@@ -1,6 +1,6 @@
 import Index from '../views/index/Index.vue'
 import Echarts from './echartss'
-import Equipment from './equipment'
+import Setting from './setting'
 import Management from './management'
 import Operate from './operate'
 import Graffiti from './graffiti'
@@ -21,7 +21,7 @@ export default
     component: Index,
     children:[
       ...Echarts,
-      ...Equipment,
+      ...Setting,
       ...Management,
       ...Graffiti,
       ...Old,
