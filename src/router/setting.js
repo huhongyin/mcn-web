@@ -1,4 +1,5 @@
 import PersonalSetting from '../views/setting/PersonalSetting.vue'
+import AutoSign from '../views/setting/auto_sign.vue'
 
 export default
 [
@@ -8,4 +9,10 @@ export default
     name: 'personalSetting',
     component: PersonalSetting
   },
+  //签约录入(兼容手机端)
+  {
+    path: "/auto/sign",
+    name: "/autosign",
+    component: AutoSign,
+  }
 ]

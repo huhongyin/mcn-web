@@ -30,7 +30,7 @@
         </el-row>
       </el-header>
       <el-container class="container_box">
-        <div style="width:10%;background:#f5f5f5;">
+        <div style="width:10%;background:#f5f5f5;" class="nav-list-menu">
           <el-aside width="100%" class="nav_list">
             <el-menu
               :default-active="this.$route.path"
@@ -219,6 +219,11 @@ export default {
     .el-menu-vertical-demo > .el-submenu > .el-menu--inline > .el-menu-item-group > ul > li:hover{ background: #ccc };
 </style>
 <style lang='less' scoped>
+@media screen and (max-width: 415px) {
+  .nav-list-menu {
+    display: none;
+  }
+}
 .el-table__body-wrapper > table,.el-table__header-wrapper > table{
   width: 100%;
 } 

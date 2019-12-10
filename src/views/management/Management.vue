@@ -57,7 +57,9 @@
                 <el-table-column label="运营人" prop="operate_user.rel_name"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="add(scope.row.id)" type="text" size="small" style="margin-left:10px;display:block;">编辑</el-button>
+                        <template v-if="userInfo.department.type != 2">
+                            <el-button @click="add(scope.row.id)" type="text" size="small" style="margin-left:10px;display:block;">编辑</el-button>
+                        </template>
                         <el-button @click="addContractDetail(scope.row.id)" type="text" size="small" style="margin-left:10px;display:block;">设置应有时长</el-button>
                         <!-- <el-button @click="signDetail(scope.row.id)" type="text" size="small" style="display:block;">流水信息</el-button> -->
                         <el-button @click="userDetail(scope.row.id)" type="text" size="small" style="display:block;">艺人信息</el-button>
@@ -499,6 +501,7 @@ export default {
     },
     data(){
         return {
+            userInfo: JSON.parse(localStorage.getItem("user")),
             sign_users: [],
             operate_users: [],
             search: {

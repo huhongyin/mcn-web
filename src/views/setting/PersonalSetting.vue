@@ -1,55 +1,67 @@
 <template>
-<div>
     <el-card class="box-card">
         <div class="clearfix" slot="header">个人设置</div>
+        <el-form ref="form" :model="form" label-width="80px">
+          <el-form-item label="真实姓名">
+            <el-input v-model="form.rel_name"></el-input>
+          </el-form-item>
+          <el-form-item label="登录账号">
+            <el-input v-model="form.name"></el-input>
+          </el-form-item>
+          <el-form-item label="密码">
+            <el-input v-model="form.password" type="password"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码">
+            <el-input v-model="form.c_password" type="password"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">保存</el-button>
+            <el-button>取消</el-button>
+          </el-form-item>
+        </el-form>
     </el-card>
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="用户名">
-        <el-input v-model="form.name"></el-input>
-      </el-form-item>
-      <el-form-item label="账号">
-        <el-select v-model="form.region" placeholder="请选择活动区域">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="密码">
-        <el-col :span="11">
-          <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-        </el-col>
-        <el-col class="line" :span="2">-</el-col>
-        <el-col :span="11">
-          <el-time-picker placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
-        </el-col>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
-        <el-button>取消</el-button>
-      </el-form-item>
-    </el-form>
-</div>
 </template>
 
 <script>
+import {get, post} from '@/api/index.js';
+import settingApi from '@/api/setting.js';
+
 export default {
     data() {
       return {
         form: {
+          id: '',
           name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+          rel_name: '',
+          password: '',
+          c_password: '',
         }
       }
     },
+    created(){
+      this.getInfo()
+    },
     methods: {
-      onSubmit() {
-        console.log('submit!');
-      }
+      getInfo(){
+        get(settingApi.userInfo).then((res) => {
+          this.form = res.data.info
+        })
+      },
+      onSubmit(){
+        if(this.form.password != '' && this.form.c_password != '' && this.form.password != null && this.form.c_password != null && typeof this.form.password != 'undefined' && typeof this.form.c_password != 'undefined'){
+          if(this.form.password != this.form.c_password){
+            this.$message.error("两次输入的密码不一致");
+            return false;
+          }
+          if(this.form.password.length < 6 || this.form.password.length > 10){
+            this.$message.error("密码长度是6-10位之间");
+          }
+        }
+
+        post(settingApi.updateUser, this.form).then((res) => {
+          this.$message.success(res.msg)
+        })
+      },
     }
 }
 </script>
