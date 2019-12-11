@@ -769,6 +769,7 @@ export default {
                     plat_id: this.search.plat_id,
                     company_id: this.search.company_id,
                 }).then((res) => {
+                    
                 this.list = res.data.list.data
                 this.totalPage = res.data.list.last_page
             })

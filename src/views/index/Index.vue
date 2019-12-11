@@ -103,6 +103,7 @@
                 <el-menu-item-group class="el-item">
                   <el-menu-item index="/company" class="el-item e-menu-span" style="font-size:13px;">公司管理</el-menu-item>
                   <el-menu-item index="/department" class="el-item e-menu-span" style="font-size:13px;">部门管理</el-menu-item>
+                  <el-menu-item index="/guild" class="el-item e-menu-span" style="font-size:13px;">公会管理</el-menu-item>
                   <el-menu-item index="/users" class="el-item e-menu-span" style="font-size:13px;">用户管理</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>

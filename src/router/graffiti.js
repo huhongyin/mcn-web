@@ -2,6 +2,7 @@ import Department from '../views/graffiti/Department.vue'
 import User from '../views/graffiti/User.vue'
 import Group from '@/views/graffiti/Group.vue'
 import Company from '@/views/graffiti/Company.vue'
+import Guild from '@/views/graffiti/Guild.vue'
 
 export default
 [
@@ -16,6 +17,11 @@ export default
     path: '/company',
     name: 'company',
     component: Company,
+  },
+  {
+    path: "/guild",
+    name: "guild",
+    component: Guild,
   },
   //用户管理
   {

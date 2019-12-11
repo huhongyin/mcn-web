@@ -1,3 +1,4 @@
 export default{
-    list: "/guild/list"
+    list: "/guild/list",
+    add: "/guild/add",
 }
