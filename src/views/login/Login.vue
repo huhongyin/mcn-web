@@ -14,7 +14,7 @@
             ref="loginForm"
             class="demo-ruleForm"
           >
-          <Icon type="user" />
+          <i type="user" />
             <!-- 账号 -->
             <el-form-item prop="username">
               <el-input

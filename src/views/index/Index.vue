@@ -155,7 +155,13 @@ export default {
     };
   },
   created(){
-    if(this.userInfo.department == null){
+    if(this.userInfo == null){
+      this.$router.push({
+					path: '/login',
+        })
+        return false
+    }
+    if(this.userInfo == null || this.userInfo.department == null){
       this.$router.push({
         path: "/management",
       })
@@ -163,11 +169,6 @@ export default {
     let is_read = localStorage.getItem('is_read')
     if(typeof(is_read) != 'undefined' && is_read == 1){
       this.is_read = true
-    }
-    if(this.userInfo == null){
-      this.$router.push({
-					path: '/login',
-				})
     }
   },
   methods: {

@@ -1,4 +1,6 @@
 export default{
     list: "/guild/list",
-    add: "/guild/add",
+    listByPage: "/guild/list/page",
+    add: "/guild/add/",
+    delete: "/guild/delete/"
 }
