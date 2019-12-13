@@ -26,7 +26,7 @@
         </el-row>
         <div style="width:100%;height:90%;margin-top:1rem;">
             <div :style="'height:' + tableHeight + ';width: 100%'">
-                <pl-table :datas="list" :height-change="true" :span-method="objectSpanMethod" :pagination-show="false" border id="tableData" v-loading="loading" ref="plTable" header-drag-style use-virtual :row-height="50">
+                <!-- <pl-table :datas="list" :height-change="true" :span-method="objectSpanMethod" :pagination-show="false" border id="tableData" v-loading="loading" ref="plTable" header-drag-style use-virtual :row-height="50">
                     <pl-table-column label="序号" prop="id"></pl-table-column>
                     <pl-table-column label="主播昵称" prop="nickname"></pl-table-column>
                     <pl-table-column label="原始ID" prop="plat_actor_id"></pl-table-column>
@@ -40,6 +40,25 @@
                     <pl-table-column label="日均收益" prop="day_avg"></pl-table-column>
                     <pl-table-column :label="all_money_title" prop="all_money"></pl-table-column>
                     <pl-table-column label="所属公司" prop="company.name"></pl-table-column>
+                </pl-table> -->
+                <pl-table :datas="list" :height-change="true" :span-method="objectSpanMethod" :pagination-show="false" border id="tableData" v-loading="loading" ref="plTable" header-drag-style use-virtual :row-height="50">
+                    <pl-table-column label="序号" prop="t_index"></pl-table-column>
+                    <pl-table-column label="主播昵称" prop="nickname">
+                        <template slot-scope="scope">
+                            <div v-html="scope.row.nickname"></div>
+                        </template>
+                    </pl-table-column>
+                    <pl-table-column label="原始ID" prop="plat_actor_id"></pl-table-column>
+                    <pl-table-column label="开播日期" prop="start_time"></pl-table-column>
+                    <pl-table-column label="主播级别" prop="level_name" width="100px;"></pl-table-column>
+                    <pl-table-column label="主播平台" prop="plat_name" width="120px;"></pl-table-column>
+                    <pl-table-column :label="day_title" prop="total_money" width="120px;"></pl-table-column>
+                    <pl-table-column label="上月同期收益" prop="total_last_money"></pl-table-column>
+                    <pl-table-column label="时长" prop="total_time" width="100px;"></pl-table-column>
+                    <pl-table-column :label="month_title" prop="current_month_money"></pl-table-column>
+                    <pl-table-column label="日均收益" prop="avg_date"></pl-table-column>
+                    <pl-table-column :label="all_money_title" prop="leiji"></pl-table-column>
+                    <pl-table-column label="所属公司" prop="company_name"></pl-table-column>
                 </pl-table>
             </div>
         </div>
@@ -102,7 +121,7 @@ export default {
         getPlat(){
             get(platApi.list).then((res) => {
                 this.plats = res.data.list
-                // this.plats.unshift({id: "", name: "全平台"})
+                this.plats.unshift({id: "", name: "全平台"})
                 this.search.plat_id = this.plats[0].id
                 this.getData()
             })
@@ -192,7 +211,7 @@ export default {
         },
         exportExcel () {
             const tHeader = ['序号', '主播昵称', '原始ID', '开播日期', '主播级别', '主播平台', this.day_title, '上月同期收益', '时长', this.month_title, '日均收益', this.all_money_title, '所属公司']
-            const filterVal = ["id", "nickname", "plat_actor_id", "start_time", "level", "plat_name", "day_money", "last_month_money", "time", "total_money", "day_avg", "all_money", "company_name"]
+            const filterVal = ["id", "nickname", "plat_actor_id", "start_time", "level_name", "plat_name", "total_money", "total_last_money", "total_time", "current_month_money", "avg_date", "leiji", "company_name"]
             const list = this.list
             const data = formatJson(filterVal, list)
             exportJsonToExcel({
