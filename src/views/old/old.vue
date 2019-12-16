@@ -6,7 +6,12 @@
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane :data-id="item.id" v-for="(item,key) in plats" :key="key" :label="item.name" :name="'plat_' + item.id">
                 <el-row :gutter="10">
-                        <el-col :xl="4" :lg="5" :md="4" :sm="2">
+                        <el-col :xl="2" :lg="3" :md="5" :sm="4">
+                            <el-select v-model="form.company_id">
+                                <el-option v-for="(company,key) in companies" :key="key" :value="company.id" :label="company.name"></el-option>
+                            </el-select>
+                        </el-col>
+                        <el-col :xl="4" :lg="4" :md="4" :sm="2">
                             <el-input v-model="form.keyword" placeholder="输入关键词搜索"></el-input>
                         </el-col>
                         <el-col :xl="4" :lg="5" :md="8" :sm="10">
@@ -125,6 +130,7 @@
 import { get, post} from '@/api/index.js';
 import platApi from '@/api/plats.js';
 import oldApi from '@/api/old.js';
+import companyApi from '@/api/company';
 
 export default {
     created(){
@@ -132,6 +138,7 @@ export default {
         day1.setTime(day1.getTime()-24*60*60*1000);
         var s1 = day1.getFullYear()+"-" + (day1.getMonth()+1) + "-" + day1.getDate();
         this.form.date = s1
+        this.getCompanies()
         this.getPlats()
         this.getData()
     },
@@ -142,8 +149,10 @@ export default {
                 plat_id: '',
                 date: '',
                 keyword: '',
+                company_id: "",
                 page: 1,
             },
+            companies: [],
             activeName: '',
             plats: [],
             tableData: [],
@@ -156,6 +165,14 @@ export default {
             this.form.plat_id = platId
             this.form.page = 1
             this.getData()
+        },
+        getCompanies(){
+            get(companyApi.list, { type: "select" }).then((res) => {
+                this.companies = res.data.list
+                if(this.companies.length > 1){
+                    this.companies.unshift({ id: "", name: "全部" })
+                }
+            })
         },
         getPlats(){
             get(platApi.list).then((res) => {

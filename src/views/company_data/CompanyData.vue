@@ -12,14 +12,14 @@
                     <el-button type="primary" @click="getData">搜索</el-button>
                 </el-col>
                 <el-col :span="2" :offset="11">
-                    <el-button @click="exportExcel" style="float:right;">导出</el-button>
+                    <!-- <el-button @click="exportExcel" style="float:right;">导出</el-button> -->
                 </el-col>
             </el-row>
         </div>
         <div style="width:100%;height:90%;">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane :label="item" :name="'tab-' + item" v-for="(item,key) in tabs" :key="key" class="doubleThTable">
-                    <el-table :data="list[item]['list']" :header-cell-class-name="headerRowClass" :header-cell-style="setHeaderRowStyle" :header-row-style="headerRowStype">
+                    <el-table show-summary v-loading="loading" :data="list[item]['list']" :header-cell-class-name="headerRowClass" :header-cell-style="setHeaderRowStyle" :header-row-style="headerRowStype">
                         <el-table-column :label="item + '各公司数据'">
                             <el-table-column prop="title">
                                 <template slot="header">
@@ -74,6 +74,7 @@ export default {
             cardHeight: 'unset',
             activeName: "",
             day: "",
+            loading: false,
             tabs: [],
             plats: [],
             list: [],
@@ -105,14 +106,16 @@ export default {
             this.activeName = 'tab-' + this.tabs[0]
         },
         changeDate(){
-            this.tabs = []
+            // this.tabs = []
             this.getData()
         },
         getData(){
+            this.loading = true
             get(companyDataApi.companyDataList, this.search).then((res) => {
                 this.list = res.data.list
                 this.tabs = res.data.dates
                 this.activeName = 'tab-' + this.tabs[0]
+                this.loading = false
             })
         },
         exportExcel () {

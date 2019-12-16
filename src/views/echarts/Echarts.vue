@@ -243,6 +243,9 @@ export default {
 			getCompanies(){
 				get(companyApi.list, { type: 'select' }).then((res) => {
 					this.companyOptions = res.data.list
+					if(this.companyOptions.length > 1){
+						this.companyOptions.unshift({ id: "", name: "全部" })
+					}
 					this.search.company = res.data.list[0].id
 					this.getSignCal() //获取统计总数 总流水  有效主播数量...
 				})
