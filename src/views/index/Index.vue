@@ -75,7 +75,8 @@
                   <span class="e-menu-span router-link">榜单查看</span>
                 </template>
                 <el-menu-item-group class="el-item">
-                  <el-menu-item index="/day/sign" class="el-item e-menu-span" style="font-size:13px;">签约数据排名</el-menu-item>
+                  <el-menu-item index="/day/sign?type=2" class="el-item e-menu-span" style="font-size:13px;">签约数据排名</el-menu-item>
+                  <el-menu-item index="/day/sign?type=1" class="el-item e-menu-span" style="font-size:13px;">运营数据排名</el-menu-item>
                   <el-menu-item index="/day/team" class="el-item e-menu-span" style="font-size:13px;" v-if="userInfo.is_operate_admin">团队日榜</el-menu-item>
                   <el-menu-item index="/day/company" class="el-item e-menu-span" style="font-size:13px;">公司榜</el-menu-item>
                   <el-menu-item index="/company_data" class="el-item e-menu-span" style="font-size:13px;">公司数据</el-menu-item>

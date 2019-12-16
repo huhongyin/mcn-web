@@ -1,34 +1,30 @@
 <template>
     <el-card class="box-card" :style="'height:'+ cardHeight +';'">
         <div slot="header" class="clearfix">
-            <el-row :gutter="10">
-                <el-col :span="2" style="line-height:40px;">
-                    签约数据排名
-                </el-col>
-                <el-col :span="4" style="line-height:40px;">
-                    <el-select v-model="search.company_id">
-                        <el-option v-for="(item,key) in companies" :key="key" :label="item.name" :value="item.id"></el-option>
-                    </el-select>
-                </el-col>
-                <el-col :span="4">
-                    <el-date-picker type="month" value-format="yyyy-MM" format="yyyy-MM" v-model="search.date" placeholder="选择月份" style="max-width:100%;"></el-date-picker>
-                </el-col>
-                <el-col :span="3">
-                    <el-button type="primary" @click="getData">搜索</el-button>
-                </el-col>
-                <el-col :span="2" :offset="9">
-                    <el-button @click="exportExcel" style="float:right;">导出</el-button>
-                </el-col>
-            </el-row>
+            <span>{{ title }}</span>
+            <el-button @click="exportExcel" style="float:right;padding: 3px 0;" type="text">导出</el-button>
         </div>
         <div style="width:100%;height:90%;">
             <div :style="'height:' + tableHeight + ';width: 100%'">
+                <el-row :gutter="10" style="margin-bottom:1rem;">
+                    <el-col :span="2" style="line-height:40px;">
+                        <el-select v-model="search.company_id">
+                            <el-option v-for="(item,key) in companies" :key="key" :label="item.name" :value="item.id"></el-option>
+                        </el-select>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-date-picker type="daterange" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="search.date" start-placeholde="开始日期" end-placeholde="结束日期" style="max-width:100%;"></el-date-picker>
+                    </el-col>
+                    <el-col :span="2">
+                        <el-button type="primary" @click="getData">搜索</el-button>
+                    </el-col>
+                </el-row>
                 <pl-table :datas="list" :height-change="true" :span-method="objectSpanMethod" :pagination-show="false" border id="out-table" v-loading="loading" ref="plTable" header-drag-style use-virtual :row-height="50">
                     <pl-table-column label="签约人" prop="user_name"></pl-table-column>
                     <pl-table-column label="前台总流水" prop="total_money"></pl-table-column>
                     <pl-table-column label="直播总有效时长" prop="total_time"></pl-table-column>
                     <pl-table-column label="签约数量" prop="sign_count"></pl-table-column>
-                    <pl-table-column label="未播主播数量" prop="not_live" width="100px;"></pl-table-column>
+                    <!-- <pl-table-column label="未播主播数量" prop="not_live" width="100px;"></pl-table-column> -->
                     <pl-table-column label="公司" prop="company_name" width="120px;"></pl-table-column>
                 </pl-table>
             </div>
@@ -47,6 +43,7 @@ import companyApi from '@/api/company.js';
 export default {
     data(){
         return {
+            title: "",
             tableHeight: '200px',
             cardHeight: 'unset',
             all_money_title: '',
@@ -56,18 +53,39 @@ export default {
             companies: [],
             count: 0,
             search: {
-                date: '',
+                date: [],
                 plat_id: '',
                 page: 1,
+                type: "",
             },
             loading: false,
         }
     },
+    watch: {
+        $route(){
+            this.init()
+        },
+    },
     created(){
-        this.getCompanies()
-        this.search.date = new Date().getFullYear() + '-' + (new Date().getMonth() + 1)
+        this.init()
     },
     methods:{
+        init(){
+            this.search.type = this.$route.query.type
+            switch(this.search.type){
+                case '1':
+                        this.title = "运营数据排名"
+                    break;
+                case '2':
+                        this.title = "签约数据排名"
+                    break;
+            }
+            this.search.date = [
+                new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + (new Date().getDay()),
+                new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + (new Date().getDay())
+            ]
+            this.getCompanies()
+        },
         getData(){
             this.loading = true
             get(teamApi.signList, this.search).then((res) => {
@@ -85,9 +103,10 @@ export default {
         getCompanies(){
             get(companyApi.list, { type: 'select' }).then((res) => {
                 this.companies = res.data.list
-                if(this.companies.length === 1){
-                    this.search.company_id = this.companies[0].id
+                if(this.companies.length > 1){
+                    this.companies.unshift({ id: "", name: "全部" })
                 }
+                this.search.company_id = this.companies[0].id
                 this.getData()
             })
         },
