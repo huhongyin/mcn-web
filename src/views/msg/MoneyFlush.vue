@@ -16,7 +16,7 @@
                     </el-select>
                 </el-col>
             </el-row>
-            <el-table :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
+            <el-table v-loading="loading" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
                 <el-table-column label="主播昵称" prop="nickname"></el-table-column>
                 <el-table-column label="流水" prop="total_money"></el-table-column>
                 <el-table-column label="平台" prop="plat_name"></el-table-column>
@@ -43,6 +43,7 @@ export default {
                 company_id: "",
                 plat_id: "",
             },
+            loading: false,
             pageSize: 0,
             total: 0,
             list: [],
@@ -55,6 +56,7 @@ export default {
     },
     methods: {
         init(){
+            this.loading = true
             this.title = this.$route.query.title
             this.search.type = this.$route.query.type
             this.search.money = this.$route.query.money
@@ -81,6 +83,7 @@ export default {
                 this.list = res.data.list.list.data
                 this.pageSize = res.data.list.list.per_page
                 this.total = res.data.list.list.total
+                this.loading = false
             })
         },
         currentChange(page){

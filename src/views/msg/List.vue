@@ -4,7 +4,7 @@
         <span>消息列表</span>
       </div>
       <div>
-        <el-table :data="gridData" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
+        <el-table v-loading="loading" :data="gridData" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}">
             <el-table-column property="title" label="统计标题"></el-table-column>
             <el-table-column property="count" label="统计结果"></el-table-column>
             <el-table-column label="操作">
@@ -24,6 +24,7 @@ export default {
     data(){
         return {
             gridData: [],
+            loading: false,
         }
     },
     created(){
@@ -31,8 +32,10 @@ export default {
     },
     methods:{
       getData(){
+        this.loading = true
         get(msgApi.list).then((res) => {
           this.gridData = res.data.list
+          this.loading = false
           localStorage.setItem("is_read", 1)
         })
       },
