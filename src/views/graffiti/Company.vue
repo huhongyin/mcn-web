@@ -64,7 +64,6 @@
 </template>
 
 <script>
-import { mkdir } from 'fs';
 import { get, post} from '@/api/index.js';
 import companyApi from '@/api/company.js';
 import departmentApi from '@/api/department.js';
@@ -174,8 +173,8 @@ export default {
                         get(departmentApi.users + '/' + tree.id, params).then((res) => {
                             var data = []
                             res.data.list.map((item) => {
-                                var item = { id: item.id + '_user', data_type: 'user', name: item.rel_name, type: 4, has_children: false }
-                                data.push(item)
+                                let items = { id: item.id + '_user', data_type: 'user', name: item.rel_name, type: 4, has_children: false }
+                                data.push(items)
                             })
 
                             resolve(data)

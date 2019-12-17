@@ -234,19 +234,19 @@ export default {
                 if(this.form.actor_plat.plat_id.includes(plat.id)){
                     //显示
                     if(plat.id == 1){
-                        var index2 = '1_douyin_fencheng'
+                        let index2 = '1_douyin_fencheng'
                         this.$refs[index2].$el.style.display = 'block'
                     }
-                    var index = plat.id + '_id'
+                    let index = plat.id + '_id'
                     this.$refs[index][0].$el.style.display = 'block'
                 }else{
                     //隐藏
                     if(plat.id == 1){
-                        var index2 = '1_douyin_fencheng'
-                        this.$refs[index2].$el.style.display = 'none'
+                        let index3 = '1_douyin_fencheng'
+                        this.$refs[index3].$el.style.display = 'none'
                     }
-                    var index = plat.id + '_id'
-                    this.$refs[index][0].$el.style.display = 'none'
+                    let index4 = plat.id + '_id'
+                    this.$refs[index4][0].$el.style.display = 'none'
                 }
             })
         },

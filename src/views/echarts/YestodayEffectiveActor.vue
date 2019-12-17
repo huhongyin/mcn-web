@@ -20,10 +20,13 @@
 </template>
 
 <script>
-import { fPost, get} from '@/api/index.js';
+import { get } from '@/api/index.js';
 import platApi from '@/api/plats.js';
 export default {
     created(){
+        this.title = this.$route.query.title
+        this.plat_id = this.$route.query.plat_id
+        this.search.date = [this.$route.query.startDate, this.$route.query.endDate]
         this.getData()
     },
     data(){
@@ -64,12 +67,6 @@ export default {
             list: [],
         }
     },
-    created(){
-        this.title = this.$route.query.title
-        this.plat_id = this.$route.query.plat_id
-        this.search.date = [this.$route.query.startDate, this.$route.query.endDate]
-        this.getData()
-    }, 
     methods:{
         handleCurrentChange(val){
             this.search.page = val

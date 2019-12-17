@@ -275,13 +275,13 @@ export default {
             })
         },
          beforeAvatarUpload(file) {
-         	return true
-            const isJPG = file.type === 'text/csv' || file.type === 'application/wps-office.xlsx';
+            // const isJPG = file.type === 'text/csv' || file.type === 'application/wps-office.xlsx';
 
-            if (!isJPG) {
-                this.$message.error('请上传csv或者xlsx文件');
-            }
-            return isJPG;
+            // if (!isJPG) {
+            //     this.$message.error('请上传csv或者xlsx文件');
+            // }
+            // return isJPG;
+            return true;
         },
         handleChange(file, fileList){
             if(typeof(file.response) != 'undefined'){

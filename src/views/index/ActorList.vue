@@ -19,10 +19,6 @@
 </template>
 
 <script>
-import { fPost, get} from '@/api/index.js';
-import userApi from '@/api/user.js';
-import FileSaver from 'file-saver';
-import XLSX from 'xlsx';
 export default {
     created(){
         this.getData()

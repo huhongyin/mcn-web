@@ -36,8 +36,6 @@
 
 <script>
 import { get} from '@/api/index.js';
-import echartApi from '@/api/echarts.js';
-import platsApi from '@/api/plats.js';
 import operateApi from '@/api/operate.js';
 
 export default {

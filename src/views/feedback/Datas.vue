@@ -65,7 +65,6 @@
 </template>
 
 <script>
-import { mkdir } from 'fs';
 import { fPost, get, post} from '@/api/index.js';
 import helpApi from '@/api/help.js';
 export default {

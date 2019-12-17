@@ -121,11 +121,8 @@
 </template>
 
 <script>
-import { mkdir } from 'fs';
-import { fPost, get, post} from '@/api/index.js';
+import { fPost } from '@/api/index.js';
 import adminApi from '@/api/admin.js';
-import roleApi from '@/api/role.js';
-import { constants } from 'crypto';
 export default {
     created(){
         this.getRole()
@@ -255,6 +252,9 @@ export default {
                 formLabelWidth: '130px',
             },
             showDetailDialog: {
+                form: {
+                    id: "",
+                },
                 centerDialogVisible: false,
             },
             size : 10,
@@ -344,6 +344,7 @@ export default {
             // })
         },
         userDetail(id){
+            this.showDetailDialog.form.id = id
             this.showDetailDialog.centerDialogVisible = true
             // var params = { id: id }
             // var that = this

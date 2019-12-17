@@ -28,12 +28,10 @@
 </template>
 
 <script>
-import { fPost, get} from '@/api/index.js';
-import userApi from '@/api/user.js';
-import FileSaver from 'file-saver';
-import XLSX from 'xlsx';
 export default {
     created(){
+        this.search.date = [this.start_date, this.end_date]
+        this.title = this.name
         this.getData()
     },
     props:[
@@ -105,12 +103,6 @@ export default {
             ],
         }
     },
-    created(){
-        // this.start_date = this.$route.query.start_date
-        // this.end_date = this.$route.query.end_date
-        this.search.date = [this.start_date, this.end_date]
-        this.title = this.name
-    }, 
     methods:{
     
         handleCurrentChange(val) {

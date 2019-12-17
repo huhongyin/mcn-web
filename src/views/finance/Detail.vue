@@ -25,7 +25,6 @@
 <script>
 
 import Total from '@/componets/finance/Total.vue'
-import ActorDayMoney from '@/componets/echarts/ActorDayMoney.vue'
 import MaoLiRun from '@/views/finance/Maolirun.vue'
 import FuChiJine from '@/views/finance/Fuchijine.vue'
 import YiFuChiJine from '@/views/finance/Yifuchijine.vue'
@@ -33,7 +32,7 @@ import ShouldPay from '@/views/finance/ShouldPay.vue'
 import TableItem from '@/views/finance/TableItem.vue'
 
 export default {
-  components:{ Total, ActorDayMoney, TableItem},
+  components:{ Total, TableItem},
     data(){
       return {
 				showMaoLiRun: false,

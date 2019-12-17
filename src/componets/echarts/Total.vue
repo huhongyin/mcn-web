@@ -9,9 +9,8 @@
 <script>
 //分渠道
 import TotalMarkLine from '@/componets/echarts/TotalMarkLine.vue'
-import SignItem from '@/componets/echarts/Sign.vue'
 export default {
-    components: {TotalMarkLine, SignItem},
+    components: {TotalMarkLine},
     props: [
         "item",
     ],

@@ -100,7 +100,6 @@
 <script>
 import { get, post} from '@/api/index.js';
 import departmentApi from '@/api/department.js';
-import companyApi from '@/api/company.js';
 import userApi from '@/api/user.js';
 export default {
     created(){

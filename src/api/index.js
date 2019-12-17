@@ -141,7 +141,7 @@ axios.interceptors.response.use(
           forbidClick: true
         });
       }
-  	} 
+  	}
   );
 
 // 封装get方法 和 post方法

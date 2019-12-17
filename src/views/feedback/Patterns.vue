@@ -59,8 +59,7 @@
 </template>
 
 <script>
-import { mkdir } from 'fs';
-import { get, post} from '@/api/index.js';
+import { post } from '@/api/index.js';
 import userApi from '@/api/user.js';
 export default {
     created(){

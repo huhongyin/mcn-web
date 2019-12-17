@@ -62,11 +62,9 @@
 </template>
 
 <script>
-import { mkdir } from 'fs';
 import { fPost, get, post} from '@/api/index.js';
 import roleApi from '@/api/role.js';
 import ruleApi from '@/api/rule.js';
-import { instanceOf } from 'prop-types';
 export default {
     created(){
         this.getRules()
@@ -164,7 +162,6 @@ export default {
             //     })
         },
         ruleDetail(id){
-            let that = this
             var params = { roleId : id }
             fPost(roleApi.detail, params).then((res) => {
                 this.detail.role_detail = res.data
@@ -173,7 +170,6 @@ export default {
         },
         add(id){
             this.addUserDialog.addUserDialogVisible = true
-            return false
             this.retRole()
             // this.getRules()
             if(id != 0){
@@ -181,6 +177,7 @@ export default {
                 let that = this
                 this.addUserDialog.form.roleId = id
                 fPost(roleApi.roleDetail, { roleId : id }).then((res) => {
+                    let roleName = ''
                     that.addUserDialog.form.roleName = roleName
                     var ruleIds = res.data
                     that.ruleList.map((item) => {

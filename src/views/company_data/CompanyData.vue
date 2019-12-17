@@ -19,7 +19,7 @@
         <div style="width:100%;height:90%;">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane :label="item" :name="'tab-' + item" v-for="(item,key) in tabs" :key="key" class="doubleThTable">
-                    <el-table show-summary v-loading="loading" :data="list[item]['list']" :header-cell-class-name="headerRowClass" :header-cell-style="setHeaderRowStyle" :header-row-style="headerRowStype">
+                    <el-table v-loading="loading" :data="list[item]['list']" :header-cell-class-name="headerRowClass" :header-cell-style="setHeaderRowStyle" :header-row-style="headerRowStype">
                         <el-table-column :label="item + '各公司数据'">
                             <el-table-column prop="title">
                                 <template slot="header">
