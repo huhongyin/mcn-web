@@ -12,15 +12,15 @@
                     <el-button type="primary" @click="getData">搜索</el-button>
                 </el-col>
                 <el-col :span="2" :offset="11">
-                    <!-- <el-button @click="exportExcel" style="float:right;">导出</el-button> -->
+                    <el-button @click="exportExcel2" style="float:right;">导出</el-button>
                 </el-col>
             </el-row>
         </div>
         <div style="width:100%;height:90%;">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane :label="item" :name="'tab-' + item" v-for="(item,key) in tabs" :key="key" class="doubleThTable">
-                    <el-table v-loading="loading" :data="list[item]['list']" :header-cell-class-name="headerRowClass" :header-cell-style="setHeaderRowStyle" :header-row-style="headerRowStype">
-                        <el-table-column :label="item + '各公司数据'">
+                    <el-table :id="'tableData_' + item" v-loading="loading" :data="list[item]['list']" :header-cell-class-name="headerRowClass" :header-cell-style="setHeaderRowStyle" :header-row-style="headerRowStype">
+                        <el-table-column style="text-align:center;" :label="item + '各公司数据'">
                             <el-table-column prop="title">
                                 <template slot="header">
                                     <span style="
@@ -62,6 +62,8 @@
 </template>
 
 <script>
+import FileSaver from 'file-saver'
+import XLSX from 'xlsx'
 import { exportJsonToExcel, formatJson } from 'pl-export-excel'
 import { get } from '@/api/index.js';
 import platApi from '@/api/plats.js';
@@ -117,6 +119,37 @@ export default {
                 this.activeName = 'tab-' + this.tabs[0]
                 this.loading = false
             })
+        },
+        exportExcel2 () {
+            var workbook = XLSX.utils.book_new(); //创建工作薄  
+
+            for(var i = 0; i < this.tabs.length; i ++){
+                var tableSheet = XLSX.utils.table_to_sheet(document.querySelector("#tableData_" + this.tabs[i]))
+                XLSX.utils.book_append_sheet(workbook, tableSheet, this.tabs[i] + '各公司数据')
+            }
+
+            var wbOut = XLSX.write(workbook, {
+                bookType: "xlsx",
+                bookSST: true,
+                type: "array",
+            })
+
+            try {
+                FileSaver.saveAs(new Blob([wbOut], { type: 'application/octet-stream' }), '公司数据.xlsx')
+            } catch (e) { 
+                if (typeof console !== 'undefined') console.log(e, wbout) 
+            }
+            return wbOut
+
+
+            /* out-table关联导出的dom节点  */
+            var wb = XLSX.utils.table_to_book(document.querySelector('#tableData'))
+            /* get binary string as output */
+            var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+            try {
+                FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '公司数据.xlsx')
+            } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
+            return wbout
         },
         exportExcel () {
             const tHeader = ['序号', '主播昵称', '原始ID', '开播日期', '主播级别', '主播平台', this.day_title, '上月同期收益', '时长', this.month_title, '日均收益', this.all_money_title, '所属公司']
