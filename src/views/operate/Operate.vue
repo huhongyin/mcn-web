@@ -135,8 +135,8 @@ export default {
 					}else{
 						this.showDepartment = true
 						this.departmentOptions = res.data.list
-						// var all = {id: "", name: "全部"};
-						// this.departmentOptions.unshift(all)
+						var all = {id: "", name: "全部"};
+						this.departmentOptions.unshift(all)
 						this.search.department = res.data.list[0].id
 					}
 					this.$refs['operate_total'].searchData(this.search)
