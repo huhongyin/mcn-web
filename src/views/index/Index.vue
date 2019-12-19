@@ -69,7 +69,7 @@
                 </el-menu-item-group>
               </el-submenu>
               <!-- 榜单查看 -->
-              <el-submenu index="/bangdan" v-show="userInfo.department != null && (userInfo.department.type == 5 || userInfo.department.type == 4)">
+              <el-submenu index="/bangdan" v-show="userInfo.department != null && (userInfo.department.type == 5 || userInfo.department.type == 4|| userInfo.department.type == 1)">
                 <template slot="title">
                   <img :src="bangdan_icon" width="20" style="margin-right:10px" height="20" alt />
                   <span class="e-menu-span router-link">榜单查看</span>

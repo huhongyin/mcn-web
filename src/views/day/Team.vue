@@ -3,23 +3,53 @@
         <div slot="header" class="clearfix">
             <el-row :gutter="10">
                 <el-col :span="4">团队日榜</el-col>
-                <el-col :span="4" :offset="16">
-                    <el-button @click="exportExcel" style="float:right;">导出</el-button>
-                </el-col>
             </el-row>
         </div>
+        <el-row :gutter="10" style="margin-bottom:1rem;">
+            <el-col :span="2">
+                <el-select v-model="search.company_id" @change="getDepartments">
+                    <el-option v-for="(company,key) in companies" :key="key" :label="company.name" :value="company.id"></el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="2">
+                <el-select v-model="search.department_id">
+                    <el-option v-for="(plat,key) in departments" :key="key" :label="plat.name" :value="plat.id"></el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="3">
+                <el-date-picker format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" style="width: 100%;" placeholder="日期" v-model="search.date"></el-date-picker>
+            </el-col>
+            <el-col :span="2">
+                <el-button type="primary" @click="searchData" style="float:right;">搜索</el-button>
+            </el-col>
+            <el-col :span="2" :offset="13">
+                <el-button @click="exportExcel" style="float:right;">导出</el-button>
+            </el-col>
+        </el-row>
         <el-table :data="list" border :span-method="objectSpanMethod" id="out-table">
         <!-- <el-table :data="list" border> -->
-            <el-table-column label="序号" prop="id" fixed></el-table-column>
-            <el-table-column label="负责人" prop="operate_user.rel_name" fixed></el-table-column>
-            <el-table-column label="序号" prop="ids" fixed></el-table-column>
-            <el-table-column label="主播昵称" prop="nickname" fixed></el-table-column>
-            <el-table-column label="主播ID" prop="plat_actor_id" fixed width="100px;"></el-table-column>
-            <el-table-column label="扶持截止日期" prop="actor_plat_sign.support_endtime" width="120px;"></el-table-column>
-            <el-table-column label="扶持金额" prop="actor_plat_sign.support_money"></el-table-column>
+            <el-table-column label="序号">
+                <template slot-scope="scope">
+                    <div style="text-align:center;">
+                    <template v-if="typeof scope.row.is_zongji == 'undefined'">
+                        <span v-if="typeof scope.row.type == 'undefined'">{{ scope.row.id }}</span>
+                        <span v-else style="background-color:#bfd7bf;">{{ scope.row.id }}</span>
+                    </template>
+                    <template v-else>
+                        <span style="font-size:20px;color:black;background-color:green;">{{ scope.row.id }}</span>
+                    </template>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column label="负责人" prop="rel_name"></el-table-column>
+            <el-table-column label="序号" prop="ids"></el-table-column>
+            <el-table-column label="主播昵称" prop="nickname"></el-table-column>
+            <el-table-column label="主播ID" prop="plat_actor_id" width="100px;"></el-table-column>
+            <el-table-column label="扶持截止日期" prop="support_endtime" width="120px;"></el-table-column>
+            <el-table-column label="扶持金额" prop="support_money"></el-table-column>
             <el-table-column label="开播日期" prop="start_time" width="100px;"></el-table-column>
-            <el-table-column label="平台" prop="plat.name"></el-table-column>
-            <el-table-column label="主播级别" prop="level.name"></el-table-column>
+            <el-table-column label="平台" prop="plat_name"></el-table-column>
+            <el-table-column label="主播级别" prop="level_name"></el-table-column>
             <el-table-column label="应有时长" prop="should_time"></el-table-column>
             <el-table-column label="应播天数" prop="should_day"></el-table-column>
             <el-table-column label="时长" prop="time"></el-table-column>
@@ -37,9 +67,14 @@ import FileSaver from 'file-saver'
 import XLSX from 'xlsx'
 import { get } from '@/api/index.js';
 import teamApi from '@/api/team.js';
+import companyApi from '@/api/company.js';
+import departmentApi from '@/api/department.js';
 
 export default {
     created(){
+        this.search.date = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + "-" + new Date().getDate()
+        this.getCompanies()
+        this.getDepartments()
         this.getData()
     },
     data(){
@@ -47,11 +82,38 @@ export default {
             month_title: '',
             list: [],
             count: [],
+            companies: [],
+            departments: [],
+            search: {
+                date: "",
+                department_id: '',
+                company_id: "",
+            },
+            last_total_row: 0,
         }
     },
     methods:{
+        searchData(){
+            this.getData()
+        },
+        getDepartments(){
+            this.departments = []
+            get(departmentApi.list, { type: "select", check: "operate", company_id: this.search.company_id }).then((res) => {
+                this.departments = res.data.list
+                if(this.departments.length > 1){
+                    this.departments.unshift({id: "", name: "全部门"})
+                }
+                this.search.department_id = this.departments[0].id
+            })
+        },
+        getCompanies(){
+            get(companyApi.list, { type: 'select' }).then((res) => {
+                this.companies = res.data.list
+                this.companies.unshift({id: '', name: "全部"})
+            })
+        },
         getData(){
-            get(teamApi.dayList).then((res) => {
+            get(teamApi.dayList, this.search).then((res) => {
                 this.list = res.data.list
                 this.count = res.data.count
                 this.month_title = res.data.month + '月总收入'
@@ -59,25 +121,37 @@ export default {
         },
         objectSpanMethod({ row, column, rowIndex, columnIndex }) {
             if(columnIndex === 0 || columnIndex === 1){
-                var rowspan = 0
-                var colspan = 0;
-                if(typeof(row.rowspan) != 'undefined'){
-                    rowspan = row.rowspan - 1
-                }
-                if(typeof(row.colspan) != 'undefined'){
-                    colspan = row.colspan
-                }
+                var rowspan = 1
                 if(row.type == 'total' && columnIndex === 0){
-                    rowspan = 1
                     return {
                         rowspan: rowspan,
-                        colspan: colspan,
+                        colspan: 11,
+                    }
+                }else{
+                    return {
+                        rowspan: rowspan,
+                        colspan: 1,
                     }
                 }
-                return {
-                    rowspan: rowspan,
-                    colspan: colspan,
-                }
+                // var rowspan = 0
+                // var colspan = 0;
+                // if(typeof(row.rowspan) != 'undefined'){
+                //     rowspan = row.rowspan - 1
+                // }
+                // if(typeof(row.colspan) != 'undefined'){
+                //     colspan = row.colspan
+                // }
+                // if(row.type == 'total' && columnIndex === 0){
+                //     rowspan = 1
+                //     return {
+                //         rowspan: rowspan,
+                //         colspan: colspan,
+                //     }
+                // }
+                // return {
+                //     rowspan: rowspan,
+                //     colspan: colspan,
+                // }
             }else if(columnIndex > 0 && columnIndex < 12){
                 if(row.type == 'total'){
                     return {

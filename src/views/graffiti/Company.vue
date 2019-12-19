@@ -24,6 +24,7 @@
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.type == 1 || scope.row.type == 0" @click="add(scope.row)" type="text" size="small">编辑</el-button>
+                        <el-button v-if="scope.row.type == 1 || scope.row.type == 0" @click="deleteCompany(scope.row)" style="color:#F56C6C;" type="text" size="small">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -49,8 +50,8 @@
                         </el-form-item>
                         <el-form-item label="挂靠公会:" :label-width="addDialog.formLabelWidth">
                             <el-select v-model="addDialog.form.is_anchored" placeholder="公会类型" style="width:100%">
-                                <el-option value="0" label="否"></el-option>
-                                <el-option value="1" label="是"></el-option>
+                                <el-option :value="0" label="否"></el-option>
+                                <el-option :value="1" label="是"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-form>
@@ -64,7 +65,7 @@
 </template>
 
 <script>
-import { get, post} from '@/api/index.js';
+import { get, post, fPost} from '@/api/index.js';
 import companyApi from '@/api/company.js';
 import departmentApi from '@/api/department.js';
 
@@ -144,6 +145,27 @@ export default {
                 this.addDialog.form.is_anchored = '否'
             }
             this.addDialog.addDialogVisible = true
+        },
+        deleteCompany(row){
+             this.$confirm('即将删除公司'+ row.name +', 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                fPost(companyApi.delete, { ids: row.id }).then((res) => {
+                    this.$message({
+                        type: 'success',
+                        message: res.msg
+                    });        
+                    this.current = 1
+                    this.getData()
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            });
         },
         doSave(){
             let that = this
