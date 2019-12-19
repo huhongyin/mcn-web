@@ -32,7 +32,9 @@
                 <template slot-scope="scope">
                     <div style="text-align:center;">
                     <template v-if="typeof scope.row.is_zongji == 'undefined'">
-                        <span v-if="typeof scope.row.type == 'undefined'">{{ scope.row.id }}</span>
+                        <span v-if="typeof scope.row.type == 'undefined'">
+                            {{ scope.row.id }}
+                        </span>
                         <span v-else style="background-color:#bfd7bf;">{{ scope.row.id }}</span>
                     </template>
                     <template v-else>
@@ -90,11 +92,17 @@ export default {
                 company_id: "",
             },
             last_total_row: 0,
+            index: 1,
         }
     },
     methods:{
         searchData(){
             this.getData()
+        },
+        getRowId(row){
+            let s = this.index
+            this.index = parseInt(this.index) + 1
+            return s
         },
         getDepartments(){
             this.departments = []
@@ -128,10 +136,22 @@ export default {
                         colspan: 11,
                     }
                 }else{
+                    var rowspan = 0
+                    var colspan = 0;
+                    if(typeof(row.rowspan) != 'undefined'){
+                        rowspan = row.rowspan
+                    }
+                    if(typeof(row.colspan) != 'undefined'){
+                        colspan = row.colspan
+                    }
                     return {
                         rowspan: rowspan,
-                        colspan: 1,
+                        colspan: colspan,
                     }
+                    // return {
+                    //     rowspan: rowspan,
+                    //     colspan: 1,
+                    // }
                 }
                 // var rowspan = 0
                 // var colspan = 0;

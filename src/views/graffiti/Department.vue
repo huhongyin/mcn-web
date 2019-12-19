@@ -136,7 +136,7 @@ export default {
     },
     methods:{
         getData(){
-            let params = { current : this.current, company_id: this.search.company_id }
+            let params = { company_id: this.search.company_id }
             get(departmentApi.list, params).then((res) => {
                 this.list = res.data.list.data
                 this.total = res.data.list.total
