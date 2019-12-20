@@ -172,11 +172,16 @@ export default {
                 //     rowspan: rowspan,
                 //     colspan: colspan,
                 // }
-            }else if(columnIndex > 0 && columnIndex < 12){
+            }else if(columnIndex > 0 && columnIndex < 11){
                 if(row.type == 'total'){
                     return {
                         rowspan: 0,
                         colspan: 0,
+                    }
+                }else{
+                    return {
+                        rowspan: 1,
+                        colspan: 1,
                     }
                 }
             }else{
