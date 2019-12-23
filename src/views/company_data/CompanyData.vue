@@ -57,6 +57,70 @@
                     </el-table>
                 </el-tab-pane>
             </el-tabs>
+            <el-tabs v-show="false" v-model="activeName" @tab-click="handleClick">
+                <el-tab-pane :label="item" :name="'tab-' + item" v-for="(item,key) in tabs" :key="key" class="doubleThTable">
+                    <el-table :id="'tableData_export_' + item" v-loading="loading" :data="list[item]['list']" :header-cell-class-name="headerRowClass" :header-cell-style="setHeaderRowStyle" :header-row-style="headerRowStype">
+                        <el-table-column style="text-align:center;" :label="item + '各公司数据'">
+                            <el-table-column prop="title">
+                                <template slot="header">
+                                    <span style="
+                                        position: absolute;
+                                        right: 0;
+                                        top: 0;
+                                    ">平台</span>
+                                        <div style="
+                                        padding: 0;
+                                        width: 2px;
+                                        height: 30px;
+                                        background-color: black;
+                                        display: inline-table;
+                                        transform: rotate(-30deg);
+                                    ">
+                                    </div>
+                                        <span style="
+                                        position: absolute;
+                                        bottom: 0;
+                                        left: 0;
+                                    ">公司</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column v-for="(plat,key) in plats" :key="key" :label="plat.name">
+                                <el-table-column label="昨日前台流水" :prop="'yestoday_money_' + plat.id"></el-table-column>
+                                <el-table-column label="前台流水" :prop="'total_money_' + plat.id"></el-table-column>
+                                <el-table-column :label="list[item]['day'] + '月总流水'" :prop="'month_money_' + plat.id"></el-table-column>
+                            </el-table-column>
+                            <el-table-column label="当日前台流水" prop="current_date_money"></el-table-column>
+                            <el-table-column label="昨日前台流水" prop="yestoday_date_total"></el-table-column>
+                            <el-table-column label="当月前台流水" prop="current_month_money"></el-table-column>
+                            <el-table-column label="上月同期收益" prop="last_date_month_money"></el-table-column>
+                            <el-table-column prop="title">
+                                <template slot="header">
+                                    <span style="
+                                        position: absolute;
+                                        right: 0;
+                                        top: 0;
+                                    ">平台</span>
+                                        <div style="
+                                        padding: 0;
+                                        width: 2px;
+                                        height: 30px;
+                                        background-color: black;
+                                        display: inline-table;
+                                        transform: rotate(-30deg);
+                                    ">
+                                    </div>
+                                        <span style="
+                                        position: absolute;
+                                        bottom: 0;
+                                        left: 0;
+                                    ">公司</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="日流水排名" prop="sort"></el-table-column>
+                        </el-table-column>
+                    </el-table>
+                </el-tab-pane>
+            </el-tabs>
         </div>
     </el-card>
 </template>
@@ -124,7 +188,7 @@ export default {
             var workbook = XLSX.utils.book_new(); //创建工作薄  
 
             for(var i = 0; i < this.tabs.length; i ++){
-                var tableSheet = XLSX.utils.table_to_sheet(document.querySelector("#tableData_" + this.tabs[i]))
+                var tableSheet = XLSX.utils.table_to_sheet(document.querySelector("#tableData_export_" + this.tabs[i]))
                 XLSX.utils.book_append_sheet(workbook, tableSheet, this.tabs[i] + '各公司数据')
             }
 
