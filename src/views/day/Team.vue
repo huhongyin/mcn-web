@@ -56,7 +56,7 @@
             <el-table-column label="应播天数" prop="should_day"></el-table-column>
             <el-table-column label="时长" prop="time"></el-table-column>
             <el-table-column label="有效天数" prop="youxiaotianshu"></el-table-column>
-            <el-table-column label="1日收入" prop="one_day_money"></el-table-column>
+            <el-table-column :label="one_day_title" prop="one_day_money"></el-table-column>
             <el-table-column :label="month_title" prop="month_money" width="100px;"></el-table-column>
             <el-table-column label="日均收票" prop="day_avg"></el-table-column>
             <el-table-column label="备注" prop="remark"></el-table-column>
@@ -82,6 +82,7 @@ export default {
     data(){
         return {
             month_title: '',
+            one_day_title: '',
             list: [],
             count: [],
             companies: [],
@@ -125,6 +126,7 @@ export default {
                 this.list = res.data.list
                 this.count = res.data.count
                 this.month_title = res.data.month + '月总收入'
+                this.one_day_title = res.data.one_day_title
             })
         },
         objectSpanMethod({ row, column, rowIndex, columnIndex }) {
