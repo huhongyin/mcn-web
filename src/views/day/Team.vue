@@ -54,7 +54,12 @@
             <el-table-column label="主播级别" prop="level_name"></el-table-column>
             <el-table-column label="应有时长" prop="should_time"></el-table-column>
             <el-table-column label="应播天数" prop="should_day"></el-table-column>
-            <el-table-column label="时长" prop="time"></el-table-column>
+            <el-table-column :label="date_time_title" prop="date_time"></el-table-column>
+            <el-table-column :label="month + '累积时长(小时)'">
+                <template slot-scope="scope">
+                    {{ scope.row.time / 60 }}
+                </template>
+            </el-table-column>
             <el-table-column label="有效天数" prop="youxiaotianshu"></el-table-column>
             <el-table-column :label="one_day_title" prop="one_day_money"></el-table-column>
             <el-table-column :label="month_title" prop="month_money" width="100px;"></el-table-column>
@@ -81,6 +86,8 @@ export default {
     },
     data(){
         return {
+            date_time_title: "",
+            month: "",
             month_title: '',
             one_day_title: '',
             list: [],
@@ -126,7 +133,9 @@ export default {
                 this.list = res.data.list
                 this.count = res.data.count
                 this.month_title = res.data.month + '月总收入'
+                this.month = res.data.month
                 this.one_day_title = res.data.one_day_title
+                this.date_time_title = res.data.date_time_title
             })
         },
         objectSpanMethod({ row, column, rowIndex, columnIndex }) {

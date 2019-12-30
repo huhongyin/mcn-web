@@ -7,11 +7,14 @@
             <el-form-item label="实名">
                 <el-input v-model="form.actor.name"></el-input>
             </el-form-item>
-            <el-form-item label="艺名">
-                <el-input v-model="form.actor_plat.nickname"></el-input>
+            <el-form-item label="联系电话">
+                <el-input v-model="form.actor.phone"></el-input>
             </el-form-item>
             <el-form-item label="身份证号码">
                 <el-input v-model="form.actor.id_card_no"></el-input>
+            </el-form-item>
+            <el-form-item label="艺名">
+                <el-input v-model="form.actor_plat.nickname"></el-input>
             </el-form-item>
             <el-form-item label="签约人">
                 <el-select filterable class="sign-select" v-model="form.actor_plat.sign_user_id">
@@ -74,9 +77,6 @@
             </el-form-item>
             <el-form-item label="付款方式">
                 <el-input v-model="form.company_cals.pay_type"></el-input>
-            </el-form-item>
-            <el-form-item label="联系电话">
-                <el-input v-model="form.actor.phone"></el-input>
             </el-form-item>
             <el-form-item label="银行卡号">
                 <el-input v-model="form.actor_plat.bank_no"></el-input>
