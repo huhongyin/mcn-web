@@ -94,6 +94,9 @@
                 <el-menu-item-group class="el-item">
                   <el-menu-item index="/management" class="el-item e-menu-span" style="font-size:13px;">主播信息</el-menu-item>
                 </el-menu-item-group>
+                <el-menu-item-group class="el-item">
+                  <el-menu-item index="/wait/managemant" class="el-item e-menu-span" style="font-size:13px;">待签署主播</el-menu-item>
+                </el-menu-item-group>
               </el-submenu>
               <!-- 分组与平台 -->
               <el-submenu index="/company" v-show="userInfo.department != null && userInfo.department.type == 4">

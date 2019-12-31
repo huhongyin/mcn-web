@@ -1,4 +1,5 @@
 import Index from '../views/management/Management.vue'
+import WaitManagemant from '../views/management/WaitSign.vue'
 import Detail from '../views/management/Detail.vue'
 import Total from '../views/management/Total.vue'
 import ActorList from '../views/index/ActorList.vue'
@@ -10,6 +11,11 @@ export default
     path: '/management',
     name: 'management',
     component: Index,
+  },
+  {
+    path: "/wait/managemant",
+    name: "wait",
+    component: WaitManagemant,
   },
   //明细报表
   {

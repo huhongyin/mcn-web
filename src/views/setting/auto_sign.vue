@@ -4,6 +4,11 @@
             <span>艺人资料录入</span>
         </div>
         <el-form ref="form" :model="form" label-width="80px">
+            <el-form-item label="合同模板">
+                <el-select v-model="form.fdd.template_id" style="width: 100%;">
+                    <el-option v-for="(item, key) in templates" :key="key" :label="item.template_name" :value="item.template_id"></el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="实名">
                 <el-input v-model="form.actor.name"></el-input>
             </el-form-item>
@@ -17,7 +22,7 @@
                 <el-input v-model="form.actor_plat.nickname"></el-input>
             </el-form-item>
             <el-form-item label="签约人">
-                <el-select filterable class="sign-select" v-model="form.actor_plat.sign_user_id">
+                <el-select filterable class="sign-select" v-model="form.actor_plat.sign_user_id" @change="getOperateUsers">
                     <el-option v-for="(item, key) in signUsers" :key="key" :value="item.id" :label="item.rel_name"></el-option>
                 </el-select>
             </el-form-item>
@@ -47,10 +52,15 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="平台">
+                <el-select v-model="form.actor_plat.plat_id" style="width:100%;" @change="changePlat">
+                    <el-option v-for="(item, key) in plats" :key="key" :value="item.id" :label="item.name"></el-option>
+                </el-select>
+            </el-form-item>
+            <!-- <el-form-item label="平台">
                 <el-checkbox-group @change="changeCheckBox" v-model="selectPlats">
                     <el-checkbox v-for="(item, key) in plats" :key="key" :value="item.id" name="actor[plat_id][]" :label="item.name"></el-checkbox>
                 </el-checkbox-group>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item style="display:none;" :ref="item.id + '_id'" :label="item.name + 'ID'" v-for="(item, key) in plats" :key="key">
                 <el-input v-model="form.actor_plat[item.id + '_id']"></el-input>
             </el-form-item>
@@ -115,6 +125,9 @@ export default {
     data(){
         return {
             form: {
+                fdd: {
+                    template_id: "",
+                },
                 actor: {
                     name: "",
                     id_card_no: "",
@@ -129,7 +142,7 @@ export default {
                     sign_user_id: "",
                     operate_user_id: "",
                     nickname: "",
-                    plat_id: [],
+                    plat_id: "",
                     douyin_fencheng: "",
                     fenchengbi: "",
                     salary: "",
@@ -158,6 +171,7 @@ export default {
             levels: [],
             guilds: [],
             operateUsers: [],
+            templates: [],
         }
     },
     created(){
@@ -166,20 +180,27 @@ export default {
     methods: {
         init(){
             this.getSignUsers()
-            this.getOperateUsers()
+            this.getOperateUsers(0)
             this.getPlats()
             this.getBanks()
             this.getSettlements()
             this.getLevels()
             this.getGuilds()
+            this.getTemplates()
+        },
+        getTemplates(){
+            get(autoSignApi.fdd_templates).then((res) => {
+                this.templates = res.data.list
+                this.form.fdd.template_id = this.templates[0].template_id
+            })
         },
         getSignUsers(){
             get(departmentApi.userListByType + '/2', { type: "select" }).then((res) => {
                 this.signUsers = res.data.list
             })
         },
-        getOperateUsers(){
-            get(departmentApi.userListByType + '/1', { type: "select" }).then((res) => {
+        getOperateUsers(val){
+            get(departmentApi.userListByType + '/1', { type: "select", sign_user_id:  val}).then((res) => {
                 this.operateUsers = res.data.list
             })
         },
@@ -218,6 +239,27 @@ export default {
                 var index = plat.id + '_id'
                 if(typeof this.$refs[index] != 'undefined'){
                     console.log(this.$refs[index])
+                }
+            })
+        },
+        changePlat(){
+            this.plats.map((plat) => {
+                if(this.form.actor_plat.plat_id == plat.id){
+                    //显示
+                    if(plat.id == 1){
+                        let index2 = '1_douyin_fencheng'
+                        this.$refs[index2].$el.style.display = 'block'
+                    }
+                    let index = plat.id + '_id'
+                    this.$refs[index][0].$el.style.display = 'block'
+                }else{
+                    //隐藏
+                    if(plat.id == 1){
+                        let index3 = '1_douyin_fencheng'
+                        this.$refs[index3].$el.style.display = 'none'
+                    }
+                    let index4 = plat.id + '_id'
+                    this.$refs[index4][0].$el.style.display = 'none'
                 }
             })
         },
@@ -271,8 +313,17 @@ export default {
             }
         },
         doAutoSign(){
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
             post(autoSignApi.add, this.form).then((res) => {
+                loading.close()
                 this.$message.success(res.msg)
+            }).catch((err) => {
+                loading.close()
             })
         },
     }

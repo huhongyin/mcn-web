@@ -1,47 +1,48 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            <el-row :gutter="10">
-                <el-col :md="4" :sm="3" :lg="3">
-                    <el-input v-model="search.keyword" placeholder="输入关键字搜索"></el-input>
-                </el-col>
-                <el-col :md="3" :sm="3" :lg="3">
-                    <el-select style="width:100%;" v-model="search.company_id" filterable placeholder="筛选公司" @change="changeSearchCompany">
-                        <el-option value="" label="全部"></el-option>
-                        <el-option v-for="item in addDialog.companies" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                    </el-select>
-                </el-col>
-                <el-col :md="3" :sm="3" :lg="3">
-                    <el-select style="width:100%;" v-model="search.sign_user_id" filterable placeholder="筛选签约人">
-                        <el-option v-for="item in sign_users" :key="item.id" :label="item.rel_name" :value="item.id"></el-option>
-                    </el-select>
-                </el-col>
-                <el-col :md="3" :sm="3" :lg="3">
-                    <el-select style="width:100%;" v-model="search.operate_user_id" filterable placeholder="筛选运营人">
-                        <el-option v-for="item in operate_users" :key="item.id" :label="item.rel_name" :value="item.id"></el-option>
-                    </el-select>
-                </el-col>
-                <el-col :md="3" :sm="3" :lg="3">
-                    <el-select style="width:100%;" v-model="search.plat_id" filterable placeholder="筛选平台">
-                        <el-option value="" label="全部"></el-option>
-                        <el-option v-for="item in addDialog.plats" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                    </el-select>
-                </el-col>
-                <el-col :md="3" :sm="3" :lg="3">
-                    <el-select v-model="search.level" style="width: 100%;">
-                        <el-option label="全部" value=""></el-option>
-                        <el-option v-for="(item,key) in addDialog.levels" :key="key" :value="item.id" :label="item.name"></el-option>
-                    </el-select>
-                </el-col>
-                <el-col :md="2" :sm="2" :lg="2">
-                    <el-button type="primary" @click="getData">搜索</el-button>
-                </el-col>
-                <el-col :md="3" :sm="4" :lg="4">
-                    <el-button icon="el-icon-download" @click="exportExcel">导出</el-button>
-                    <el-button type="primary" @click="add(0)">新增</el-button>
-                </el-col>
-            </el-row>
+            <span>主播列表</span>
         </div>
+        <el-row :gutter="10" style="margin-bottom: 1rem;">
+            <el-col :md="4" :sm="3" :lg="3">
+                <el-input v-model="search.keyword" placeholder="输入关键字搜索"></el-input>
+            </el-col>
+            <el-col :md="3" :sm="3" :lg="3">
+                <el-select style="width:100%;" v-model="search.company_id" filterable placeholder="筛选公司" @change="changeSearchCompany">
+                    <el-option value="" label="全部"></el-option>
+                    <el-option v-for="item in addDialog.companies" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
+            </el-col>
+            <el-col :md="3" :sm="3" :lg="3">
+                <el-select style="width:100%;" v-model="search.sign_user_id" filterable placeholder="筛选签约人">
+                    <el-option v-for="item in sign_users" :key="item.id" :label="item.rel_name" :value="item.id"></el-option>
+                </el-select>
+            </el-col>
+            <el-col :md="3" :sm="3" :lg="3">
+                <el-select style="width:100%;" v-model="search.operate_user_id" filterable placeholder="筛选运营人">
+                    <el-option v-for="item in operate_users" :key="item.id" :label="item.rel_name" :value="item.id"></el-option>
+                </el-select>
+            </el-col>
+            <el-col :md="3" :sm="3" :lg="3">
+                <el-select style="width:100%;" v-model="search.plat_id" filterable placeholder="筛选平台">
+                    <el-option value="" label="全部"></el-option>
+                    <el-option v-for="item in addDialog.plats" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
+            </el-col>
+            <el-col :md="3" :sm="3" :lg="3">
+                <el-select v-model="search.level" style="width: 100%;">
+                    <el-option label="全部" value=""></el-option>
+                    <el-option v-for="(item,key) in addDialog.levels" :key="key" :value="item.id" :label="item.name"></el-option>
+                </el-select>
+            </el-col>
+            <el-col :md="2" :sm="2" :lg="2">
+                <el-button type="primary" @click="getData">搜索</el-button>
+            </el-col>
+            <el-col :md="3" :sm="4" :lg="4">
+                <el-button icon="el-icon-download" @click="exportExcel">导出</el-button>
+                <el-button type="primary" @click="add(0)">新增</el-button>
+            </el-col>
+        </el-row>
         <el-table id="managementTable" stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
                 <el-table-column type="selection"></el-table-column>
                 <el-table-column fixed label="序号" type="index"></el-table-column>

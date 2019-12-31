@@ -8,4 +8,5 @@ export default{
     contractDetail: '/actor/contract',
     contractTime: '/actor/contractTime',
     addContractTime: '/actor/contractTime/add',
+    signUrl: "/actor/signUrl/",
 }
