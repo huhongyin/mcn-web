@@ -103,7 +103,7 @@ export default {
                 operate_user_id: '',
                 plat_id: "",
                 company_id: "",
-                status: 0,
+                status: "0,1,3,4",
             },
             keywords : "",
             select_date: "",

@@ -120,6 +120,9 @@
                 <el-menu-item-group class="el-item">
                   <el-menu-item index="/personalSetting" class="el-item e-menu-span" style="font-size:13px;">个人设置</el-menu-item>
                 </el-menu-item-group>
+                <el-menu-item-group class="el-item">
+                  <el-menu-item index="/auto/sign" class="el-item e-menu-span" style="font-size:13px;">签约主播</el-menu-item>
+                </el-menu-item-group>
               </el-submenu>
             </el-menu>
           </el-aside>
