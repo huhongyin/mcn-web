@@ -65,8 +65,7 @@
             <el-dialog title="签署地址" :visible.sync="urlDialog.show" width="30%">
                 <span v-text="urlDialog.form.url"></span>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click="urlDialog.show = false">取 消</el-button>
-                    <el-button type="primary" @click="urlDialog.show = false">确 定</el-button>
+                    <el-button type="primary" @click="urlDialog.show = false">关 闭</el-button>
                 </span>
             </el-dialog>
     </el-card>
@@ -215,6 +214,7 @@ export default {
         signUrl(id){
             get(actorApi.signUrl + id).then((res) => {
                 this.urlDialog.form.url = res.data.url
+                this.urlDialog.show = true
             })
         },
     }
