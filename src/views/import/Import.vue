@@ -34,8 +34,8 @@
             </el-form-item>
             <el-form-item label="导入时间" v-show="showPlatImport">
                 <el-col :span="12">
-                    <el-date-picker v-show="selectDate" type="date" :value-format="valueFormat" :format="valueFormat" placeholder="选择日期" v-model="form.date" style="width: 100%;"></el-date-picker>
-                    <el-date-picker v-show="selectMonth" value-format="yyyy-MM" format="yyyy-MM" v-model="form.date" style="width:100%:" type="month" placeholder="选择日期"></el-date-picker>
+                    <el-date-picker :picker-options="pickerOptions1" :editable="false" v-show="selectDate" type="date" :value-format="valueFormat" :format="valueFormat" placeholder="选择日期" v-model="form.date" style="width: 100%;"></el-date-picker>
+                    <el-date-picker :picker-options="pickerOptions1" :editable="false" v-show="selectMonth" value-format="yyyy-MM" format="yyyy-MM" v-model="form.date" style="width:100%:" type="month" placeholder="选择日期"></el-date-picker>
                 </el-col>
             </el-form-item>
             <el-form-item label="导入文件">
@@ -68,7 +68,7 @@
         :visible.sync="centerDialogVisible"
         width="30%"
         center>
-        <span>请仔细确认导入的文档是否和平台已经公司对应后提交</span>
+        <span>请仔细确认导入的文档是否和平台以及公司对应后提交</span>
         <span slot="footer" class="dialog-footer">
             <el-button @click="centerDialogVisible = false">再确认一下</el-button>
             <el-button type="primary" @click="onSubmit">我确认好了</el-button>
@@ -94,12 +94,17 @@ export default {
             selectMonth: false,
             selectDate: false,
             centerDialogVisible: false,
-            uploadUrl: 'http://admin.mcn.huhongyin.com/' + uploadApi.upload,
-            // uploadUrl: 'http://sk.dev.com' + uploadApi.upload,
+            // uploadUrl: 'http://admin.mcn.huhongyin.com/' + uploadApi.upload,
+            uploadUrl: 'http://sk.dev.com' + uploadApi.upload,
             showPlatImport: true,
             showMoneyType: false,
             valueFormat: 'yyyy-MM-dd',
             fileList: [],
+            pickerOptions1: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now();
+                },
+            },
             form: {
                 date: "",
                 data_type: 1,
@@ -227,6 +232,7 @@ export default {
         },
         changeImportMoneyType(value){
             this.form.money_type = value
+            this.form.date = ""
             this.isShow()
         },
         getPlats(){
@@ -294,7 +300,7 @@ export default {
                     this.fileList = file.response.data.list
                 }
             }
-        }
+        },
     }
 }
 </script>

@@ -275,6 +275,15 @@
                                     </el-select>
                                 </el-col>
                             </el-form-item>
+                            <el-form-item>
+                                <el-col :span="4">主播类型</el-col>
+                                <el-col :span="19" :offset="1">
+                                    <el-select v-model="addDialog.form.actor.actor_status" style="width: 100%;" placeholder="请选择主播类型">
+                                        <el-option label="稳定" :value="1"></el-option>
+                                        <el-option label="长尾" :value="0"></el-option>
+                                    </el-select>
+                                </el-col>
+                            </el-form-item>
                             <el-form-item label="" prop="actor.name">
                                 <el-col :span="4">实名</el-col>
                                 <el-col :span="19" :offset="1">
@@ -551,6 +560,7 @@ export default {
                         start_time: "",
                         join_date: "",
                         salary: 0,
+                        actor_status: 1,
                     },
                     bank: {
                         id: "",

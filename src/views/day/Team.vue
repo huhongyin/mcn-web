@@ -55,7 +55,7 @@
             <el-table-column label="应有时长" prop="should_time"></el-table-column>
             <el-table-column label="应播天数" prop="should_day"></el-table-column>
             <el-table-column :label="date_time_title" prop="date_time"></el-table-column>
-            <el-table-column :label="month + '累积时长(小时)'">
+            <el-table-column :label="month + '月累积时长(小时)'">
                 <template slot-scope="scope">
                     {{ scope.row.time / 60 }}
                 </template>
