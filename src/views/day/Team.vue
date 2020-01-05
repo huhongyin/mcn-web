@@ -45,8 +45,28 @@
             </el-table-column>
             <el-table-column label="负责人" prop="rel_name"></el-table-column>
             <el-table-column label="序号" prop="ids"></el-table-column>
-            <el-table-column label="主播昵称" prop="nickname"></el-table-column>
+            <el-table-column label="主播昵称">
+                <template slot-scope="scope">
+                    <div style="text-align:center;">
+                        <template v-if="typeof scope.row.type == 'undefined'">
+                            <span>
+                                {{ scope.row.nickname }}
+                            </span>
+                        </template>
+                        <template v-else>
+                            <span style="font-size:16px;color:black;background-color:gray;">{{ scope.row.nickname }}</span>
+                        </template>
+                    </div>
+                </template>
+            </el-table-column>
             <el-table-column label="主播ID" prop="plat_actor_id" width="100px;"></el-table-column>
+            <el-table-column label="公会名称" prop="guild_name" width="100px;"></el-table-column>
+            <el-table-column label="主播状态" width="100px;">
+                <template slot-scope="scope">
+                    <span v-if="typeof(scope.row.actor_plat_status) == 'undefined'|| scope.row.actor_plat_status == null">稳定</span>
+                    <span v-else v-text="scope.row.actor_plat_status.status_name"></span>
+                </template>
+            </el-table-column>
             <el-table-column label="扶持截止日期" prop="support_endtime" width="120px;"></el-table-column>
             <el-table-column label="扶持金额" prop="support_money"></el-table-column>
             <el-table-column label="开播日期" prop="start_time" width="100px;"></el-table-column>
@@ -144,7 +164,12 @@ export default {
                 if(row.type == 'total' && columnIndex === 0){
                     return {
                         rowspan: rowspan,
-                        colspan: 11,
+                        colspan: 13,
+                    }
+                }else if(row.type == "status"){
+                    return {
+                        rowspan: 0,
+                        colspan: 0,
                     }
                 }else{
                     var rowspan = 0
@@ -159,32 +184,24 @@ export default {
                         rowspan: rowspan,
                         colspan: colspan,
                     }
-                    // return {
-                    //     rowspan: rowspan,
-                    //     colspan: 1,
-                    // }
                 }
-                // var rowspan = 0
-                // var colspan = 0;
-                // if(typeof(row.rowspan) != 'undefined'){
-                //     rowspan = row.rowspan - 1
-                // }
-                // if(typeof(row.colspan) != 'undefined'){
-                //     colspan = row.colspan
-                // }
-                // if(row.type == 'total' && columnIndex === 0){
-                //     rowspan = 1
-                //     return {
-                //         rowspan: rowspan,
-                //         colspan: colspan,
-                //     }
-                // }
-                // return {
-                //     rowspan: rowspan,
-                //     colspan: colspan,
-                // }
-            }else if(columnIndex > 0 && columnIndex < 11){
+            }else if(columnIndex === 3 && row.type == "status"){
+                    return {
+                        rowspan: 1,
+                        colspan: 11,
+                    }
+            }else if(row.type == "status" && columnIndex > 3 && columnIndex < 13){
+                return {
+                    rowspan: 0,
+                    colspan: 0,
+                }
+            }else if(columnIndex > 0 && columnIndex < 13){
                 if(row.type == 'total'){
+                    return {
+                        rowspan: 0,
+                        colspan: 0,
+                    }
+                }else if(row.type == 'status'){
                     return {
                         rowspan: 0,
                         colspan: 0,
