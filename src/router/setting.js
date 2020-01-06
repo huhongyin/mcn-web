@@ -1,5 +1,6 @@
 import PersonalSetting from '../views/setting/PersonalSetting.vue'
 import AutoSign from '../views/setting/auto_sign.vue'
+import FddTemplate from '../views/setting/fdd_template'
 
 export default
 [
@@ -14,5 +15,11 @@ export default
     path: "/auto/sign",
     name: "/autosign",
     component: AutoSign,
+  },
+  //法大大合同模板管理
+  {
+    path: "/template",
+    name: "template",
+    component: FddTemplate
   }
 ]

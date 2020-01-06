@@ -120,6 +120,16 @@
                 <el-menu-item-group class="el-item">
                   <el-menu-item index="/personalSetting" class="el-item e-menu-span" style="font-size:13px;">个人设置</el-menu-item>
                 </el-menu-item-group>
+              </el-submenu>
+              <!-- 自动签 -->
+              <el-submenu index="/auto_sign">
+                <template slot="title">
+                  <img :src="sys_icon" width="20" style="margin-right:10px" height="20" alt />
+                  <span class="e-menu-span router-link">自动签</span>
+                </template>
+                <el-menu-item-group class="el-item">
+                  <el-menu-item index="/template" class="el-item e-menu-span" style="font-size:13px;">合同模板</el-menu-item>
+                </el-menu-item-group>
                 <el-menu-item-group class="el-item">
                   <el-menu-item index="/auto/sign" class="el-item e-menu-span" style="font-size:13px;">签约主播</el-menu-item>
                 </el-menu-item-group>
