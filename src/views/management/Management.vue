@@ -824,6 +824,7 @@ export default {
                     }
                     data.bank.bank_no = data.bank_no
                     this.addDialog.form.bank = data.bank
+                    data.actor.actor_status = (typeof data.actor.actor_status == 'undefined') ? 1 : parseInt(data.actor.actor_status)
                     data.actor.nickname = data.nickname
                     data.actor.plat_id = data.plat_id
                     data.actor.old_id = data.plat_actor_id
