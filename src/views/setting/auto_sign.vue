@@ -9,9 +9,20 @@
                     <el-option v-for="(item, key) in templates" :key="key" :label="item.template_name" :value="item.template_id"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="item.label" v-for="(item, key) in selectForms" :key="key">
-                <el-input v-model="form.fdd.forms[item.name]"></el-input>
-            </el-form-item>
+            <template v-for="(item, key) in selectForms">
+                <template v-if="!date_arr.includes(item.name)">
+                    <template v-if="item.name == 'start_year'">
+                        <el-form-item :label="'合作期间'" :key="key">
+                            <el-date-picker value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width:100%;" v-model="form.fdd.forms['dates']" type="daterange" start-placeholde="开始日期" end-placeholde="结束日期"></el-date-picker>
+                        </el-form-item>
+                    </template>
+                    <template v-else>
+                        <el-form-item :label="item.label" :key="key">
+                            <el-input v-model="form.fdd.forms[item.name]"></el-input>
+                        </el-form-item>
+                    </template>
+                </template>
+            </template>
             <!-- <el-form-item label="实名">
                 <el-input v-model="form.actor.name"></el-input>
             </el-form-item> -->
@@ -48,10 +59,10 @@
                 <el-input v-model="form.actor_plat.source"></el-input>
             </el-form-item>
             <el-form-item label="合约时间">
-                <el-select filterable class="sign-select" v-model="form.contract.heyue_time">
-                    <el-option label="4个月" value="4个月"></el-option>
-                    <el-option label="1年" value="1年"></el-option>
-                    <el-option label="1+2年" value="1+2年"></el-option>
+                <el-select filterable class="sign-select" @change="changeHeyue" v-model="form.contract.heyue_time">
+                    <el-option label="4个月" :value="4"></el-option>
+                    <el-option label="1年" :value="12"></el-option>
+                    <el-option label="1+2年" :value="36"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="平台">
@@ -91,9 +102,9 @@
             <el-form-item label="付款方式">
                 <el-input v-model="form.company_cals.pay_type"></el-input>
             </el-form-item>
-            <el-form-item label="银行卡号">
+            <!-- <el-form-item label="银行卡号">
                 <el-input v-model="form.actor_plat.bank_no"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="生日">
                 <el-date-picker style="width: 100%;" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择生日" v-model="form.actor.birthday"></el-date-picker>
             </el-form-item>
@@ -127,6 +138,13 @@ import autoSignApi from '@/api/autosign';
 export default {
     data(){
         return {
+            date_arr: [
+                "start_month",
+                "start_day",
+                "end_year",
+                "end_month",
+                "end_day",
+            ],
             form: {
                 fdd: {
                     template_id: "",
@@ -140,7 +158,7 @@ export default {
                     address: "",
                 },
                 contract: {
-                    heyue_time: "4个月",
+                    heyue_time: 4,
                 },
                 actor_plat: {
                     sign_user_id: "",
@@ -198,6 +216,7 @@ export default {
                 this.templates = res.data.list
                 this.form.fdd.template_id = this.templates[0].template_id
                 this.changeTemplate(this.form.fdd.template_id)
+                this.changeHeyue(this.form.contract.heyue_time)
             })
         },
         changeTemplate(val){
@@ -206,7 +225,13 @@ export default {
                     var forms = element.forms
                     this.selectForms = forms
                     forms.forEach(item => {
-                        this.$set(this.form.fdd.forms, item.name, "")
+                        if(!this.date_arr.includes(item.name)){
+                            if(item.name == "start_year"){
+                                this.$set(this.form.fdd.forms, "dates", [])
+                            }else{
+                                this.$set(this.form.fdd.forms, item.name, "")
+                            }
+                        }
                     })
                 }
             });
@@ -258,6 +283,20 @@ export default {
                     console.log(this.$refs[index])
                 }
             })
+        },
+        changeHeyue(val){
+            let month = parseInt(val)
+            let days = month * 30
+            var date1 = new Date();
+            var date2 = new Date(date1);
+            date2.setDate(date1.getDate() + days);
+            let start_date = date1.getFullYear() + '-' + (date1.getMonth() + 1) + '-' + date1.getDay()
+            let end_date = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDay()
+            
+            let dateArr = new Array()
+            dateArr.push(start_date)
+            dateArr.push(end_date)
+            this.form.fdd.forms.dates = dateArr
         },
         changePlat(){
             this.plats.map((plat) => {

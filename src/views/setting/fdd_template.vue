@@ -13,6 +13,7 @@
             <el-table-column fixed label="模板id" prop="template_id"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
+                    <!-- <el-button type="text" @click="showForm(scope.row)">查看表单</el-button> -->
                     <el-button type="text" @click="showDeleteDialog(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
@@ -22,6 +23,9 @@
             <el-form :model="form">
                 <el-form-item label="合同模板名称" :label-width="formLabelWidth">
                     <el-input placeholder="请输入合同模板名称" v-model="form.file_name" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="公司签章关键字" :label-width="formLabelWidth">
+                    <el-input placeholder="输入公司签章关键字,默认为甲方" v-model="form.company_sign_keyword" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="合同模板文件" :label-width="formLabelWidth">
                     <el-upload class="upload-demo" ref="upload" action="" :http-request="httpRequest" :on-change="handleChange" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
@@ -34,6 +38,15 @@
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
                 <el-button type="primary" @click="doAddTemplate">确 定</el-button>
             </div>
+        </el-dialog>
+        <el-dialog title="需要填写的表单信息" :visible.sync="formDialog.show" width="50%" center>
+            <div v-for="(item, key) in formDialog.list" :key="key" style="width: 100%;text-align:center;">
+                <span v-text="item.label" ></span>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="formDialog.show = false">取 消</el-button>
+                <el-button type="primary" @click="formDialog.show = false">确 定</el-button>
+            </span>
         </el-dialog>
         <el-dialog title="提示" :visible.sync="deleteDialog.show" width="30%" center>
             <span>{{ deleteDialog.title }}</span>
@@ -69,6 +82,7 @@ export default {
             form: {
                 file_name: "",
                 file_path: "",
+                company_sign_keyword: "",
             },
             deleteDialog: {
                 show: false,
@@ -76,6 +90,10 @@ export default {
                 form: {
                     id: ""
                 }
+            },
+            formDialog: {
+                show: false,
+                list: [],
             }
         }
     },
@@ -103,6 +121,11 @@ export default {
             this.deleteDialog.title = "确定删除合同模板" + data.template_name
             this.deleteDialog.show = true
         },
+        showForm(data){
+            console.log(data)
+            this.formDialog.list = data.forms
+            this.formDialog.show = true
+        },
         deleteData(){
             fPost(fddApi.delete + this.deleteDialog.form.id).then((res) => {
                 this.deleteDialog.show = false
@@ -119,6 +142,7 @@ export default {
             let formData = new FormData()
             formData.append("file_name", this.form.file_name)
             formData.append("file_path", uploader.file)
+            formData.append("company_sign_keyword", this.form.company_sign_keyword)
             axios.post(fddApi.add, formData).then((res) => {
                 if(res.data.code != 1){
                     this.$message.error(res.data.msg)

@@ -52,9 +52,17 @@
                 <el-table-column label="联系电话" prop="actor.phone"></el-table-column>
                 <el-table-column label="分成比例" prop="fenchengbi"></el-table-column>
                 <el-table-column label="保底工资" prop="salary"></el-table-column>
-                <el-table-column label="开播时间" prop="start_time"></el-table-column>
                 <el-table-column label="签约人" prop="sign_user.rel_name"></el-table-column>
                 <el-table-column label="运营人" prop="operate_user.rel_name"></el-table-column>
+                <el-table-column label="认证状态">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.actor.status == 0">未激活</span>
+                        <span v-else-if="scope.row.actor.status == 1">未认证</span>
+                        <span v-else-if="scope.row.actor.status == 2">审核通过</span>
+                        <span v-else-if="scope.row.actor.status == 3">已提交,待审核</span>
+                        <span v-else-if="scope.row.actor.status == 4">审核不通过</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button @click="signUrl(scope.row.id)" type="text" size="small" style="display:block;">查看签署地址</el-button>

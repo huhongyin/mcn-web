@@ -94,7 +94,7 @@ export default {
             selectMonth: false,
             selectDate: false,
             centerDialogVisible: false,
-            uploadUrl: 'http://admin.mcn.huhongyin.com/' + uploadApi.upload,
+            uploadUrl: 'http://test.admin.mcn.huhongyin.com/' + uploadApi.upload,
             // uploadUrl: 'http://sk.dev.com' + uploadApi.upload,
             showPlatImport: true,
             showMoneyType: false,

@@ -1,6 +1,7 @@
 import PersonalSetting from '../views/setting/PersonalSetting.vue'
 import AutoSign from '../views/setting/auto_sign.vue'
 import FddTemplate from '../views/setting/fdd_template'
+import FlowConfig from '../views/setting/FlowConfig'
 
 export default
 [
@@ -21,5 +22,11 @@ export default
     path: "/template",
     name: "template",
     component: FddTemplate
+  },
+  //流程管理
+  {
+    path: "/flowConfig",
+    name: "flowConfig",
+    component: FlowConfig,
   }
 ]

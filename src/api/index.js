@@ -3,8 +3,8 @@ import qs from 'qs'
 import { Message } from 'element-ui';
 
 // 环境切换
-axios.defaults.baseURL = 'http://admin.mcn.huhongyin.com/api/v1/'
-// axios.defaults.baseURL = 'http://sk.dev.com/api/v1/'
+// axios.defaults.baseURL = 'http://test.admin.mcn.huhongyin.com/api/v1/'
+axios.defaults.baseURL = 'http://sk.dev.com/api/v1/'
 // if (process.env.NODE_ENV === 'development') {
 //   axios.defaults.baseURL = 'https://official.cdhengsu.com'
 //   // console.log('开发环境api接口url')
@@ -13,7 +13,7 @@ axios.defaults.baseURL = 'http://admin.mcn.huhongyin.com/api/v1/'
 //   // console.log('测试环境api接口url')
 // } else if (process.env.NODE_ENV === 'production') {
 //   axios.defaults.baseURL = 'https://official.cdhengsu.com'
-//   // console.log('设置生产环境api接口url')
+  // console.log('设置生产环境api接口url')
 // }
 
 // 请求超时时间

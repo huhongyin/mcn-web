@@ -235,6 +235,8 @@
                     </el-col>
                 </el-row>
                 <span slot="footer" class="dialog-footer">
+                    <el-button v-show="contractDetailDialog.show_contract" type="primary" @click="viewPdfContract">预 览</el-button>
+                    <el-button v-show="contractDetailDialog.show_contract" type="primary" @click="downloadContract">下 载</el-button>
                     <el-button type="primary" @click="contractDetailDialog.show = false">确 定</el-button>
                 </span>
             </el-dialog>
@@ -682,6 +684,7 @@ export default {
             },
             contractDetailDialog: {
                 show: false,
+                show_contract: false,
                 detail: {
                     id: '',
                     actor_plat_id: '',
@@ -972,10 +975,21 @@ export default {
                 this.userDetailDialog.show = true
             })
         },
+        viewPdfContract(){
+            window.open(this.contractDetailDialog.detail.viewpdf_url, "_blank");
+            // window.location.href = this.contractDetailDialog.detail.viewpdf_url
+        },
+        downloadContract(){
+            window.open(this.contractDetailDialog.detail.download_url, "_blank");
+        },
         //合同信息
         contractDetail(id){
             get(actorApi.contractDetail + '/' + id).then((res) => {
+                this.contractDetailDialog.show_contract = false
                 if(res.data.info != null){
+                    if(typeof res.data.info.download_url != 'undefined' && res.data.info.download_url != null && res.data.info.download_url != ''){
+                        this.contractDetailDialog.show_contract = true
+                    }
                     this.contractDetailDialog.detail = res.data.info
                 }else{
                     this.contractDetailDialog.detail = {

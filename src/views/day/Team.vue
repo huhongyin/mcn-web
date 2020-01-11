@@ -26,7 +26,7 @@
                 <el-button @click="exportExcel" style="float:right;">导出</el-button>
             </el-col>
         </el-row>
-        <el-table :data="list" border :span-method="objectSpanMethod" id="out-table">
+        <el-table height="60vh" style="overflow-x:scroll;" :data="list" border :span-method="objectSpanMethod" id="out-table">
         <!-- <el-table :data="list" border> -->
             <el-table-column label="序号">
                 <template slot-scope="scope">
