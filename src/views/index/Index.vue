@@ -121,6 +121,19 @@
                   <el-menu-item index="/personalSetting" class="el-item e-menu-span" style="font-size:13px;">个人设置</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
+              <!-- 流程列表 -->
+              <el-menu-item index="/myFlow" class="el-item e-menu-span" style="font-size:13px;"><img :src="yunying_icon" width="20" style="margin-right:10px" height="20" alt />
+                我的流程
+              </el-menu-item>
+              <!-- <el-submenu index="/flowList">
+                <template slot="title">
+                  <img :src="sys_icon" width="20" style="margin-right:10px" height="20" alt />
+                  <span class="e-menu-span router-link">流程列表</span>
+                </template>
+                <el-menu-item-group class="el-item">
+                  <el-menu-item index="/myFlow" class="el-item e-menu-span" style="font-size:13px;">我的流程</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu> -->
               <!-- 自动签 -->
               <el-submenu index="/auto_sign">
                 <template slot="title">
