@@ -30,7 +30,7 @@
         </el-row>
       </el-header>
       <el-container class="container_box">
-        <div style="width:10%;background:#f5f5f5;" class="nav-list-menu">
+        <div class="nav-list-menu">
           <el-aside width="100%" class="nav_list">
             <el-menu
               :default-active="this.$route.path"
@@ -256,7 +256,18 @@ export default {
 <style lang='less' scoped>
 @media screen and (max-width: 415px) {
   .nav-list-menu {
-    display: none;
+    // display: none;
+    background:#f5f5f5;
+    width: 30%;
+  }
+  .main_box{
+    width: 70%;
+  }
+}
+@media screen and (min-width: 415px) {
+  .nav-list-menu{
+    width:10%;
+    background:#f5f5f5;
   }
 }
 .el-table__body-wrapper > table,.el-table__header-wrapper > table{
@@ -266,6 +277,8 @@ export default {
   box-sizing: border-box;
   background:#ccc;
 }
+
+
 
 .main {
   width: 100%;

@@ -40,11 +40,11 @@
                     <el-option v-for="(item, key) in signUsers" :key="key" :value="item.id" :label="item.rel_name"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="运营人">
+            <!-- <el-form-item label="运营人">
                 <el-select filterable class="sign-select" v-model="form.actor_plat.operate_user_id">
                     <el-option v-for="(item, key) in operateUsers" :key="key" :value="item.id" :label="item.rel_name"></el-option>
                 </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="所属公会">
                 <el-select allow-create filterable class="sign-select" v-model="form.actor_plat.guild_id">
                     <el-option v-for="(item, key) in guilds" :key="key" :value="item.id" :label="item.name"></el-option>
