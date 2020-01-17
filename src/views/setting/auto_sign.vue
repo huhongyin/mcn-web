@@ -220,6 +220,7 @@ export default {
             })
         },
         changeTemplate(val){
+            this.form.fdd.forms = []
             this.templates.forEach(element => {
                 if(val == element.template_id){
                     var forms = element.forms
@@ -285,18 +286,26 @@ export default {
             })
         },
         changeHeyue(val){
-            let month = parseInt(val)
-            let days = month * 30
-            var date1 = new Date();
-            var date2 = new Date(date1);
-            date2.setDate(date1.getDate() + days);
-            let start_date = date1.getFullYear() + '-' + (date1.getMonth() + 1) + '-' + date1.getDay()
-            let end_date = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDay()
-            
-            let dateArr = new Array()
-            dateArr.push(start_date)
-            dateArr.push(end_date)
-            this.form.fdd.forms.dates = dateArr
+            this.selectForms.forEach(item => {
+                if(!this.date_arr.includes(item.name)){
+                    if(item.name == "start_year"){
+                        let month = parseInt(val)
+                        let days = month * 30
+                        var date1 = new Date();
+                        var date2 = new Date(date1);
+                        date2.setDate(date1.getDate() + days);
+                        let start_date = date1.getFullYear() + '-' + (date1.getMonth() + 1) + '-' + date1.getDay()
+                        let end_date = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDay()
+                        
+                        let dateArr = new Array()
+                        dateArr.push(start_date)
+                        dateArr.push(end_date)
+                        this.form.fdd.forms.dates = dateArr
+                    }else{
+                        this.$set(this.form.fdd.forms, "dates", [])
+                    }
+                }
+            })
         },
         changePlat(){
             this.plats.map((plat) => {
@@ -312,9 +321,11 @@ export default {
                     //隐藏
                     if(plat.id == 1){
                         let index3 = '1_douyin_fencheng'
+                        this.$set(this.form.actor_plat, "douyin_fencheng", "")
                         this.$refs[index3].$el.style.display = 'none'
                     }
                     let index4 = plat.id + '_id'
+                    this.$set(this.form.actor_plat, index4, "")
                     this.$refs[index4][0].$el.style.display = 'none'
                 }
             })
