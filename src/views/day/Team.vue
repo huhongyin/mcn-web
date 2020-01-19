@@ -26,7 +26,7 @@
                 <el-button @click="exportExcel" style="float:right;">导出</el-button>
             </el-col>
         </el-row>
-        <el-table v-loading="loading" height="60vh" style="overflow-x:scroll;" :data="list" border :span-method="objectSpanMethod" id="out-table">
+        <el-table v-loading="loading" height="70vh" style="overflow-x:scroll;" :data="list" border :span-method="objectSpanMethod" id="out-table">
         <!-- <el-table :data="list" border> -->
             <el-table-column label="序号">
                 <template slot-scope="scope">
@@ -74,7 +74,11 @@
             <el-table-column label="主播级别" prop="level_name"></el-table-column>
             <el-table-column label="应有时长" prop="should_time"></el-table-column>
             <el-table-column label="应播天数" prop="should_day"></el-table-column>
-            <el-table-column :label="date_time_title" prop="date_time"></el-table-column>
+            <el-table-column :label="date_time_title">
+                <template slot-scope="scope">  
+                    <div v-html="scope.row.date_time"></div>
+                </template>
+            </el-table-column>
             <el-table-column :label="month + '月累积时长(小时)'">
                 <template slot-scope="scope">
                     {{ scope.row.time / 60 }}
