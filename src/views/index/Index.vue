@@ -1,7 +1,7 @@
 <template>
   <el-container class="main">
       <!-- 头部 -->
-      <el-header class="header">
+      <el-header class="header" style="height: 70px;">
         <el-row style="height:100%;">
           <el-col :span="12" style="height: 100%;">
             <div class="grid-content bg-purple">
@@ -10,7 +10,7 @@
               <a href="/#/management">
                 <img class="img" :src="plat_icon" alt/>
                 <el-divider direction="vertical"></el-divider>
-                <span class="title-web">MCN</span>
+                <span class="title-web">HCF</span>
               </a>
             </div>
           </el-col>
@@ -165,7 +165,7 @@ export default {
   data() {
     return {
       bangdan_icon: require("../../assets/imgs/bangdan.png"),
-      plat_icon: require("../../assets/imgs/plat_icon.png"),
+      plat_icon: require("../../assets/imgs/logo.jpg"),
       sign_icon: require("../../assets/imgs/sign_data.png"),
       yunying_icon: require("../../assets/imgs/yunying_data.png"),
       finanace_icon: require("../../assets/imgs/finance_icon.png"),
@@ -263,11 +263,80 @@ export default {
   .main_box{
     width: 70%;
   }
+  .header {
+    width: 100%;
+    background-color: #ffffff;
+    border-bottom: 1px solid rgba(211,220,230,1);
+    padding: 0 10px;
+    .grid-content{
+      height: 100%;
+      a {      
+        height: 100%;
+        width: 16vw;
+        display: block;
+        img{
+          height: 100%;
+          width: 22vw;
+        }
+      }
+    }
+    .el-divider--vertical{
+      position: absolute;
+      left: 22vw;
+      width:.05rem;
+      margin:0 .4rem;
+      height: 80%;
+      top: 10%;
+    }
+    
+
+    .title-web{
+      position: absolute;
+      font-size: 1.8rem;
+      left: 25vw;
+      color: #706e6e;
+      top: .9rem;
+    }
+  }
 }
 @media screen and (min-width: 415px) {
   .nav-list-menu{
     width:10%;
     background:#f5f5f5;
+  }
+  .header {
+    width: 100%;
+    background-color: #ffffff;
+    border-bottom: 1px solid rgba(211,220,230,1);
+    .grid-content{
+      height: 100%;
+      a {      
+        height: 100%;
+        width: 16vw;
+        display: block;
+        img{
+          height: 100%;
+          width: 9vw;
+        }
+      }
+    }
+    .el-divider--vertical{
+      position: absolute;
+      height: 80%;
+      top: 10%;
+      left: 9vw;
+      width:.05rem;
+      margin:0 .4rem;
+    }
+    
+
+    .title-web{
+      position: absolute;
+      font-size: 1.8rem;
+      left: 10vw;
+      color: #706e6e;
+      top: .9rem;
+    }
   }
 }
 .el-table__body-wrapper > table,.el-table__header-wrapper > table{
@@ -352,37 +421,40 @@ export default {
     
   }
 
-  .header {
-    width: 100%;
-    background-color: #ffffff;
-    border-bottom: 1px solid rgba(211,220,230,1);
+  // .header {
+  //   width: 100%;
+  //   background-color: #ffffff;
+  //   border-bottom: 1px solid rgba(211,220,230,1);
+  //   .grid-content{
+  //     height: 100%;
+  //     a {      
+  //       height: 100%;
+  //       width: 16vw;
+  //       display: block;
+  //       img{
+  //         height: 100%;
+  //         width: 9vw;
+  //       }
+  //     }
+  //   }
+  //   .el-divider--vertical{
+  //     position: absolute;
+  //     top: .9rem;
+  //     left: 9vw;
+  //     width:.05rem;
+  //     height:2rem;
+  //     margin:0 .4rem;
+  //   }
+    
 
-    .grid-content{
-      height: 100%;
-    }
-    .el-divider--vertical{
-      position: absolute;
-      top: .9rem;
-      left: 2.5rem;
-      width:.05rem;
-      height:2rem;
-      margin:0 .4rem;
-    }
-    .img{
-        position: absolute;
-        width: 2.5rem;
-        height: 1.8rem;
-        top: 1rem;
-    }
-
-    .title-web{
-      position: absolute;
-      font-size: 1.8rem;
-      left: 3.3rem;
-      color: #706e6e;
-      top: .5rem;
-    }
-  }
+  //   .title-web{
+  //     position: absolute;
+  //     font-size: 1.8rem;
+  //     left: 10vw;
+  //     color: #706e6e;
+  //     top: .5rem;
+  //   }
+  // }
   .container_box {
     background: #eee;
   }

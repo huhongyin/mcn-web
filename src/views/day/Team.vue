@@ -26,19 +26,22 @@
                 <el-button @click="exportExcel" style="float:right;">导出</el-button>
             </el-col>
         </el-row>
+        <!-- <el-table v-loading="loading" height="70vh" style="overflow-x:scroll;" :data="list" border :span-method="objectSpanMethod" id="out-table"> -->
+            
         <el-table v-loading="loading" height="70vh" style="overflow-x:scroll;" :data="list" border :span-method="objectSpanMethod" id="out-table">
+            
         <!-- <el-table :data="list" border> -->
             <el-table-column label="序号">
                 <template slot-scope="scope">
                     <div style="text-align:center;">
-                    <template v-if="typeof scope.row.is_zongji == 'undefined'">
-                        <span v-if="typeof scope.row.type == 'undefined'">
-                            {{ scope.row.id }}
+                    <template v-if="(typeof scope.row.is_zongji == 'undefined') || (typeof scope.row.is_zongji != 'undefined' && (scope.row.is_zongji == null || scope.row.is_zongji == 0))">
+                        <span v-if="(typeof scope.row.type == 'undefined') || (typeof scope.row.type != 'undefined' && (scope.row.type == null || scope.row.type == ''))">
+                            {{ scope.row.row_name }}
                         </span>
-                        <span v-else style="background-color:#bfd7bf;">{{ scope.row.id }}</span>
+                        <span v-else style="background-color:#bfd7bf;">{{ scope.row.row_name }}</span>
                     </template>
                     <template v-else>
-                        <span style="font-size:20px;color:black;background-color:green;">{{ scope.row.id }}</span>
+                        <span style="font-size:20px;color:black;background-color:green;">{{ scope.row.row_name }}</span>
                     </template>
                     </div>
                 </template>
@@ -48,7 +51,7 @@
             <el-table-column label="主播昵称">
                 <template slot-scope="scope">
                     <div style="text-align:center;">
-                        <template v-if="typeof scope.row.type == 'undefined'">
+                        <template v-if="(typeof scope.row.type == 'undefined') || (typeof scope.row.type != 'undefined' && (scope.row.type == null || scope.row.type == ''))">
                             <span>
                                 {{ scope.row.nickname }}
                             </span>
@@ -88,7 +91,11 @@
             <el-table-column :label="one_day_title" prop="one_day_money"></el-table-column>
             <el-table-column :label="month_title" prop="month_money" width="100px;"></el-table-column>
             <el-table-column label="日均收票" prop="day_avg"></el-table-column>
-            <el-table-column label="备注" prop="remark"></el-table-column>
+            <el-table-column label="备注">
+                <template slot-scope="scope">
+                    <div v-html="scope.row.remark"></div>
+                </template>
+            </el-table-column>
         </el-table>
     </el-card>
 </template>
@@ -137,15 +144,27 @@ export default {
             this.index = parseInt(this.index) + 1
             return s
         },
-        getDepartments(){
-            this.departments = []
-            get(departmentApi.list, { type: "select", check: "operate", company_id: this.search.company_id }).then((res) => {
-                this.departments = res.data.list
-                if(this.departments.length > 1){
-                    this.departments.unshift({id: "", name: "全部门"})
+        getDepartments(companyId){
+            if(companyId == ""){
+                this.departments = []
+                this.search.department_id = ""
+            }else{
+                this.departments = []
+                this.search.department_id = ""
+                if(this.search.company_id != ""){
+                    get(departmentApi.list, { type: "select", check: "operate", company_id: this.search.company_id }).then((res) => {
+                        this.departments = res.data.list
+                        if(this.departments.length > 1){
+                            this.departments.unshift({id: "", name: "全部门"})
+                            this.search.department_id = this.departments[0].id
+                        }else if(this.departments.length <= 0){
+                            this.search.department_id = ""
+                        }else if(this.departments.length == 1){
+                            this.search.department_id = this.departments[0].id
+                        }
+                    })
                 }
-                this.search.department_id = this.departments[0].id
-            })
+            }
         },
         getCompanies(){
             get(companyApi.list, { type: 'select' }).then((res) => {
@@ -183,10 +202,10 @@ export default {
                 }else{
                     var rowspan = 0
                     var colspan = 0;
-                    if(typeof(row.rowspan) != 'undefined'){
+                    if(typeof(row.rowspan) != 'undefined' && row.rowspan != "0"){
                         rowspan = row.rowspan
                     }
-                    if(typeof(row.colspan) != 'undefined'){
+                    if(typeof(row.colspan) != 'undefined' && row.colspan != "0"){
                         colspan = row.colspan
                     }
                     return {
