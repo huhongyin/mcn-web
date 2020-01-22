@@ -27,6 +27,7 @@
             <el-tab-pane name="waitCheck" label="待我审核">
                 <el-table :data="list" style="width: 100%">
                     <el-table-column prop="flow_config.name" label="流程名称"></el-table-column>
+                    <el-table-column prop="apply_user.rel_name" label="发起人"></el-table-column>
                     <el-table-column label="当前审核人">
                         <template slot-scope="scope">
                             <template v-if="scope.row.current_check_user_names.length > 0">
@@ -47,6 +48,7 @@
             <el-tab-pane name="hadCheck" label="我已审核">
                 <el-table :data="list" style="width: 100%">
                     <el-table-column prop="flow_config.name" label="流程名称"></el-table-column>
+                    <el-table-column prop="apply_user.rel_name" label="发起人"></el-table-column>
                     <el-table-column label="发起人" prop="apply_user.rel_name"></el-table-column>
                     <el-table-column prop="status_name" label="状态"></el-table-column>
                     <el-table-column prop="created_date" label="发起时间"></el-table-column>

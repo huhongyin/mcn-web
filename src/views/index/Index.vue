@@ -140,10 +140,10 @@
                   <img :src="sys_icon" width="20" style="margin-right:10px" height="20" alt />
                   <span class="e-menu-span router-link">自动签</span>
                 </template>
-                <el-menu-item-group class="el-item">
+                <el-menu-item-group class="el-item" v-show="userInfo.department != null && userInfo.department.type == 4">
                   <el-menu-item index="/flowConfig" class="el-item e-menu-span" style="font-size:13px;">流程管理</el-menu-item>
                 </el-menu-item-group>
-                <el-menu-item-group class="el-item">
+                <el-menu-item-group class="el-item" v-show="userInfo.department != null && userInfo.department.type == 4">
                   <el-menu-item index="/template" class="el-item e-menu-span" style="font-size:13px;">合同模板</el-menu-item>
                 </el-menu-item-group>
                 <el-menu-item-group class="el-item">

@@ -33,7 +33,7 @@
                 <el-input v-model="form.actor.id_card_no"></el-input>
             </el-form-item> -->
             <el-form-item label="身份证图片">
-                <el-upload action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
+                <el-upload :limit="2" :on-remove="handleRemove" :before-upload="beforeUpload" :http-request="handleRequest" action="" list-type="picture-card" :on-preview="handlePictureCardPreview">
                     <i class="el-icon-plus"></i>
                 </el-upload>
                 <el-dialog :visible.sync="dialogVisible">
@@ -142,6 +142,8 @@ import bankApi from '@/api/bank';
 import levelApi from '@/api/level';
 import guildApi from '@/api/guild';
 import autoSignApi from '@/api/autosign';
+import uploadApi from '@/api/upload';
+import axios from "axios";
 
 export default {
     data(){
@@ -166,6 +168,7 @@ export default {
                     phone: "",
                     birthday: "",
                     address: "",
+                    id_card_pic: []
                 },
                 contract: {
                     heyue_time: 4,
@@ -221,12 +224,54 @@ export default {
             this.getGuilds()
             this.getTemplates()
         },
+        beforeUpload(file){
+            const isJPG = file.type === 'image/jpeg';
+
+            if (!isJPG) {
+            this.$message.error('上传图片只能是 JPG 格式!');
+            }
+            return isJPG
+            // if(this.form.actor.id_card_pic.length >= 2){
+            //     this.form.actor.id_card_pic = this.form.actor.id_card_pic.splice(0, 2)
+            //     this.$message({
+            //         type: "warning",
+            //         message: "最多上传两张图片"
+            //     })
+            //     return false
+            // }
+
+            // return true
+        },
         handleRemove(file, fileList) {
-            console.log(file, fileList);
+            var newArr = new Array()
+            this.form.actor.id_card_pic.map((item) => {
+                if(item.name != file.name){
+                    newArr.push(item)
+                }
+            })
+            this.form.actor.id_card_pic = newArr
         },
         handlePictureCardPreview(file) {
             this.dialogImageUrl = file.url;
             this.dialogVisible = true;
+        },
+        handleRequest(uploader){
+            var formData = new FormData()
+            formData.append("file[]", uploader.file)
+            axios.post(uploadApi.uploadV2, formData).then((res) => {
+                if(res.data.code != 1){
+                    this.$message({
+                        type: 'danger',
+                        message: res.data.msg
+                    })
+
+                }else{
+                    var file = new Array()
+                    file.path = res.data.data.list[0].path
+                    file.name = uploader.file.name
+                    this.form.actor.id_card_pic.push(file)
+                }
+            })
         },
         getTemplates(){
             get(autoSignApi.fdd_templates).then((res) => {

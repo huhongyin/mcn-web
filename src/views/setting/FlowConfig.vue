@@ -84,10 +84,17 @@
                                         <span v-if="item.sort != ''" v-text="item.sort + ':'"></span>
                                         <span></span>
                                     </el-col>
-                                    <el-col :span="18">
-                                        <el-select filterable style="width:100%;" v-model="item.user_ids">
+                                    <el-col :span="10">
+                                        <el-select v-model="updateFlowConfigDialog.info.flow_config_steps[key].check_user_type">
+                                            <el-option :value="1" label="自选"></el-option>
+                                            <el-option :value="2" label="部门负责人"></el-option>
+                                        </el-select>
+                                    </el-col>
+                                    <el-col :span="8">
+                                        <el-select v-if="updateFlowConfigDialog.info.flow_config_steps[key].check_user_type == 1" filterable style="width:100%;" v-model="updateFlowConfigDialog.info.flow_config_steps[key].user_ids[0]">
                                             <el-option v-for="(user, k) in users" :key="k" :label="user.rel_name" :value="user.id"></el-option>
                                         </el-select>
+                                        <span style="display: block;height: 40px;line-height: 40px;" v-else-if="updateFlowConfigDialog.info.flow_config_steps[key].check_user_type == 2">部门负责人</span>
                                     </el-col>
                                     <el-col :span="4">
                                         <el-button type="danger" size="small" @click="deleteStep(item.id, item.index)">删除</el-button>
