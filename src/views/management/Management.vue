@@ -383,7 +383,7 @@
                                 <el-col :span="4">运营人</el-col>
                                 <el-col :span="19" :offset="1">
                                     <el-select filterable v-model="addDialog.form.actor.yunying_user_id" style="width: 100%;" placeholder="请选择运营负责人">
-                                        <el-option v-for="(item,key) in addDialog.yunyings" :key="key" :label="item.name" :value="item.id"></el-option>
+                                        <el-option v-for="(item,key) in addDialog.yunyings" :key="key" :label="item.rel_name" :value="item.id"></el-option>
                                     </el-select>
                                 </el-col>
                             </el-form-item>
@@ -870,8 +870,8 @@ export default {
                     data.actor.old_id = data.plat_actor_id
                     data.actor.now_id = data.now_id
                     data.actor.level = (data.level_id == 0) ? '' : data.level_id
-                    data.actor.yunying_user_id = (data.operate_user_id == 0) ? '' : data.operate_user_id
-                    data.actor.sign_user_id = (data.sign_user_id == 0) ? '' : data.sign_user_id
+                    data.actor.yunying_user_id = (data.operate_user_id == 0) ? "" : data.operate_user_id
+                    data.actor.sign_user_id = (data.sign_user_id == 0) ? "" : data.sign_user_id
                     data.actor.company_id = data.company_id
                     data.actor.should_time = data.should_time
                     data.actor.should_day = data.should_day
@@ -972,7 +972,7 @@ export default {
         },
         getOperate(){
             if(typeof this.addDialog.form.actor.company_id != "undefined"){
-                get(departmentApi.userListByType + '/' + 1, { company_id: this.addDialog.form.actor.company_id }).then((res) => {
+                get(departmentApi.userListByType + '/' + 1, { company_id: this.addDialog.form.actor.company_id, s: "o" }).then((res) => {
                     this.addDialog.yunyings = res.data.list
                 })
             }
