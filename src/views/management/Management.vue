@@ -70,7 +70,6 @@
                 </el-table-column>
             </el-table>
             <el-table id="managementExportTble" v-show="showExportTable" stripe :data="export_list" tooltip-effect="dark">
-                <el-table-column type="selection"></el-table-column>
                 <el-table-column fixed label="序号" type="index"></el-table-column>
                 <el-table-column fixed label="主播实名" prop="actor.name" ></el-table-column>
                 <el-table-column fixed label="主播昵称" prop="nickname"></el-table-column>
@@ -598,9 +597,9 @@ export default {
                         level: [
                             { required: true, message: '请选择等级', trigger: 'change' }
                         ],
-                        yunying_user_id: [
-                            { required: true, message: '请选择运营', trigger: 'change' }
-                        ],
+                        // yunying_user_id: [
+                        //     { required: true, message: '请选择运营', trigger: 'change' }
+                        // ],
                         sign_user_id: [
                             { required: true, message: '请选择签约人', trigger: 'change' }
                         ],
@@ -792,7 +791,43 @@ export default {
             this.current = val
             this.getData()
         },
-        exportExcel () {
+        formatJson(filterVal, jsonData) {
+    　　　　return jsonData.map(v => filterVal.map(j => {
+                var arr = j.split(".")
+                if(arr.length > 1){
+                    if(v[arr[0]] != null && typeof v[arr[0]] != 'undefined'){
+                        return v[arr[0]][arr[1]]
+                    }
+                    return ""
+                }else{
+                    return v[j]
+                }
+            }))
+    　　},
+        exportExcel(){
+            const loading = this.$loading({
+                lock: true,
+                text: '导出中,请稍后...',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
+            get(actorApi.list, { type: 'export', level: this.search.level, keyword: this.search.keyword }).then((res) => {
+                
+                require.ensure([], () => {
+                    //require的路径因个人项目结构不同可能需要单独调整，请自行修改路径
+        　　　　　　const { export_json_to_excel } = require('../../vendor/Export2Excel');
+
+        　　　　　　const tHeader = ['主播实名','主播昵称','平台','身份证号','联系电话','分成比例', '保底工资', '开播时间', '签约人', '运营人'];
+        　　　　　　const filterVal = ['actor.name', 'nickname', 'plat.name', 'actor.id_card_no', 'actor.phone', 'fenchengbi', 'salary', 'start_time', 'sign_user.rel_name', 'operate_user.rel_name'];
+        　　　　　　const listData = res.data.list
+        　　　　　　const data = this.formatJson(filterVal, listData);
+        　　　　　　export_json_to_excel(tHeader, data, '主播信息导出');
+                   loading.close()
+        　　　　})
+                
+            })
+        },
+        exportExcel2 () {
             //获取导出的数据列表，然后导出
             get(actorApi.list, { type: 'export', level: this.search.level, keyword: this.search.keyword }).then((res) => {
                 this.export_list = res.data.list
@@ -809,6 +844,8 @@ export default {
                     if (typeof console !== 'undefined')
                         console.log(e, wbout)
                 }
+                
+                this.showExportTable = false
                 return wbout
             })
         },
