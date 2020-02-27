@@ -817,8 +817,8 @@ export default {
                     //require的路径因个人项目结构不同可能需要单独调整，请自行修改路径
         　　　　　　const { export_json_to_excel } = require('../../vendor/Export2Excel');
 
-        　　　　　　const tHeader = ['主播实名','主播昵称','平台','身份证号','联系电话','分成比例', '保底工资', '开播时间', '签约人', '运营人'];
-        　　　　　　const filterVal = ['actor.name', 'nickname', 'plat.name', 'actor.id_card_no', 'actor.phone', 'fenchengbi', 'salary', 'start_time', 'sign_user.rel_name', 'operate_user.rel_name'];
+        　　　　　　const tHeader = ['主播实名', '所属公司', '主播昵称','平台','身份证号','联系电话','分成比例', '保底工资', '开播时间', '签约人', '运营人'];
+        　　　　　　const filterVal = ['actor.name', 'company.name', 'nickname', 'plat.name', 'actor.id_card_no', 'actor.phone', 'fenchengbi', 'salary', 'start_time', 'sign_user.rel_name', 'operate_user.rel_name'];
         　　　　　　const listData = res.data.list
         　　　　　　const data = this.formatJson(filterVal, listData);
         　　　　　　export_json_to_excel(tHeader, data, '主播信息导出');
