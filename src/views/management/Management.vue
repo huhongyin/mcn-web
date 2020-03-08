@@ -40,7 +40,7 @@
             </el-col>
             <el-col :md="3" :sm="4" :lg="4">
                 <el-button icon="el-icon-download" @click="exportExcel">导出</el-button>
-                <el-button type="primary" @click="add(0)">新增</el-button>
+                <el-button v-if="userInfo.department.company.type == 1 && userInfo.department.type == 4" type="primary" @click="add(0)">新增</el-button>
             </el-col>
         </el-row>
         <el-table id="managementTable" stripe ref="multipleTable" :data="list" tooltip-effect="dark" :header-cell-style="{background:'#EFF5F9'}" @selection-change="handleSelectionChange">
@@ -58,7 +58,7 @@
                 <el-table-column label="运营人" prop="operate_user.rel_name"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <template v-if="userInfo.department.type != 2">
+                        <template v-if="userInfo.department.type == 4 && userInfo.department.company.type == 1">
                             <el-button @click="add(scope.row.id)" type="text" size="small" style="margin-left:10px;display:block;">编辑</el-button>
                         </template>
                         <el-button @click="addContractDetail(scope.row.id)" type="text" size="small" style="margin-left:10px;display:block;">设置应有时长</el-button>

@@ -34,9 +34,9 @@
                 <el-table-column label="部门" prop="department.name"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="add(scope.row.id)" type="text" size="small">编辑</el-button>
+                        <el-button v-if="userInfo.department.type == 4 && userInfo.department.company.type == 1" @click="add(scope.row.id)" type="text" size="small">编辑</el-button>
                         <el-button @click="showDetail(scope.row)" type="text" size="small">查看</el-button>
-                        <el-button type="text" size="small" @click="deleteUser(scope.row.id)">删除</el-button>
+                        <el-button v-if="userInfo.department.type == 4 && userInfo.department.company.type == 1" type="text" size="small" @click="deleteUser(scope.row.id)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -123,6 +123,7 @@ export default {
     },
     data(){
         return {
+            userInfo: JSON.parse(localStorage.getItem("user")),
             search: {
                 keywords: "",
                 company_id: "",
