@@ -87,6 +87,7 @@ export default {
   components:{ Plat, MarkLine, BarLabel, Total },
     data(){
       return {
+		loading: null,
 		total_money_img: require("../../assets/imgs/index/total_money.png"),
 		all_users_img: require("../../assets/imgs/index/all_users.png"),
 		time_img: require("../../assets/imgs/index/time.png"),
@@ -209,6 +210,12 @@ export default {
 		}
 	},
     created(){
+			this.loading = this.$loading({
+				lock: true,
+				text: '加载中,请稍后...',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.7)'
+			});
 			this.isLogin() //验证登录
 			this.setDate() //初始化时间
 			this.getPlats() //获取平台
@@ -317,6 +324,8 @@ export default {
 				initMarkLine(){
 					let myChart = this.$echarts.init(document.getElementById("mark-line-total_all_plat"), 'macarons');
 					myChart.setOption(this.lineOptions);
+					
+					this.loading.close()
 				}
     },
 }
