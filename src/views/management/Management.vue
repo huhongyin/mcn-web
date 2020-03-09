@@ -817,8 +817,47 @@ export default {
                     //require的路径因个人项目结构不同可能需要单独调整，请自行修改路径
         　　　　　　const { export_json_to_excel } = require('../../vendor/Export2Excel');
 
-        　　　　　　const tHeader = ['主播实名', '主播ID', '住址', '等级', '扶持金额', '每日应播时长', '银行卡号', '合同编号', '合同签订日期', '扶持金额', '所属公司', '主播昵称','平台','身份证号','联系电话','分成比例', '保底工资', '开播时间', '签约人', '运营人'];
-        　　　　　　const filterVal = ['actor.name', 'company.name', 'nickname', 'plat.name', 'actor.id_card_no', 'actor.phone', 'fenchengbi', 'salary', 'start_time', 'sign_user.rel_name', 'operate_user.rel_name'];
+        　　　　　　const tHeader = [
+            '主播实名', 
+            '主播ID', 
+            '住址', 
+            '等级', 
+            '扶持金额', 
+            '每日应播时长', 
+            '银行卡号', 
+            '合同编号', 
+            '合同签订日期', 
+            '所属公司', 
+            '主播昵称',
+            '平台',
+            '身份证号',
+            '联系电话',
+            '分成比例', 
+            '保底工资', 
+            '开播时间', 
+            '签约人', 
+            '运营人'];
+        　　　　　　const filterVal = [
+            'actor.name', 
+            'plat_actor_id', 
+            'actor.address', 
+            'level.name', 
+            'actor_plat_sign.support_money', 
+            'actor_plat_sign.day_time', 
+            'bank_no', 
+            'contract.contract', 
+            'contract.contract_date', 
+            'company.name', 
+            'nickname', 
+            'plat.name', 
+            'actor.id_card_no', 
+            'actor.phone', 
+            'fenchengbi', 
+            'salary', 
+            'start_time', 
+            'sign_user.rel_name', 
+            'operate_user.rel_name'
+            ];
         　　　　　　const listData = res.data.list
         　　　　　　const data = this.formatJson(filterVal, listData);
         　　　　　　export_json_to_excel(tHeader, data, '主播信息导出');
@@ -997,16 +1036,24 @@ export default {
         userDetail(id){
             get(actorApi.detail + '/' + id).then((res) => {
                 this.userDetailDialog.detail = res.data.info
-                if(typeof(this.userDetailDialog.detail.operate_user) == 'undefind'){
+                if(typeof(this.userDetailDialog.detail.operate_user) == 'undefind' || this.userDetailDialog.detail.operate_user == null){
                     this.userDetailDialog.detail.operate_user = {
                         id: '',
                         rel_name : '',
                     }
+                }else{
+                    if(this.userDetailDialog.detail.operate_user.rel_name == null){
+                        this.userDetailDialog.detail.operate_user.rel_name = ""
+                    }
                 }
-                if(typeof(this.userDetailDialog.detail.sign_user) == 'undefind'){
+                if(typeof(this.userDetailDialog.detail.sign_user) == 'undefind' || this.userDetailDialog.detail.sign_user == null){
                     this.userDetailDialog.detail.sign_user = {
                         id: '',
                         rel_name : '',
+                    }
+                }else{
+                    if(this.userDetailDialog.detail.sign_user.rel_name == null){
+                        this.userDetailDialog.detail.sign_user.rel_name = ""
                     }
                 }
                 this.userDetailDialog.show = true
