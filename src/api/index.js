@@ -1,6 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
 import { Message } from 'element-ui';
+import router from "../router";
 
 // 环境切换
 axios.defaults.baseURL = 'http://admin.mcn.huhongyin.com/api/v1/'
