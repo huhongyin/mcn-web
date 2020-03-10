@@ -812,58 +812,76 @@ export default {
                 background: 'rgba(0, 0, 0, 0.7)'
             });
             get(actorApi.list, { type: 'export', level: this.search.level, keyword: this.search.keyword }).then((res) => {
-                
-                require.ensure([], () => {
-                    //require的路径因个人项目结构不同可能需要单独调整，请自行修改路径
-        　　　　　　const { export_json_to_excel } = require('../../vendor/Export2Excel');
+                console.log(res)
+                loading.close()
+                window.open(res.data.list, '_blank')
+                // var debug = {hello: "world"};
 
-        　　　　　　const tHeader = [
-            '主播实名', 
-            '主播ID', 
-            '住址', 
-            '等级', 
-            '扶持金额', 
-            '每日应播时长', 
-            '银行卡号', 
-            '合同编号', 
-            '合同签订日期', 
-            '所属公司', 
-            '主播昵称',
-            '平台',
-            '身份证号',
-            '联系电话',
-            '分成比例', 
-            '保底工资', 
-            '开播时间', 
-            '签约人', 
-            '运营人'];
-        　　　　　　const filterVal = [
-            'actor.name', 
-            'plat_actor_id', 
-            'actor.address', 
-            'level.name', 
-            'actor_plat_sign.support_money', 
-            'actor_plat_sign.day_time', 
-            'bank_no', 
-            'contract.contract', 
-            'contract.contract_date', 
-            'company.name', 
-            'nickname', 
-            'plat.name', 
-            'actor.id_card_no', 
-            'actor.phone', 
-            'fenchengbi', 
-            'salary', 
-            'start_time', 
-            'sign_user.rel_name', 
-            'operate_user.rel_name'
-            ];
-        　　　　　　const listData = res.data.list
-        　　　　　　const data = this.formatJson(filterVal, listData);
-        　　　　　　export_json_to_excel(tHeader, data, '主播信息导出');
-                   loading.close()
-        　　　　})
+                // let blob = new Blob([res.data.list], {type: "application/vnd.ms-excel"})  // res就是接口返回的文件流了
+                // let objectUrl = URL.createObjectURL(blob);
+                // window.location.href = objectUrl
+
+                // var blob = new Blob([res.data.list],{type : 'application/vnd.ms-excel'});
                 
+        //         require.ensure([], () => {
+        //             //require的路径因个人项目结构不同可能需要单独调整，请自行修改路径
+        // 　　　　　　const { export_json_to_excel } = require('../../vendor/Export2Excel');
+
+        // 　　　　　　const tHeader = [
+        //     '主播实名', 
+        //     '主播ID', 
+        //     '住址', 
+        //     '等级', 
+        //     '扶持金额', 
+        //     '每日应播时长', 
+        //     '银行卡号', 
+        //     '合同编号', 
+        //     '合同签订日期', 
+        //     '所属公司', 
+        //     '主播昵称',
+        //     '平台',
+        //     '身份证号',
+        //     '联系电话',
+        //     '分成比例', 
+        //     '保底工资', 
+        //     '开播时间', 
+        //     '签约人', 
+        //     '运营人'];
+        // 　　　　　　const filterVal = [
+        //     'actor.name', 
+        //     'plat_actor_id', 
+        //     'actor.address', 
+        //     'level.name', 
+        //     'actor_plat_sign.support_money', 
+        //     'actor_plat_sign.day_time', 
+        //     'bank_no', 
+        //     'contract.contract', 
+        //     'contract.contract_date', 
+        //     'company.name', 
+        //     'nickname', 
+        //     'plat.name', 
+        //     'actor.id_card_no', 
+        //     'actor.phone', 
+        //     'fenchengbi', 
+        //     'salary', 
+        //     'start_time', 
+        //     'sign_user.rel_name', 
+        //     'operate_user.rel_name'
+        //     ];
+        // 　　　　　　const listData = res.data.list
+        //         //    const data = new Array()
+        //         //    data.concat(this.formatJson(filterVal, listData))
+        // 　　　　　　const data = this.formatJson(filterVal, listData);
+        // 　　　　　　export_json_to_excel(tHeader, data, '主播信息导出');
+        //            loading.close()
+        // 　　　　})
+                
+            }).catch((err) => {
+                this.$message({
+                    type: "error",
+                    message: "导出失败"
+                })
+                loading.close()
             })
         },
         exportExcel2 () {
