@@ -18,7 +18,7 @@ axios.defaults.baseURL = 'http://admin.mcn.huhongyin.com/api/v1/'
 // }
 
 // 请求超时时间
-axios.defaults.timeout = 500000
+axios.defaults.timeout = 1000000
 
 // post请求头
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'

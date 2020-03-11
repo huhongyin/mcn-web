@@ -251,7 +251,8 @@ export default {
 				get(companyApi.list, { type: 'select' }).then((res) => {
 					this.companyOptions = res.data.list
 					if(this.companyOptions.length > 1){
-						this.companyOptions.unshift({ id: "", name: "全部" })
+					this.search.company = res.data.list[0].id
+						// this.companyOptions.unshift({ id: "", name: "全部" })
 					}
 					this.search.company = res.data.list[0].id
 					this.getSignCal() //获取统计总数 总流水  有效主播数量...
@@ -279,6 +280,7 @@ export default {
 								title: title,
 								start_date: this.search.date[0],
 								end_date: this.search.date[1],
+								company_id: this.search.company
 						}
 				})
 			},

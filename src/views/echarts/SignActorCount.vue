@@ -57,8 +57,9 @@ export default {
             total: {},
             search: {
                 date: [],
-                sign_user_id: '',
+                sign_user_id: "",
                 plat_id: '',
+                company_id: '',
             },
             sign_users: [],
             pickerOptions2: {
@@ -92,6 +93,7 @@ export default {
     },
     created(){
         this.title = this.$route.query.title
+        this.search.company_id = this.$route.query.company_id
         this.search.date = [this.$route.query.start_date, this.$route.query.end_date]
         this.getSignUsers()
         this.getPlats()
@@ -105,14 +107,16 @@ export default {
             })
         },
         getSignUsers(){
-            get(departmentApi.userListByType + '/2').then((res) => {
+            get(departmentApi.userListByType + '/2', {company_id: this.search.company_id}).then((res) => {
+                // this.sign_users = new Array()
+                // this.sign_users.push({id: "", name: "全部"})
                 this.sign_users = res.data.list
             })
         },
         getData(){
             var strartDate = this.search.date == null ? '' : this.search.date[0]
             var endDate = this.search.date == null ? '' : this.search.date[1]
-            var params = { page: this.current, start_date: strartDate, end_date: endDate, plat_id: this.search.plat_id, sign_user_id: this.search.sign_user_id}
+            var params = { company_id: this.search.company_id, page: this.current, start_date: strartDate, end_date: endDate, plat_id: this.search.plat_id, sign_user_id: this.search.sign_user_id}
             get(echartApi.signActorList, params).then((res) => {
                 this.totalPage = res.data.list.last_page
                 this.list = res.data.list.data
